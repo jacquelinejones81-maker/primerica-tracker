@@ -826,6 +826,27 @@ function RepAppointmentTracker({ appointments = [], onChange }) {
                   }}
                 />
               )}
+              {/* MACHO summary display for existing scores */}
+              {isFilled && (appt.macho||[]).length > 0 && (
+                <div style={{ marginTop: 8, padding: "8px 10px", background: (appt.macho||[]).length >= 3 ? "#10b98110" : "#f59e0b0a", border: `1px solid ${(appt.macho||[]).length >= 3 ? "#10b98130" : "#f59e0b25"}`, borderRadius: 8 }}>
+                  <div style={{ fontSize: 10, color: "#ffffff40", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>MACHO Score</div>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {["M","A","C","H","O"].map(k => {
+                      const active = (appt.macho||[]).includes(k);
+                      const labels = {M:"Married",A:"Age 25-55",C:"Children",H:"Homeowner",O:"Occupation"};
+                      return (
+                        <div key={k} style={{ fontSize: 11, background: active ? "#f59e0b20" : "#ffffff08", border: `1px solid ${active ? "#f59e0b50" : "#ffffff10"}`, borderRadius: 20, padding: "3px 10px", color: active ? "#f59e0b" : "#ffffff25", fontWeight: active ? "bold" : "normal" }}>
+                          {active ? "⭐" : "☆"} {k} {active ? `— ${labels[k]}` : ""}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div style={{ fontSize: 12, color: (appt.macho||[]).length >= 3 ? "#10b981" : "#f59e0b", fontWeight: "bold", marginTop: 6 }}>
+                    {(appt.macho||[]).length} ⭐ — {(appt.macho||[]).length >= 3 ? "✓ Qualified!" : `${3-(appt.macho||[]).length} more stars needed`}
+                    {(appt.macho||[]).length === 5 && " 🔥 Top priority!"}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
