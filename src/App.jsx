@@ -5,12 +5,10 @@ import React, { useState, useEffect, useMemo } from "react";
 const TRAINER_CHECKLIST = [
   { id: "t1", category: "Getting Started", task: "Complete IBA and register for class or self online study", note: "Urgency: get them moving within 48 hours!", link: null },
   { id: "t2", category: "Apps & Access", task: "Confirm recruit downloaded Primerica app and logged in within 24 hours", note: "🎉 $50 bonus when completed within 24 hours", link: null },
-  { id: "t2b", category: "Apps & Access", task: "Confirm POL login is active (not just registered)", note: "Have them log in to primericaonline.com and confirm access", link: null },
   { id: "t2c", category: "Apps & Access", task: "Share the team onboarding app URL with new rep and confirm they've saved it", note: "Send them the link and have them bookmark it or save it to their phone's home screen so they can track their own checklist progress", link: null },
   { id: "t3", category: "Apps & Access", task: "Confirm recruit downloaded Telegram and joined the group", note: "Send them the link to be added", link: "https://t.me/+WjPWktwvOpVhZDlh" },
   { id: "t4", category: "Apps & Access", task: "Give recruit access to new student folder", note: "Google Drive study resources", link: "https://drive.google.com/drive/folders/1IrsYPZyMlaClTLftKSkK6pCxAzVavTPl" },
   { id: "t5", category: "References", task: "Get 5 character references (names & phone numbers)", note: "MACHO people — most influential in their life", link: null },
-  { id: "t6", category: "Onboarding Videos", task: "Send welcome video and confirm they watched it", note: "We'll get notification by registration and watch time", link: "https://us06web.zoom.us/clips/share/HkOwxveSSd6QaYTXZ0gUgg" },
   { id: "t7", category: "Onboarding Videos", task: "Send Orientation video to watch", note: "Advise note-taking; be prepared to answer questions", link: null },
   { id: "t8", category: "References", task: "Complete character reference calls & book training appointments", note: "Use the call script link — rep logs appointments in the Appointments tab", link: "https://docs.google.com/document/d/1ju_kh_QbSc5whqLpm8r9190Jr7raYfcGoi2jdDxP49U/edit?usp=sharing" },
   { id: "t9", category: "Appointments", task: "Review rep's Appointments tab — confirm 15–20 training appointments logged", note: "Open the Appointments tab to see full details: name, phone, email, date, status", link: null },
@@ -27,15 +25,16 @@ const FAST_START_CHECKLIST = [
   { id: "f3",   category: "References",          task: "Provide 5 professional character references to your trainer", note: null, link: null },
   { id: "f4",   category: "Onboarding",          task: "Complete Orientation", note: null, link: null },
 
-  { id: "f7",   category: "FNA",                 task: "Complete Financial Needs Analysis — Life Insurance", note: "Minimum required", link: null },
-  { id: "f8",   category: "FNA",                 task: "Complete Financial Needs Analysis — Roth IRA", note: "Minimum required", link: null },
-  { id: "f10",  category: "Events",              task: "Schedule Digital Grand Opening — enter your DGO date in the DGO section below", note: null, link: null },
-  { id: "f10b", category: "Events",              task: "Attend DGO — mark complete in the DGO section below", note: "Review who attended, appointments set, and next steps", link: null },
+  { id: "f7",   category: "FNA",                 task: "Complete Financial Needs Analysis — Life Insurance", note: null, link: null },
+  { id: "f8",   category: "FNA",                 task: "Complete Financial Needs Analysis — Roth IRA", note: null, link: null },
+  { id: "f10",  category: "Events",              task: "Schedule Digital Grand Opening — enter your DGO date in the DGO card on your dashboard", note: null, link: null },
+  { id: "f10b", category: "Events",              task: "Attend DGO — mark complete in the DGO card on your dashboard", note: "Review who attended, appointments set, and next steps", link: null },
   { id: "f15",  category: "Bonus Goals",         task: "3×$3,000 done — $650 Bonus + District Manager Promotion", note: null, link: null },
   { id: "f16",  category: "Bonus Goals",         task: "6×$6,000 done — $1,250 Bonus + District Manager Promotion", note: null, link: null },
   { id: "f17",  category: "Bonus Goals",         task: "10×$10,000 done — $2,050 Bonus + District Manager Promotion", note: null, link: null },
   { id: "f18",  category: "Licensing",           task: "Complete pre-licensing class — enter your dates in the Pre-Licensing Class section below", note: "Use the Class Scheduling card below to log your dates", link: null },
-  { id: "f19",  category: "Licensing",           task: "Schedule exam within 5 days of completing class", note: null, link: null },
+  { id: "f19",  category: "Licensing",           task: "Schedule exam within 5 days of completing class — enter your exam date in the Exam section on your dashboard", note: null, link: null },
+  { id: "f22b", category: "Licensing",           task: "Access Live Life Exam Review Sessions with Licensing Coaches", note: "Path: primericaonline.com → Life Licensing → Pre-Licensing Education (select your state) → Life Exam Study Resources → Life Review Sessions → Live Life Exam Review Sessions", link: "https://www.primericaonline.com" },
   { id: "f23",  category: "Licensing",           task: "Pass exam — upload pass notice and required docs in Primerica App", note: "🎉 Congratulations!!", link: null },
   { id: "f24",  category: "Licensing",           task: "Request License — Now What Checklist", note: null, link: null },
 ];
@@ -46,12 +45,13 @@ const REGULAR_START_CHECKLIST = [
   { id: "r2",   category: "Apps & Setup",        task: "Download the Telegram app", note: "Team communication app", link: null },
   { id: "r3",   category: "References",          task: "Provide 5 character references to your trainer", note: null, link: null },
   { id: "r4",   category: "Onboarding",          task: "Complete Orientation", note: null, link: null },
-  { id: "r8",   category: "FNA",                 task: "Complete Financial Needs Analysis — Life Insurance", note: "Minimum required", link: null },
-  { id: "r9",   category: "FNA",                 task: "Complete Financial Needs Analysis — Roth IRA", note: "Minimum required", link: null },
+  { id: "r8",   category: "FNA",                 task: "Complete Financial Needs Analysis — Life Insurance", note: null, link: null },
+  { id: "r9",   category: "FNA",                 task: "Complete Financial Needs Analysis — Roth IRA", note: null, link: null },
+  { id: "r12",  category: "Events",              task: "Schedule Digital Grand Opening — enter your DGO date in the DGO card on your dashboard", note: null, link: null },
+  { id: "r12b", category: "Events",              task: "Attend DGO — mark complete in the DGO card on your dashboard", note: "Review who attended, appointments set, and next steps", link: null },
   { id: "r10",  category: "Licensing",           task: "Complete pre-licensing class — enter your dates in the Pre-Licensing Class section below", note: "Use the Class Scheduling card below to log your dates", link: null },
-  { id: "r11",  category: "Licensing",           task: "Schedule exam within 5 days of completing class", note: null, link: null },
-  { id: "r12",  category: "Events",              task: "Schedule Digital Grand Opening — enter your DGO date in the DGO section below", note: null, link: null },
-  { id: "r12b", category: "Events",              task: "Attend DGO — mark complete in the DGO section below", note: "Review who attended, appointments set, and next steps", link: null },
+  { id: "r11",  category: "Licensing",           task: "Schedule exam within 5 days of completing class — enter your exam date in the Exam section on your dashboard", note: null, link: null },
+  { id: "r19b", category: "Licensing",           task: "Access Live Life Exam Review Sessions with Licensing Coaches", note: "Path: primericaonline.com → Life Licensing → Pre-Licensing Education (select your state) → Life Exam Study Resources → Life Review Sessions → Live Life Exam Review Sessions", link: "https://www.primericaonline.com" },
   { id: "r20",  category: "Licensing",           task: "Pass exam — upload pass notice and required docs in Primerica App", note: "🎉 Congratulations!!", link: null },
   { id: "r21",  category: "Licensing",           task: "Request License — Now What Checklist", note: null, link: null },
 ];
@@ -73,17 +73,20 @@ const LICENSED_NOW_WHAT = [
   { id: "l14", category: "Team Schedule", task: "Attend SIE Study Session / Practice Drill — Tuesdays & Saturdays @ 9 pm CST", note: null, link: null },
   { id: "l15", category: "Team Schedule", task: "Attend Wealth Building Opportunity — Thursdays @ 7:30 pm CST (invite guests)", note: null, link: null },
   { id: "l16", category: "Team Schedule", task: "Attend Team Training — Saturdays @ 10:10 am CST", note: null, link: null },
-  { id: "l17", category: "Learning Activity", task: "Complete Life Training Hub (POL > Products > Life Insurance > Life Training Hub)", note: null, link: null },
+  { id: "l17", category: "Learning Activity", task: "Complete Life Training Hub (POL > Products > Life Insurance > Life Training Hub)", note: null, link: "https://www.primericaonline.com" },
   { id: "l18", category: "Learning Activity", task: "Get certified for Indexed and Fixed Annuities", note: null, link: null },
-  { id: "l19", category: "Learning Activity", task: "Master the 7 Fundamentals — Prospecting", note: "See Licensed Now What Folder", link: null },
-  { id: "l20", category: "Learning Activity", task: "Master the 7 Fundamentals — Setting Appointments", note: "See Licensed Now What Folder", link: null },
+  { id: "l17b", category: "Learning Activity", task: "Access the Licensed Now What Google Drive Folder", note: "All 7 Fundamentals resources are in this folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
   { id: "l21", category: "Learning Activity", task: "Complete 3 practice life apps in Primerica app", note: null, link: null },
   { id: "l22", category: "Learning Activity", task: "Complete 3 practice IBAs in Primerica app", note: null, link: null },
-  { id: "l23", category: "Learning Activity", task: "Master the 7 Fundamentals — Giving a Winning Presentation", note: "See Licensed Now What Folder", link: null },
-  { id: "l24", category: "Learning Activity", task: "Master the 7 Fundamentals — Overcoming Objections", note: "See Licensed Now What Folder", link: null },
-  { id: "l25", category: "Learning Activity", task: "Master the 7 Fundamentals — Closing", note: "See Licensed Now What Folder", link: null },
-  { id: "l26", category: "Learning Activity", task: "Master the 7 Fundamentals — Mastering the Products (Life, Investments, etc.)", note: null, link: null },
-  { id: "l27", category: "Learning Activity", task: "Beneficiary & Emergency Contacts process", note: "See Licensed Now What Folder", link: null },
+  { id: "l19", category: "Learning Activity", task: "1. Master the 7 Fundamentals — Prospecting", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l20", category: "Learning Activity", task: "2. Master the 7 Fundamentals — Setting Appointments", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l23", category: "Learning Activity", task: "3. Master the 7 Fundamentals — Giving a Winning Presentation", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l24", category: "Learning Activity", task: "4. Master the 7 Fundamentals — Overcoming Objections", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25", category: "Learning Activity", task: "5. Master the 7 Fundamentals — Closing (Life Insurance)", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25b", category: "Learning Activity", task: "6. Master the 7 Fundamentals — Getting Referrals", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25c", category: "Learning Activity", task: "7. Master the 7 Fundamentals — Getting a New Rep Started", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l26", category: "Learning Activity", task: "Master the Products (Life, Investments, etc.)", note: null, link: null },
+  { id: "l27", category: "Learning Activity", task: "Beneficiary & Emergency Contacts process", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
   { id: "l28", category: "Securities License", task: "Start securities license process — SIE", note: null, link: null },
   { id: "l29", category: "Securities License", task: "Series 6", note: null, link: null },
   { id: "l30", category: "Securities License", task: "Series 63", note: null, link: null },
@@ -170,14 +173,14 @@ const STORAGE_KEY = "primerica_reps_v6";
 const TRAINERS_KEY = "primerica_trainers_v1";
 const ACTIVE_TRAINER_KEY = "primerica_active_trainer";
 const ADMINS_KEY = "primerica_admins_v1";
-const SCHEDULE_KEY = "primerica_schedule_v1";
+const SCHEDULE_KEY = "primerica_schedule_v2";
 const RVP_KEY = "primerica_rvp_v1";
 const DEFAULT_SCHEDULE = [
-  { id: "s1", day: "Monday",    time: "5:30 PM PST / 7:30 PM CST / 8:30 PM EST",   title: "Mindset Monday 🎖️",                              type: "meeting",  required: true  },
+  { id: "s1", day: "Monday",    time: "7:30 PM CST / 8:30 PM EST",                  title: "Mindset Monday 🎖️",                                    type: "meeting",  required: true  },
   { id: "s2", day: "Tuesday",   time: "7:00 PM PST / 9:00 PM CST / 10:00 PM EST",  title: "SIE Securities Exam Study Group (Licensed Life Agents only)", type: "study", required: false },
-  { id: "s3", day: "Wednesday", time: "7:00 PM PST / 9:00 PM CST / 10:00 PM EST",  title: "Education Center",                                type: "training", required: true  },
-  { id: "s4", day: "Thursday",  time: "5:30 PM PST / 7:30 PM CST / 8:30 PM EST",   title: "How Money Works Opportunity Night (invite guests!)", type: "event",  required: true  },
-  { id: "s5", day: "Saturday",  time: "8:10 AM PST / 10:10 AM CST / 11:10 AM EST", title: "Team Training",                                   type: "training", required: true  },
+  { id: "s3", day: "Wednesday", time: "7:00 PM PST / 9:00 PM CST / 10:00 PM EST",  title: "Education Center",                                      type: "training", required: true  },
+  { id: "s4", day: "Thursday",  time: "5:30 PM PST / 7:30 PM CST / 8:30 PM EST",   title: "How Money Works Opportunity Night (invite guests!)",     type: "event",    required: true  },
+  { id: "s5", day: "Saturday",  time: "8:10 AM PST / 10:10 AM CST / 11:10 AM EST", title: "Team Training 💪",                                       type: "training", required: true  },
 ];
 const DEFAULT_ADMINS = [{ id: "admin", name: "Admin (You)", color: "#f59e0b", pin: "1234", isSuperAdmin: true }];
 const DEFAULT_TRAINERS = [];
@@ -921,7 +924,7 @@ function TeamScheduleView({ schedule, isAdmin, onUpdate }) {
                 <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>{item.day} · {item.time}</div>
                 <div style={{ display:"flex", gap:6, marginTop:4 }}>
                   <div style={{ fontSize:10, color:color, background:`${color}15`, border:`1px solid ${color}30`, borderRadius:20, padding:"2px 8px" }}>{TYPE_LABELS[item.type]||item.type}</div>
-                  {item.required && <div style={{ fontSize:10, color:"#f43f5e", background:"#f43f5e15", border:"1px solid #f43f5e30", borderRadius:20, padding:"2px 8px" }}>Required</div>}
+    
                 </div>
               </div>
               {editing && <button onClick={() => removeItem(item.id)} style={{ background:"none", border:"1px solid #f43f5e30", color:"#f43f5e70", padding:"4px 10px", borderRadius:6, cursor:"pointer", fontSize:12 }}>✕</button>}
@@ -1014,9 +1017,7 @@ function DailyBanner({ schedule, appointments = [] }) {
               <div style={{ fontSize: 15, fontWeight: "bold", color: "#f0ede8" }}>{meeting.title}</div>
               <div style={{ fontSize: 12, color: "#ffffff70", marginTop: 3 }}>🕐 {meeting.time}</div>
             </div>
-            {meeting.required && (
-              <div style={{ background: "#f43f5e20", border: "1px solid #f43f5e40", borderRadius: 20, padding: "4px 12px", fontSize: 11, color: "#f43f5e", fontWeight: "bold", flexShrink: 0 }}>Required</div>
-            )}
+
           </div>
         );
       })}
@@ -1056,6 +1057,198 @@ function DailyBanner({ schedule, appointments = [] }) {
   );
 }
 
+
+// ─── REFERENCES SECTION ───────────────────────────────────────────────────────
+const RELATIONSHIP_OPTIONS = ["Friend","Family","Coworker","Neighbor","Church Member","Classmate","Associate","Other"];
+
+function ReferencesSection({ references = [], onChange, readOnly = false }) {
+  const total = 5;
+  const rows = Array.from({ length: total }, (_, i) =>
+    references[i] || { id: `ref-${i}`, name: "", phone: "", relationship: "Friend" }
+  );
+  const filled = rows.filter(r => r.name).length;
+
+  const updateRef = (idx, field, value) => {
+    const updated = [...references];
+    if (!updated[idx]) updated[idx] = { id: `ref-${idx}`, name: "", phone: "", relationship: "Friend" };
+    updated[idx] = { ...updated[idx], [field]: value };
+    onChange(updated);
+  };
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ paddingBottom: 8, borderBottom: "1px solid #8b5cf630", marginBottom: 14 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8b5cf6", fontWeight: "bold" }}>👥 My 5 Character References</div>
+          <div style={{ fontSize: 12, color: filled >= 5 ? "#10b981" : "#ffffff40", fontWeight: filled >= 5 ? "bold" : "normal" }}>{filled}/5 {filled >= 5 ? "✅" : ""}</div>
+        </div>
+        <div style={{ fontSize: 11, color: "#ffffff40", marginTop: 4 }}>Enter 5 people your trainer can contact — MACHO people who are most influential in your life</div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {rows.map((ref, idx) => {
+          const isFilled = !!ref.name;
+          return (
+            <div key={idx} style={{ background: isFilled ? "#8b5cf610" : "#ffffff03", border: `1px solid ${isFilled ? "#8b5cf630" : "#ffffff08"}`, borderRadius: 10, padding: "12px 14px" }}>
+              <div style={{ fontSize: 11, color: isFilled ? "#8b5cf6" : "#ffffff20", fontWeight: "bold", marginBottom: 8, letterSpacing: "0.08em" }}>REFERENCE #{idx + 1}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px 12px" }}>
+                {[["name","Name","Full name"],["phone","Phone","Phone number"]].map(([field, label, placeholder]) => (
+                  <div key={field}>
+                    <div style={{ fontSize: 9, color: "#ffffff30", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>{label}</div>
+                    {readOnly
+                      ? <div style={{ fontSize: 13, color: isFilled ? "#f0ede8" : "#ffffff20" }}>{ref[field] || "—"}</div>
+                      : <input value={ref[field] || ""} onChange={e => updateRef(idx, field, e.target.value)} placeholder={placeholder}
+                          style={{ background: "transparent", border: "none", borderBottom: "1px solid #ffffff15", color: isFilled ? "#f0ede8" : "#ffffff35", fontSize: 13, outline: "none", width: "100%", padding: "4px 2px", fontFamily: "inherit" }} />
+                    }
+                  </div>
+                ))}
+                <div>
+                  <div style={{ fontSize: 9, color: "#ffffff30", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Relationship</div>
+                  {readOnly
+                    ? <div style={{ fontSize: 13, color: isFilled ? "#8b5cf6" : "#ffffff20" }}>{ref.relationship || "—"}</div>
+                    : <select value={ref.relationship || "Friend"} onChange={e => updateRef(idx, "relationship", e.target.value)}
+                        style={{ background: "#ffffff0d", border: "1px solid #8b5cf630", borderRadius: 6, color: "#f0ede8", fontSize: 12, padding: "4px 8px", outline: "none", width: "100%" }}>
+                        {RELATIONSHIP_OPTIONS.map(r => <option key={r} value={r} style={{ background: "#1a1a2e" }}>{r}</option>)}
+                      </select>
+                  }
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── EXAM DATE CARD ───────────────────────────────────────────────────────────
+function ExamDateCard({ examDate, examCompleted, onSetDate, onSetCompleted, readOnly = false }) {
+  return (
+    <div style={{ background: examCompleted ? "#10b98110" : "#f59e0b10", border: `1px solid ${examCompleted ? "#10b98140" : "#f59e0b40"}`, borderRadius: 14, padding: "16px 20px", marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        <div style={{ fontSize: 14, fontWeight: "bold", color: examCompleted ? "#10b981" : "#f59e0b" }}>📝 Exam Date</div>
+        {!readOnly && (
+          <div onClick={() => onSetCompleted(!examCompleted)} style={{ background: examCompleted ? "#10b98120" : "#f59e0b20", border: `1px solid ${examCompleted ? "#10b98150" : "#f59e0b50"}`, borderRadius: 20, padding: "6px 16px", fontSize: 13, fontWeight: "bold", color: examCompleted ? "#10b981" : "#f59e0b", cursor: "pointer" }}>
+            {examCompleted ? "✓ Passed! 🎉" : "Mark Passed"}
+          </div>
+        )}
+        {readOnly && examCompleted && <div style={{ fontSize: 12, color: "#10b981", fontWeight: "bold" }}>✓ Passed!</div>}
+      </div>
+      <div>
+        <div style={{ fontSize: 10, color: "#ffffff40", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Scheduled Exam Date</div>
+        {readOnly
+          ? <div style={{ fontSize: 15, fontWeight: "bold", color: examDate ? "#f0ede8" : "#ffffff30" }}>{examDate || "Not scheduled yet"}</div>
+          : <>
+              <input type="date" value={examDate || ""} onChange={e => onSetDate(e.target.value)}
+                style={{ background: "transparent", border: "none", borderBottom: `1px solid ${examCompleted ? "#10b98140" : "#f59e0b40"}`, color: examDate ? "#f0ede8" : "#ffffff30", fontSize: 15, outline: "none", colorScheme: "dark", fontFamily: "inherit", padding: "4px 2px" }} />
+              {!examDate && <div style={{ fontSize: 11, color: "#ffffff30", marginTop: 4 }}>Schedule within 5 days of completing your class</div>}
+            </>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── SCRIPTS SECTION ─────────────────────────────────────────────────────────
+const SCRIPTS = [
+  {
+    id: "appt_friend",
+    title: "Setting Appointments — Friend or Associate (Already knows you)",
+    category: "Appointments",
+    color: "#3b82f6",
+    content: `Hey [Name], how's everything going? (brief small talk) Well I'm not going to keep you. I need a huge favor (wait for acknowledgement).
+
+I know you know I'm in the process of getting my license and certification to work in financial services. I'm now at the point where I need to get some training hours in. I just need you (and your spouse if married) to jump on a 30-minute Zoom with my trainer and I so I can see how to do a presentation. You don't have to join or buy anything. I mainly need the practice. Can you do that for me? (wait for answer)
+
+(If they ask "What is it, or what do I have to do?")
+Honestly, I just need you to sit and listen (laugh a little). I'll be licensed within the next few weeks and I need to know how to have a conversation with a potential client. I'd rather practice and mess up with friends & family vs a stranger. Worst case, you'll have a full understanding of what I'm getting certified to do, so you can send referrals my way if you come across anyone in the future. Since we're family/friends, I figured you'd do that for me, right? (wait for answer)
+
+(If "yes") Great, I appreciate it! Would evenings or weekends work better for you? (give 2 day options, then 2 time options)
+
+📅 To schedule, use one of these links:
+• Coach Tellis Bolton: calendly.com/tbolton81/meeting-with-rvp-tellis-bolton
+• Coach Jacqueline Jones: calendly.com/jacquelinejones81/trainingappointment
+  ⚠️ Add yourself as a guest on the appointment!
+
+Thanks! Again, I appreciate the help.`,
+    tip: "Remember: the appointment is primarily FOR YOUR TRAINING, not for them to join or become clients. Once the appointment is set — HANG UP! Don't keep talking. People like doing business with busy people.",
+  },
+  {
+    id: "appt_new",
+    title: "Setting Appointments — Someone who doesn't know you're in financial services",
+    category: "Appointments",
+    color: "#3b82f6",
+    content: `Hey [Name], how's everything going? (brief small talk) Well I'm not going to keep you. I need a huge favor (wait for acknowledgement).
+
+I'm not sure if you knew, but I'm in the process of getting my license and certification to work in financial services. I'm now at the point where I need to get some training hours in. I just need you (and your spouse if married) to jump on a 30-minute Zoom with my trainer and I so I can see how to do a presentation. You don't have to join or buy anything. I mainly need the practice. Can you do that for me? (wait for answer)
+
+(If "yes") Great, I appreciate it! Would evenings or weekends work better for you? (give 2 day options, then 2 time options)
+
+📅 To schedule, use one of these links:
+• Coach Tellis Bolton: calendly.com/tbolton81/meeting-with-rvp-tellis-bolton
+• Coach Jacqueline Jones: calendly.com/jacquelinejones81/trainingappointment
+  ⚠️ Add yourself as a guest on the appointment!
+
+Thanks! Again, I appreciate the help.`,
+    tip: "Scholarship requirement: 3–6 Qualified appointments set",
+  },
+  {
+    id: "opportunity_night",
+    title: "Inviting Guests to How Money Works Opportunity Night",
+    category: "Events",
+    color: "#f59e0b",
+    content: `Hey [Name], how's everything going? (brief small talk) How's the family doing? Well I'm not going to keep ya. I need you to do me a favor (wait for acknowledgement).
+
+I'm in the process of getting my license and certifications to work in financial services, and I'm going for a promotion. I need you to be my guest and log onto a webinar tonight (or whenever it is) for about 40 minutes on Zoom so you can see what I'm doing. You don't have to talk, nor show your face. It's just informational. Plus, you may be able to help me out with a promotion in the process. Can you do that for me? (wait for answer)
+
+Thanks, I appreciate it! It's going to be at [time]. What's your email address so I can send you the confirmation and Zoom link? (wait for answer)
+
+Please don't forget — I need you on this one. Thanks again!`,
+    tip: "Thursday nights at 7:30 PM CST. Always invite 2–3 people to ensure at least 1 shows up.",
+  },
+];
+
+function ScriptsSection() {
+  const [activeScript, setActiveScript] = useState(null);
+  const categories = [...new Set(SCRIPTS.map(s => s.category))];
+
+  return (
+    <div>
+      <div style={{ fontSize: 13, fontWeight: "bold", color: "#f59e0b", marginBottom: 14, letterSpacing: "0.05em" }}>📜 Scripts & Call Guides</div>
+      <div style={{ fontSize: 12, color: "#ffffff50", marginBottom: 16 }}>Tap any script to read it. You don't have to say it word for word — understand the psychology and make it your own!</div>
+
+      {categories.map(cat => (
+        <div key={cat} style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 11, color: "#f59e0b", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: "bold", marginBottom: 10, paddingBottom: 6, borderBottom: "1px solid #f59e0b25" }}>{cat}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {SCRIPTS.filter(s => s.category === cat).map(script => (
+              <div key={script.id}>
+                <div onClick={() => setActiveScript(activeScript === script.id ? null : script.id)}
+                  style={{ background: activeScript === script.id ? `${script.color}15` : "#ffffff07", border: `1px solid ${activeScript === script.id ? script.color+"40" : "#ffffff12"}`, borderRadius: 10, padding: "14px 16px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", transition: "all 0.15s" }}>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: "bold", color: activeScript === script.id ? script.color : "#f0ede8" }}>{script.title}</div>
+                    <div style={{ fontSize: 11, color: "#ffffff40", marginTop: 3 }}>Tap to {activeScript === script.id ? "collapse" : "view script"}</div>
+                  </div>
+                  <div style={{ fontSize: 16, color: activeScript === script.id ? script.color : "#ffffff40" }}>{activeScript === script.id ? "▲" : "▼"}</div>
+                </div>
+                {activeScript === script.id && (
+                  <div style={{ background: "#ffffff05", border: `1px solid ${script.color}25`, borderRadius: "0 0 10px 10px", padding: "16px 18px", marginTop: -1 }}>
+                    {script.tip && (
+                      <div style={{ background: "#f59e0b0f", border: "1px solid #f59e0b25", borderRadius: 8, padding: "10px 14px", marginBottom: 14, fontSize: 12, color: "#f59e0b" }}>
+                        💡 {script.tip}
+                      </div>
+                    )}
+                    <div style={{ fontSize: 13, color: "#f0ede8", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>{script.content}</div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── REP VIEW ─────────────────────────────────────────────────────────────────
 function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE }) {
   const [activeTab, setActiveTab] = useState("checklist");
@@ -1068,8 +1261,16 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
   const apptDone = (rep.appointments||[]).filter(a => a.status==="completed"&&a.name).length;
 
   const toggleItem = (itemId) => {
-    const updated = { ...rep, repCompleted: rep.repCompleted.includes(itemId) ? rep.repCompleted.filter(x => x !== itemId) : [...rep.repCompleted, itemId], lastActivity: new Date().toISOString() };
+    const alreadyDone = rep.repCompleted.includes(itemId);
+    const newCompleted = alreadyDone ? rep.repCompleted.filter(x => x !== itemId) : [...rep.repCompleted, itemId];
+    const updated = { ...rep, repCompleted: newCompleted, lastActivity: new Date().toISOString() };
     onUpdate(updated);
+    // Auto-open RVP tab when rep checks "Request RVP checklist"
+    if (!alreadyDone && itemId === "l42") {
+      spawnConfetti(window.innerWidth/2, 200);
+      spawnEmoji(window.innerWidth/2, 180, "👑");
+      setTimeout(() => setActiveTab("rvp"), 600);
+    }
   };
 
   return (
@@ -1173,6 +1374,16 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           </div>
         )}
 
+        {/* Exam Date Card */}
+        {(rep.track === "fast" || rep.track === "regular") && (
+          <ExamDateCard
+            examDate={rep.examDate||""}
+            examCompleted={rep.examCompleted||false}
+            onSetDate={date => onUpdate({ ...rep, examDate: date, lastActivity: new Date().toISOString() })}
+            onSetCompleted={val => { onUpdate({ ...rep, examCompleted: val, lastActivity: new Date().toISOString() }); if (val) { spawnConfetti(window.innerWidth/2, 200); spawnEmoji(window.innerWidth/2, 180, "🎉"); } }}
+          />
+        )}
+
         {/* Class Scheduling Card */}
         {(rep.track === "fast" || rep.track === "regular") && (() => {
           const cardColor = rep.classCompleted ? "#10b981" : "#a78bfa";
@@ -1247,7 +1458,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
 
         {/* Tabs */}
         <div style={{ display:"flex", gap:4, background:"#ffffff08", borderRadius:10, padding:4, marginBottom:22 }}>
-          {[{key:"checklist",label:"My Checklist"},{key:"appointments",label:`Appointments (${apptSet})`},{key:"schedule",label:"Team Schedule"}].map(tab => (
+          {[{key:"checklist",label:"My Checklist"},{key:"appointments",label:`Appointments (${apptSet})`},{key:"refs",label:"References"},{key:"scripts",label:"📜 Scripts"},{key:"schedule",label:"Schedule"}].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{ flex:1, padding:"10px 12px", borderRadius:8, border:"none", cursor:"pointer", fontSize:13, fontWeight:"bold", transition:"all 0.15s", background:activeTab===tab.key?"#ffffff15":"transparent", color:activeTab===tab.key?"#f0ede8":"#ffffff50" }}>
               {tab.label}
             </button>
@@ -1263,6 +1474,13 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
         {activeTab==="schedule" && (
           <TeamScheduleView schedule={schedule} isAdmin={false} onUpdate={() => {}} />
         )}
+        {activeTab==="refs" && (
+          <ReferencesSection
+            references={rep.references||[]}
+            onChange={refs => onUpdate({ ...rep, references: refs, lastActivity: new Date().toISOString() })}
+          />
+        )}
+        {activeTab==="scripts" && <ScriptsSection />}
         {activeTab==="rvp" && (
           <RvpChecklist
             completedIds={rep.rvpCompleted||[]}
@@ -1581,7 +1799,14 @@ export default function App() {
 
   const updateRep = (repId, updater) => setReps(prev => prev.map(r => r.id !== repId ? r : { ...updater(r), lastActivity: new Date().toISOString() }));
   const toggleTrainer = (repId, itemId) => updateRep(repId, r => ({ ...r, trainerCompleted: r.trainerCompleted.includes(itemId) ? r.trainerCompleted.filter(x => x !== itemId) : [...r.trainerCompleted, itemId] }));
-  const toggleRep = (repId, itemId) => updateRep(repId, r => ({ ...r, repCompleted: r.repCompleted.includes(itemId) ? r.repCompleted.filter(x => x !== itemId) : [...r.repCompleted, itemId] }));
+  const toggleRep = (repId, itemId) => updateRep(repId, r => {
+    const alreadyDone = r.repCompleted.includes(itemId);
+    const newCompleted = alreadyDone ? r.repCompleted.filter(x => x !== itemId) : [...r.repCompleted, itemId];
+    // Auto-upgrade to Licensed Now What when rep checks Request License
+    const unlockItems = ["f24", "r21"];
+    const shouldUnlock = !alreadyDone && unlockItems.includes(itemId);
+    return { ...r, repCompleted: newCompleted, ...(shouldUnlock ? { track: "licensed" } : {}) };
+  });
   const toggleStalled = (repId) => updateRep(repId, r => ({ ...r, stalledManual: !r.stalledManual }));
   const saveNote = (repId, note) => updateRep(repId, r => ({ ...r, notes: note }));
   const updateAppointments = (repId, appts) => updateRep(repId, r => ({ ...r, appointments: appts }));
@@ -1589,13 +1814,15 @@ export default function App() {
   const setDgoDate = (repId, date) => updateRep(repId, r => ({ ...r, dgoDate: date }));
   const toggleRvp = (repId, itemId) => updateRep(repId, r => ({ ...r, rvpCompleted: (r.rvpCompleted||[]).includes(itemId) ? (r.rvpCompleted||[]).filter(x => x !== itemId) : [...(r.rvpCompleted||[]), itemId] }));
   const setRvpPromotionDate = (repId, date) => updateRep(repId, r => ({ ...r, rvpPromotionDate: date }));
+  const setExamDate = (repId, date) => updateRep(repId, r => ({ ...r, examDate: date }));
+  const setReferences = (repId, refs) => updateRep(repId, r => ({ ...r, references: refs }));
   const setDgoCompleted = (repId, val) => updateRep(repId, r => ({ ...r, dgoCompleted: val }));
   const setBusinessCommitment = (repId, val) => updateRep(repId, r => ({ ...r, businessCommitment: val }));
   const addCheckIn = (repId, note, trainerName) => updateRep(repId, r => ({ ...r, checkIns: [{ id: Date.now(), date: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), time: new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}), note, trainer: trainerName }, ...(r.checkIns||[])] }));
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "" }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [] }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
@@ -1685,8 +1912,9 @@ export default function App() {
       { key:"trainer", label:"Trainer" },
       { key:"rep", label: track.shortLabel },
       { key:"appointments", label:`Appointments (${apptSet})` },
+      { key:"refs", label:`References (${(rep.references||[]).filter(r=>r.name).length})` },
       { key:"rvp", label:"👑 RVP Path" },
-      { key:"schedule", label:"Team Schedule" },
+      { key:"schedule", label:"Schedule" },
     ];
 
     return (
@@ -1801,8 +2029,51 @@ export default function App() {
                   : <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Not started yet</div>
                 }
               </div>
+
+              {/* Exam Date */}
+              <div style={{ background:"#f59e0b0a", border:"1px solid #f59e0b25", borderRadius:10, padding:"12px 14px" }}>
+                <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:6 }}>📝 Exam Date</div>
+                {rep.examDate
+                  ? <div>
+                      <div style={{ fontSize:14, fontWeight:"bold", color: rep.examCompleted ? "#10b981" : "#f59e0b" }}>{rep.examDate}</div>
+                      <div style={{ fontSize:11, color: rep.examCompleted ? "#10b981" : "#ffffff50", marginTop:3 }}>{rep.examCompleted ? "✓ Passed!" : "Scheduled"}</div>
+                    </div>
+                  : <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Not scheduled yet</div>
+                }
+              </div>
             </div>
           </div>
+
+          {/* References Feed — from rep's entries */}
+          {(rep.references||[]).filter(r => r.name).length > 0 && (
+            <div style={{ background:"#ffffff07", border:"1px solid #8b5cf630", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
+              <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:14 }}>👥 Rep's Character References ({(rep.references||[]).filter(r=>r.name).length}/5)</div>
+              <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                {(rep.references||[]).filter(r => r.name).map((ref, idx) => (
+                  <div key={idx} style={{ background:"#8b5cf610", border:"1px solid #8b5cf625", borderRadius:10, padding:"10px 14px", display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8 }}>
+                    <div>
+                      <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:3 }}>Name</div>
+                      <div style={{ fontSize:13, fontWeight:"bold", color:"#f0ede8" }}>{ref.name}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:3 }}>Phone</div>
+                      <div style={{ fontSize:13, color:"#f0ede8" }}>{ref.phone || "—"}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:3 }}>Relationship</div>
+                      <div style={{ fontSize:12, color:"#8b5cf6", fontWeight:"bold" }}>{ref.relationship || "—"}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {(rep.references||[]).filter(r => r.name).length === 0 && (
+            <div style={{ background:"#ffffff05", border:"1px solid #8b5cf620", borderRadius:12, padding:"14px 18px", marginBottom:14 }}>
+              <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:6 }}>👥 Character References</div>
+              <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Rep hasn't entered references yet</div>
+            </div>
+          )}
 
           {/* Progress cards */}
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
@@ -1902,6 +2173,24 @@ export default function App() {
           ))}
           {activeTab==="appointments" && (
             <AppointmentTracker appointments={rep.appointments||[]} onChange={appts=>updateAppointments(rep.id,appts)} />
+          )}
+          {activeTab==="refs" && (
+            <ReferencesSection
+              references={rep.references||[]}
+              onChange={(refs) => setReferences(rep.id, refs)}
+              readOnly={false}
+            />
+          )}
+          {activeTab==="schedule" && (
+            <TeamScheduleView schedule={schedule} isAdmin={isAdmin} onUpdate={(updated) => setSchedule(updated)} />
+          )}
+          {activeTab==="rvp" && (
+            <RvpChecklist
+              completedIds={rep.rvpCompleted||[]}
+              promotionDate={rep.rvpPromotionDate||""}
+              onToggle={(id) => toggleRvp(rep.id, id)}
+              onSetDate={(date) => setRvpPromotionDate(rep.id, date)}
+            />
           )}
         </div>
       </div>
