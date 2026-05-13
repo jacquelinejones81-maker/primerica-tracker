@@ -1,4 +1,43 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "firebase/firestore";
+
+// ─── FIREBASE CONFIG ──────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyDb9DiueYc3zuqSb3hANNPenu9RVvbJLHM",
+  authDomain: "checklist-app-ad0fe.firebaseapp.com",
+  projectId: "checklist-app-ad0fe",
+  storageBucket: "checklist-app-ad0fe.firebasestorage.app",
+  messagingSenderId: "603671435017",
+  appId: "1:603671435017:web:2c640ae2393f98d12da5d8",
+  measurementId: "G-9K9P6PH53E"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+
+// ─── FIREBASE HELPERS ─────────────────────────────────────────────────────────
+async function fbSave(key, data) {
+  try {
+    await setDoc(doc(db, "appdata", key), { value: JSON.stringify(data) });
+  } catch(e) { console.error("Firebase save error:", e); }
+}
+
+async function fbLoad(key, fallback) {
+  try {
+    const snap = await getDoc(doc(db, "appdata", key));
+    if (snap.exists()) return JSON.parse(snap.data().value);
+  } catch(e) { console.error("Firebase load error:", e); }
+  return fallback;
+}
+
+function fbListen(key, callback) {
+  return onSnapshot(doc(db, "appdata", key), (snap) => {
+    if (snap.exists()) {
+      try { callback(JSON.parse(snap.data().value)); } catch(e) {}
+    }
+  });
+}
 
 // ─── CHECKLISTS ───────────────────────────────────────────────────────────────
 
@@ -187,6 +226,8 @@ const DEFAULT_TRAINERS = [];
 
 function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; } }
 function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+// Firebase versions
+function saveToFirebase(key, val) { fbSave(key, val); save(key, val); } // save to both for offline fallback
 function pct(done, total) { return total === 0 ? 0 : Math.round((done / total) * 100); }
 function isGraduated(rep) {
   return rep.trainerCompleted.length === TRAINER_CHECKLIST.length &&
@@ -1791,11 +1832,30 @@ export default function App() {
   const isAdmin = session?.role === "admin" || session?.role === "superadmin";
   const currentAdminId = isAdmin ? session?.id : null;
 
-  useEffect(() => { save(STORAGE_KEY, reps); setSaveIndicator(true); const t = setTimeout(() => setSaveIndicator(false), 1500); return () => clearTimeout(t); }, [reps]);
-  useEffect(() => { save(TRAINERS_KEY, trainers); }, [trainers]);
-  useEffect(() => { save(ADMINS_KEY, admins); }, [admins]);
-  useEffect(() => { save(SCHEDULE_KEY, schedule); }, [schedule]);
+  useEffect(() => { saveToFirebase(STORAGE_KEY, reps); setSaveIndicator(true); const t = setTimeout(() => setSaveIndicator(false), 1500); return () => clearTimeout(t); }, [reps]);
+  useEffect(() => { saveToFirebase(TRAINERS_KEY, trainers); }, [trainers]);
+  useEffect(() => { saveToFirebase(ADMINS_KEY, admins); }, [admins]);
+  useEffect(() => { saveToFirebase(SCHEDULE_KEY, schedule); }, [schedule]);
   useEffect(() => { save(ACTIVE_TRAINER_KEY, activeTrainerId); }, [activeTrainerId]);
+
+  // ── FIREBASE REAL-TIME LISTENERS ──────────────────────────────────────────
+  useEffect(() => {
+    // Load initial data from Firebase then listen for changes
+    const unsubs = [];
+
+    fbLoad(STORAGE_KEY, null).then(data => { if (data) setReps(data); });
+    fbLoad(TRAINERS_KEY, null).then(data => { if (data) setTrainers(data); });
+    fbLoad(ADMINS_KEY, null).then(data => { if (data) setAdmins(data); });
+    fbLoad(SCHEDULE_KEY, null).then(data => { if (data) setSchedule(data); });
+
+    // Listen for real-time updates
+    unsubs.push(fbListen(STORAGE_KEY, data => setReps(data)));
+    unsubs.push(fbListen(TRAINERS_KEY, data => setTrainers(data)));
+    unsubs.push(fbListen(ADMINS_KEY, data => setAdmins(data)));
+    unsubs.push(fbListen(SCHEDULE_KEY, data => setSchedule(data)));
+
+    return () => unsubs.forEach(u => u());
+  }, []);
 
   const updateRep = (repId, updater) => setReps(prev => prev.map(r => r.id !== repId ? r : { ...updater(r), lastActivity: new Date().toISOString() }));
   const toggleTrainer = (repId, itemId) => updateRep(repId, r => ({ ...r, trainerCompleted: r.trainerCompleted.includes(itemId) ? r.trainerCompleted.filter(x => x !== itemId) : [...r.trainerCompleted, itemId] }));
