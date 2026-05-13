@@ -744,7 +744,7 @@ function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFA
         <div style={{ fontSize: 18 }}>⚠️</div>
         <div>
           <div style={{ fontSize: 13, fontWeight: "bold", color: "#f59e0b", marginBottom: 4 }}>Add yourself as a guest when scheduling!</div>
-          <div style={{ fontSize: 12, color: "#ffffff60", marginBottom: 8 }}>Schedule your training appointments using the link below. Make sure to add your field trainer as a guest so they receive the confirmation.</div>
+          <div style={{ fontSize: 12, color: "#ffffff60", marginBottom: 8 }}>Schedule your training appointments using the link below. Make sure to add yourself as a "guest" on the appointment so you will receive the appointment notifications to your email.</div>
           <a href={trainerLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#f59e0b", textDecoration: "none", fontWeight: "bold" }}>📅 Schedule Training Appointment ↗</a>
         </div>
       </div>
