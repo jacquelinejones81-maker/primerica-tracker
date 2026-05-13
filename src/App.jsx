@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 // ─── CHECKLISTS ───────────────────────────────────────────────────────────────
 
@@ -2376,4 +2376,3 @@ export default function App() {
     </div>
   );
 }
-
