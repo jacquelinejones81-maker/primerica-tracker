@@ -213,7 +213,11 @@ const CAT_COLORS = {
   "Income Producing Activity":"#10b981","RVP Path":"#f59e0b","Milestones":"#fbbf24",
 };
 
-const APPT_LINK = "https://calendly.com/jacquelinejones81/trainingappointment";
+const DEFAULT_APPT_LINK = "https://calendly.com/jacquelinejones81/trainingappointment";
+function getApptLink(trainer) {
+  if (trainer?.calendlyLink && trainer.calendlyLink.trim()) return trainer.calendlyLink.trim();
+  return DEFAULT_APPT_LINK;
+}
 const STORAGE_KEY = "primerica_reps_v6";
 const TRAINERS_KEY = "primerica_trainers_v1";
 const ACTIVE_TRAINER_KEY = "primerica_active_trainer";
@@ -475,7 +479,7 @@ function AppointmentTracker({ appointments = [], onChange }) {
         <div>
           <div style={{ fontSize: 13, fontWeight: "bold", color: "#f59e0b", marginBottom: 4 }}>Important: Add yourself as a guest when scheduling!</div>
           <div style={{ fontSize: 12, color: "#ffffff60", marginBottom: 8 }}>Use the link below to schedule your training appointments. Make sure to add your field trainer as a guest so they receive the confirmation.</div>
-          <a href={APPT_LINK} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#f59e0b", textDecoration: "none", fontWeight: "bold" }}>📅 Schedule Training Appointment ↗</a>
+          <a href={trainerLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#f59e0b", textDecoration: "none", fontWeight: "bold" }}>📅 Schedule Training Appointment ↗</a>
         </div>
       </div>
 
@@ -678,7 +682,7 @@ function MachoQualifier({ contact, onUpdate }) {
 }
 
 // ─── REP APPOINTMENT TRACKER ─────────────────────────────────────────────────
-function RepAppointmentTracker({ appointments = [], onChange }) {
+function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFAULT_APPT_LINK }) {
   const total = 20;
   const rows = Array.from({ length: total }, (_, i) =>
     appointments[i] || { id: `appt-${i}`, name: "", phone: "", email: "", date: "", status: "set", apptNote: "", completed: false }
@@ -740,7 +744,7 @@ function RepAppointmentTracker({ appointments = [], onChange }) {
         <div>
           <div style={{ fontSize: 13, fontWeight: "bold", color: "#f59e0b", marginBottom: 4 }}>Add yourself as a guest when scheduling!</div>
           <div style={{ fontSize: 12, color: "#ffffff60", marginBottom: 8 }}>Schedule your training appointments using the link below. Make sure to add your field trainer as a guest so they receive the confirmation.</div>
-          <a href={APPT_LINK} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#f59e0b", textDecoration: "none", fontWeight: "bold" }}>📅 Schedule Training Appointment ↗</a>
+          <a href={trainerLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#f59e0b", textDecoration: "none", fontWeight: "bold" }}>📅 Schedule Training Appointment ↗</a>
         </div>
       </div>
 
@@ -1329,7 +1333,7 @@ function ScriptsSection() {
 }
 
 // ─── REP VIEW ─────────────────────────────────────────────────────────────────
-function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE }) {
+function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK }) {
   const [activeTab, setActiveTab] = useState("checklist");
   const track = TRACK_INFO[rep.track];
   const repChecklist = track.checklist;
@@ -1548,7 +1552,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
         ))}
         {activeTab==="appointments" && (
-          <RepAppointmentTracker appointments={rep.appointments||[]} onChange={appts => onUpdate({ ...rep, appointments:appts, lastActivity:new Date().toISOString() })} />
+          <RepAppointmentTracker appointments={rep.appointments||[]} onChange={appts => onUpdate({ ...rep, appointments:appts, lastActivity:new Date().toISOString() })} trainerLink={trainerLink} />
         )}
         {activeTab==="schedule" && (
           <TeamScheduleView schedule={schedule} isAdmin={false} onUpdate={() => {}} />
@@ -1949,7 +1953,7 @@ export default function App() {
     if (!newTrainerName.trim()) return;
     const colors = ["#3b82f6","#8b5cf6","#ec4899","#06b6d4","#84cc16","#f43f5e"];
     const adminId = isSuperAdmin ? (newTrainer_adminId || "admin") : currentAdminId;
-    setTrainers(prev => [...prev, { id: Date.now().toString(), name: newTrainerName.trim(), color: colors[trainers.length % colors.length], isAdmin: false, adminId, pin: "" }]);
+    setTrainers(prev => [...prev, { id: Date.now().toString(), name: newTrainerName.trim(), color: colors[trainers.length % colors.length], isAdmin: false, adminId, pin: "", calendlyLink: "" }]);
     setNewTrainerName("");
   };
 
@@ -2000,7 +2004,7 @@ export default function App() {
           </div>
           <div style={{ marginLeft: "auto", background: "#f59e0b20", border: "1px solid #f59e0b40", borderRadius: 20, padding: "4px 14px", fontSize: 12, color: "#f59e0b" }}>👁 Read-only preview</div>
         </div>
-        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} />
+        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(trainers.find(t => t.id === previewRep.trainerId))} />
       </div>
     );
   }
@@ -2011,7 +2015,9 @@ export default function App() {
   if (session.role === "rep") {
     const repData = reps.find(r => r.id === session.id);
     if (!repData) { handleLogout(); return null; }
-    return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} />;
+    const repTrainerData = trainers.find(t => t.id === repData.trainerId);
+    const repTrainerLink = getApptLink(repTrainerData);
+    return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} trainerLink={repTrainerLink} />;
   }
 
   // ── DETAIL VIEW ──────────────────────────────────────────────────────────────
@@ -2470,12 +2476,20 @@ export default function App() {
                       </div>
                       <div style={{ fontSize:12, color:"#ffffff40" }}>{reps.filter(r=>r.trainerId===t.id).length} reps</div>
                     </div>
-                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
                       <div style={{ fontSize:11, color:"#ffffff40" }}>PIN:</div>
                       <input
                         type="password" value={t.pin||""} onChange={e => updateTrainerPin(t.id, e.target.value)}
                         placeholder="Set PIN" maxLength={6}
                         style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, padding:"5px 10px", color:"#f0ede8", fontSize:13, outline:"none", width:100, letterSpacing:"0.2em" }}
+                      />
+                    </div>
+                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                      <div style={{ fontSize:11, color:"#ffffff40", whiteSpace:"nowrap" }}>Booking Link:</div>
+                      <input
+                        value={t.calendlyLink||""} onChange={e => setTrainers(prev => prev.map(tr => tr.id !== t.id ? tr : { ...tr, calendlyLink: e.target.value }))}
+                        placeholder="Paste your appointment booking link here"
+                        style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, padding:"5px 10px", color:"#f0ede8", fontSize:11, outline:"none", flex:1 }}
                       />
                     </div>
                   </div>
