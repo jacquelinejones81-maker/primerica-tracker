@@ -34,7 +34,13 @@ async function fbLoad(key, fallback) {
 function fbListen(key, callback) {
   return onSnapshot(doc(db, "appdata", key), (snap) => {
     if (snap.exists()) {
-      try { callback(JSON.parse(snap.data().value)); } catch(e) {}
+      try {
+        const data = JSON.parse(snap.data().value);
+        // Only update if data is valid and non-empty
+        if (data !== null && data !== undefined) {
+          callback(data);
+        }
+      } catch(e) { console.error("fbListen parse error:", e); }
     }
   });
 }
@@ -1826,33 +1832,53 @@ export default function App() {
   const [previewingRepId, setPreviewingRepId] = useState(null);
   const [noteDraft, setNoteDraft] = useState("");
 
+  const [dataLoaded, setDataLoaded] = useState(false);
   const activeAdmin = admins.find(a => a.id === session?.id);
   const activeTrainer = trainers.find(t => t.id === activeTrainerId) || trainers[0];
   const isSuperAdmin = session?.role === "superadmin";
   const isAdmin = session?.role === "admin" || session?.role === "superadmin";
   const currentAdminId = isAdmin ? session?.id : null;
 
-  useEffect(() => { saveToFirebase(STORAGE_KEY, reps); setSaveIndicator(true); const t = setTimeout(() => setSaveIndicator(false), 1500); return () => clearTimeout(t); }, [reps]);
-  useEffect(() => { saveToFirebase(TRAINERS_KEY, trainers); }, [trainers]);
-  useEffect(() => { saveToFirebase(ADMINS_KEY, admins); }, [admins]);
-  useEffect(() => { saveToFirebase(SCHEDULE_KEY, schedule); }, [schedule]);
+  useEffect(() => { if (!dataLoaded) return; saveToFirebase(STORAGE_KEY, reps); setSaveIndicator(true); const t = setTimeout(() => setSaveIndicator(false), 1500); return () => clearTimeout(t); }, [reps]);
+  useEffect(() => { if (!dataLoaded) return; saveToFirebase(TRAINERS_KEY, trainers); }, [trainers]);
+  useEffect(() => { if (!dataLoaded) return; saveToFirebase(ADMINS_KEY, admins); }, [admins]);
+  useEffect(() => { if (!dataLoaded) return; saveToFirebase(SCHEDULE_KEY, schedule); }, [schedule]);
   useEffect(() => { save(ACTIVE_TRAINER_KEY, activeTrainerId); }, [activeTrainerId]);
 
   // ── FIREBASE REAL-TIME LISTENERS ──────────────────────────────────────────
   useEffect(() => {
-    // Load initial data from Firebase then listen for changes
     const unsubs = [];
+    let loadCount = 0;
+    const TOTAL_KEYS = 4;
 
-    fbLoad(STORAGE_KEY, null).then(data => { if (data) setReps(data); });
-    fbLoad(TRAINERS_KEY, null).then(data => { if (data) setTrainers(data); });
-    fbLoad(ADMINS_KEY, null).then(data => { if (data) setAdmins(data); });
-    fbLoad(SCHEDULE_KEY, null).then(data => { if (data) setSchedule(data); });
+    const markLoaded = () => {
+      loadCount++;
+      if (loadCount >= TOTAL_KEYS) setDataLoaded(true);
+    };
 
-    // Listen for real-time updates
-    unsubs.push(fbListen(STORAGE_KEY, data => setReps(data)));
-    unsubs.push(fbListen(TRAINERS_KEY, data => setTrainers(data)));
-    unsubs.push(fbListen(ADMINS_KEY, data => setAdmins(data)));
-    unsubs.push(fbListen(SCHEDULE_KEY, data => setSchedule(data)));
+    // Load initial data from Firebase, fall back to localStorage
+    fbLoad(STORAGE_KEY, null).then(data => {
+      if (data && Array.isArray(data)) setReps(data);
+      markLoaded();
+    });
+    fbLoad(TRAINERS_KEY, null).then(data => {
+      if (data && Array.isArray(data)) setTrainers(data);
+      markLoaded();
+    });
+    fbLoad(ADMINS_KEY, null).then(data => {
+      if (data && Array.isArray(data) && data.length > 0) setAdmins(data);
+      markLoaded();
+    });
+    fbLoad(SCHEDULE_KEY, null).then(data => {
+      if (data && Array.isArray(data) && data.length > 0) setSchedule(data);
+      markLoaded();
+    });
+
+    // Listen for real-time updates from other devices
+    unsubs.push(fbListen(STORAGE_KEY, data => { if (Array.isArray(data)) setReps(data); }));
+    unsubs.push(fbListen(TRAINERS_KEY, data => { if (Array.isArray(data)) setTrainers(data); }));
+    unsubs.push(fbListen(ADMINS_KEY, data => { if (Array.isArray(data) && data.length > 0) setAdmins(data); }));
+    unsubs.push(fbListen(SCHEDULE_KEY, data => { if (Array.isArray(data) && data.length > 0) setSchedule(data); }));
 
     return () => unsubs.forEach(u => u());
   }, []);
