@@ -235,6 +235,15 @@ function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); 
 // Firebase versions
 function saveToFirebase(key, val) { fbSave(key, val); save(key, val); } // save to both for offline fallback
 function pct(done, total) { return total === 0 ? 0 : Math.round((done / total) * 100); }
+
+// Format phone number as user types: 111-111-1111
+function formatPhone(value) {
+  // Strip everything except digits
+  const digits = value.replace(/\D/g, '').slice(0, 10);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `${digits.slice(0,3)}-${digits.slice(3)}`;
+  return `${digits.slice(0,3)}-${digits.slice(3,6)}-${digits.slice(6)}`;
+}
 function isGraduated(rep) {
   return rep.trainerCompleted.length === TRAINER_CHECKLIST.length &&
     rep.repCompleted.length === TRACK_INFO[rep.track].checklist.length;
@@ -490,8 +499,8 @@ function AppointmentTracker({ appointments = [], onChange }) {
                 {[["name","Name","Full name"],["date","Date",null],["phone","Phone","Phone number"],["email","Email","Email address"]].map(([field, label, placeholder]) => (
                   <div key={field}>
                     <div style={{ fontSize: 9, color: "#ffffff30", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>{label}</div>
-                    <input type={field === "date" ? "date" : field === "email" ? "email" : "text"} value={appt[field] || ""} onChange={e => updateAppt(idx, field, e.target.value)}
-                      placeholder={placeholder || ""} style={{ ...fieldStyle, fontSize: field === "date" ? 12 : 13, colorScheme: field === "date" ? "dark" : undefined }} />
+                    <input type={field === "date" ? "date" : field === "email" ? "email" : "text"} value={appt[field] || ""} onChange={e => updateAppt(idx, field, field === "phone" ? formatPhone(e.target.value) : e.target.value)}
+                      placeholder={field === "phone" ? "111-111-1111" : (placeholder || "")} maxLength={field === "phone" ? 12 : undefined} style={{ ...fieldStyle, fontSize: field === "date" ? 12 : 13, colorScheme: field === "date" ? "dark" : undefined }} />
                   </div>
                 ))}
               </div>
@@ -1143,7 +1152,7 @@ function ReferencesSection({ references = [], onChange, readOnly = false }) {
                     <div style={{ fontSize: 9, color: "#ffffff30", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>{label}</div>
                     {readOnly
                       ? <div style={{ fontSize: 13, color: isFilled ? "#f0ede8" : "#ffffff20" }}>{ref[field] || "—"}</div>
-                      : <input value={ref[field] || ""} onChange={e => updateRef(idx, field, e.target.value)} placeholder={placeholder}
+                      : <input value={ref[field] || ""} onChange={e => updateRef(idx, field, field === "phone" ? formatPhone(e.target.value) : e.target.value)} placeholder={field === "phone" ? "111-111-1111" : placeholder} maxLength={field === "phone" ? 12 : undefined}
                           style={{ background: "transparent", border: "none", borderBottom: "1px solid #ffffff15", color: isFilled ? "#f0ede8" : "#ffffff35", fontSize: 13, outline: "none", width: "100%", padding: "4px 2px", fontFamily: "inherit" }} />
                     }
                   </div>
@@ -2161,6 +2170,63 @@ export default function App() {
             </div>
           )}
 
+          {/* Appointments Feed — from rep's entries including MACHO scores */}
+          <div style={{ background:"#ffffff07", border:"1px solid #f43f5e30", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
+              <div style={{ fontSize:11, color:"#f43f5e", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase" }}>
+                📅 Rep's Training Appointments ({(rep.appointments||[]).filter(a=>a.name).length}/20)
+              </div>
+              <div style={{ fontSize:12, color:"#ffffff40" }}>
+                {(rep.appointments||[]).filter(a=>a.completed&&a.name).length} completed · {(rep.appointments||[]).filter(a=>a.name&&(a.macho||[]).length>=3).length} qualified (3+ ⭐)
+              </div>
+            </div>
+            {(rep.appointments||[]).filter(a=>a.name).length === 0 ? (
+              <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Rep hasn't logged any appointments yet</div>
+            ) : (
+              <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                {(rep.appointments||[]).filter(a=>a.name).map((appt, idx) => {
+                  const stars = (appt.macho||[]).length;
+                  const isQualified = stars >= 3;
+                  const isComplete = appt.completed || appt.status === "completed";
+                  return (
+                    <div key={idx} style={{ background: isComplete ? "#10b98110" : isQualified ? "#f59e0b0a" : "#ffffff06", border:`1px solid ${isComplete?"#10b98130":isQualified?"#f59e0b25":"#ffffff10"}`, borderRadius:10, padding:"12px 14px" }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
+                        <div style={{ fontSize:13, fontWeight:"bold", color: isComplete?"#ffffff60":"#f0ede8", textDecoration: isComplete?"line-through":"none" }}>{appt.name}</div>
+                        <div style={{ display:"flex", gap:8, alignItems:"center" }}>
+                          {stars > 0 && (
+                            <div style={{ fontSize:12, color:"#f59e0b", fontWeight:"bold" }}>
+                              {"⭐".repeat(stars)} {isQualified ? "Qualified!" : `${3-stars} more needed`}
+                            </div>
+                          )}
+                          <div style={{ fontSize:11, color: isComplete?"#10b981":"#3b82f6", fontWeight:"bold", background: isComplete?"#10b98120":"#3b82f620", border:`1px solid ${isComplete?"#10b98140":"#3b82f640"}`, borderRadius:20, padding:"2px 10px" }}>
+                            {isComplete ? "✓ Done" : "Set"}
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8 }}>
+                        {appt.phone && <div><div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:2 }}>Phone</div><div style={{ fontSize:12, color:"#ffffff70" }}>{appt.phone}</div></div>}
+                        {appt.email && <div><div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:2 }}>Email</div><div style={{ fontSize:12, color:"#ffffff70" }}>{appt.email}</div></div>}
+                        {appt.date && <div><div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:2 }}>Date</div><div style={{ fontSize:12, color:"#ffffff70" }}>📅 {appt.date}</div></div>}
+                      </div>
+                      {(appt.macho||[]).length > 0 && (
+                        <div style={{ display:"flex", gap:6, marginTop:8, flexWrap:"wrap" }}>
+                          {["M","A","C","H","O"].map(k => {
+                            const active = (appt.macho||[]).includes(k);
+                            const labels = {M:"Married",A:"Age 25-55",C:"Children",H:"Homeowner",O:"Occupation"};
+                            return active ? (
+                              <div key={k} style={{ fontSize:10, background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:20, padding:"2px 8px", color:"#f59e0b", fontWeight:"bold" }}>⭐ {k} — {labels[k]}</div>
+                            ) : null;
+                          })}
+                        </div>
+                      )}
+                      {appt.apptNote && <div style={{ fontSize:11, color:"#ffffff40", marginTop:6, fontStyle:"italic" }}>📝 {appt.apptNote}</div>}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
           {/* Progress cards */}
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
             {[
@@ -2540,7 +2606,7 @@ export default function App() {
             <div style={{ fontSize:14, fontWeight:"bold", marginBottom:16, color:"#f59e0b" }}>New Recruit</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }}>
               <div><label style={labelStyle}>Full Name</label><input value={newRep.name} onChange={e => setNewRep(p=>({...p,name:e.target.value}))} placeholder="Full Name" style={inputStyle} /></div>
-              <div><label style={labelStyle}>Phone Number</label><input value={newRep.phone} onChange={e => setNewRep(p=>({...p,phone:e.target.value}))} placeholder="Phone Number" style={inputStyle} /></div>
+              <div><label style={labelStyle}>Phone Number</label><input value={newRep.phone} onChange={e => setNewRep(p=>({...p,phone:formatPhone(e.target.value)}))} placeholder="111-111-1111" maxLength={12} style={inputStyle} /></div>
               <div><label style={labelStyle}>Start Date</label><input type="date" value={newRep.startDate} onChange={e => setNewRep(p=>({...p,startDate:e.target.value}))} style={inputStyle} /></div>
               <div><label style={labelStyle}>Target Graduation Date</label><input type="date" value={newRep.gradDate} onChange={e => setNewRep(p=>({...p,gradDate:e.target.value}))} style={inputStyle} /></div>
             </div>
