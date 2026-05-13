@@ -555,7 +555,7 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
     onLogin("rep", selectedRepLogin.id);
   };
 
-  const filteredReps = reps.filter(r => r.name.toLowerCase().includes(repSearch.toLowerCase()));
+  const filteredReps = repSearch.trim().length === 0 ? [] : reps.filter(r => r.name.toLowerCase().includes(repSearch.toLowerCase()));
 
   return (
     <div style={{ fontFamily:"'Georgia',serif", minHeight:"100vh", background:"#0f0f11", color:"#f0ede8", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
@@ -603,7 +603,8 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
             <div style={{ fontSize:12, color:"#ffffff50", marginBottom:16 }}>Find your name to view your checklist</div>
             <input value={repSearch} onChange={e => { setRepSearch(e.target.value); setSelectedRepLogin(null); }} placeholder="Search your name..." style={{ ...inputStyle, marginBottom:10 }} autoFocus />
             <div style={{ maxHeight:220, overflowY:"auto", display:"flex", flexDirection:"column", gap:6, marginBottom:14 }}>
-              {filteredReps.length === 0 && <div style={{ fontSize:13, color:"#ffffff30", textAlign:"center", padding:"20px 0" }}>No reps found. Ask your trainer to add you first.</div>}
+              {repSearch.trim().length === 0 && <div style={{ fontSize:13, color:"#ffffff30", textAlign:"center", padding:"20px 0" }}>Start typing your name to find yourself</div>}
+              {repSearch.trim().length > 0 && filteredReps.length === 0 && <div style={{ fontSize:13, color:"#ffffff30", textAlign:"center", padding:"20px 0" }}>No results found. Ask your trainer to add you first.</div>}
               {filteredReps.map(r => {
                 const track = TRACK_INFO[r.track];
                 const sel = selectedRepLogin?.id === r.id;
@@ -1963,7 +1964,12 @@ export default function App() {
 
   const handleLogin = (role, id) => { const s = { role, id }; setSession(s); saveSession(role, id); };
   const handleLogout = () => { setSession(null); clearSession(); };
-  const updateRepDirect = (updatedRep) => setReps(prev => prev.map(r => r.id !== updatedRep.id ? r : updatedRep));
+  const updateRepDirect = (updatedRep) => {
+    setReps(prev => prev.map(r => r.id !== updatedRep.id ? r : updatedRep));
+    // Save immediately to Firebase so trainer sees changes in real time
+    const updatedReps = reps.map(r => r.id !== updatedRep.id ? r : updatedRep);
+    saveToFirebase(STORAGE_KEY, updatedReps);
+  };
 
   const deleteRep = (repId) => { setReps(prev => prev.filter(r => r.id !== repId)); setShowDeleteConfirm(null); if (selectedRepId === repId) setView("dashboard"); };
   const openRep = (rep) => { setSelectedRepId(rep.id); setActiveTab("trainer"); setView("detail"); setEditingNotes(false); };
