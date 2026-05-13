@@ -214,8 +214,9 @@ const CAT_COLORS = {
 };
 
 const DEFAULT_APPT_LINK = "https://calendly.com/jacquelinejones81/trainingappointment";
-function getApptLink(trainer) {
+function getApptLink(trainer, admin) {
   if (trainer?.calendlyLink && trainer.calendlyLink.trim()) return trainer.calendlyLink.trim();
+  if (admin?.calendlyLink && admin.calendlyLink.trim()) return admin.calendlyLink.trim();
   return DEFAULT_APPT_LINK;
 }
 const STORAGE_KEY = "primerica_reps_v6";
@@ -231,7 +232,7 @@ const DEFAULT_SCHEDULE = [
   { id: "s4", day: "Thursday",  time: "5:30 PM PST / 7:30 PM CST / 8:30 PM EST",   title: "How Money Works Opportunity Night (invite guests!)",     type: "event",    required: true  },
   { id: "s5", day: "Saturday",  time: "8:10 AM PST / 10:10 AM CST / 11:10 AM EST", title: "Team Training 💪",                                       type: "training", required: true  },
 ];
-const DEFAULT_ADMINS = [{ id: "admin", name: "Admin (You)", color: "#f59e0b", pin: "1234", isSuperAdmin: true }];
+const DEFAULT_ADMINS = [{ id: "admin", name: "Admin (You)", color: "#f59e0b", pin: "1234", isSuperAdmin: true, calendlyLink: "" }];
 const DEFAULT_TRAINERS = [];
 
 function load(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; } }
@@ -1964,6 +1965,7 @@ export default function App() {
   };
 
   const updateAdminPin = (adminId, pin) => setAdmins(prev => prev.map(a => a.id !== adminId ? a : { ...a, pin }));
+  const updateAdminCalendly = (adminId, link) => setAdmins(prev => prev.map(a => a.id !== adminId ? a : { ...a, calendlyLink: link }));
   const updateTrainerPin = (trainerId, pin) => setTrainers(prev => prev.map(t => t.id !== trainerId ? t : { ...t, pin }));
 
   const handleLogin = (role, id) => { const s = { role, id }; setSession(s); saveSession(role, id); };
@@ -2016,7 +2018,8 @@ export default function App() {
     const repData = reps.find(r => r.id === session.id);
     if (!repData) { handleLogout(); return null; }
     const repTrainerData = trainers.find(t => t.id === repData.trainerId);
-    const repTrainerLink = getApptLink(repTrainerData);
+    const repAdminData = admins.find(a => a.id === repTrainerData?.adminId);
+    const repTrainerLink = getApptLink(repTrainerData, repAdminData);
     return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} trainerLink={repTrainerLink} />;
   }
 
@@ -2432,24 +2435,44 @@ export default function App() {
                     <div style={{ fontSize:12, color:"#ffffff40" }}>{trainers.filter(t=>t.adminId===a.id).length} trainers</div>
                   </div>
                   {!a.isSuperAdmin && (
-                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                      <div style={{ fontSize:11, color:"#ffffff40" }}>PIN:</div>
-                      <input
-                        type="password" value={a.pin} onChange={e => updateAdminPin(a.id, e.target.value)}
-                        placeholder="Set PIN" maxLength={6}
-                        style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, padding:"5px 10px", color:"#f0ede8", fontSize:13, outline:"none", width:100, letterSpacing:"0.2em" }}
-                      />
-                      <div style={{ fontSize:11, color:"#ffffff30" }}>(reps: {reps.filter(r => trainers.filter(t=>t.adminId===a.id).map(t=>t.id).includes(r.trainerId)).length})</div>
+                    <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                        <div style={{ fontSize:11, color:"#ffffff40" }}>PIN:</div>
+                        <input
+                          type="password" value={a.pin} onChange={e => updateAdminPin(a.id, e.target.value)}
+                          placeholder="Set PIN" maxLength={6}
+                          style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, padding:"5px 10px", color:"#f0ede8", fontSize:13, outline:"none", width:100, letterSpacing:"0.2em" }}
+                        />
+                        <div style={{ fontSize:11, color:"#ffffff30" }}>(reps: {reps.filter(r => trainers.filter(t=>t.adminId===a.id).map(t=>t.id).includes(r.trainerId)).length})</div>
+                      </div>
+                      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                        <div style={{ fontSize:11, color:"#ffffff40", whiteSpace:"nowrap" }}>Booking Link:</div>
+                        <input
+                          value={a.calendlyLink||""} onChange={e => updateAdminCalendly(a.id, e.target.value)}
+                          placeholder="Paste your appointment booking link here"
+                          style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, padding:"5px 10px", color:"#f0ede8", fontSize:11, outline:"none", flex:1 }}
+                        />
+                      </div>
                     </div>
                   )}
                   {a.isSuperAdmin && (
-                    <div style={{ display:"flex", alignItems:"center", gap:8, marginTop:8 }}>
-                      <div style={{ fontSize:11, color:"#ffffff40" }}>PIN:</div>
-                      <input
-                        type="password" value={a.pin} onChange={e => updateAdminPin(a.id, e.target.value)}
-                        placeholder="Change PIN" maxLength={6}
-                        style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, padding:"5px 10px", color:"#f0ede8", fontSize:13, outline:"none", width:100, letterSpacing:"0.2em" }}
-                      />
+                    <div style={{ display:"flex", flexDirection:"column", gap:8, marginTop:8 }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                        <div style={{ fontSize:11, color:"#ffffff40" }}>PIN:</div>
+                        <input
+                          type="password" value={a.pin} onChange={e => updateAdminPin(a.id, e.target.value)}
+                          placeholder="Change PIN" maxLength={6}
+                          style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, padding:"5px 10px", color:"#f0ede8", fontSize:13, outline:"none", width:100, letterSpacing:"0.2em" }}
+                        />
+                      </div>
+                      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                        <div style={{ fontSize:11, color:"#ffffff40", whiteSpace:"nowrap" }}>Booking Link:</div>
+                        <input
+                          value={a.calendlyLink||""} onChange={e => updateAdminCalendly(a.id, e.target.value)}
+                          placeholder="Paste your appointment booking link here"
+                          style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, padding:"5px 10px", color:"#f0ede8", fontSize:11, outline:"none", flex:1 }}
+                        />
+                      </div>
                     </div>
                   )}
                 </div>
