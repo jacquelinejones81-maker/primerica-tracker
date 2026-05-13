@@ -796,8 +796,9 @@ function RepAppointmentTracker({ appointments = [], onChange }) {
                     <input
                       type={field === "date" ? "date" : field === "email" ? "email" : "text"}
                       value={appt[field] || ""}
-                      onChange={e => updateAppt(idx, field, e.target.value)}
-                      placeholder={placeholder || ""}
+                      onChange={e => updateAppt(idx, field, field === "phone" ? formatPhone(e.target.value) : e.target.value)}
+                      placeholder={field === "phone" ? "111-111-1111" : (placeholder || "")}
+                      maxLength={field === "phone" ? 12 : undefined}
                       style={{ ...fieldStyle, fontSize: field === "date" ? 12 : 13, colorScheme: field === "date" ? "dark" : undefined }}
                     />
                   </div>
@@ -2324,7 +2325,7 @@ export default function App() {
             <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={id=>toggleRep(rep.id,id)} />
           ))}
           {activeTab==="appointments" && (
-            <AppointmentTracker appointments={rep.appointments||[]} onChange={appts=>updateAppointments(rep.id,appts)} />
+            <RepAppointmentTracker appointments={rep.appointments||[]} onChange={appts=>updateAppointments(rep.id,appts)} />
           )}
           {activeTab==="refs" && (
             <ReferencesSection
