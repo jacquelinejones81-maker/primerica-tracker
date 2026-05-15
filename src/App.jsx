@@ -1625,6 +1625,8 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           <WeeklyScorecard
             activity={rep.weeklyActivity||{}}
             onChange={act => onUpdate({ ...rep, weeklyActivity:act, lastActivity:new Date().toISOString() })}
+            autoLifeApps={(rep.lifeApps||[]).filter(a=>a.clientName).length}
+            autoInvestments={(rep.lifeApps||[]).filter(a=>a.investStatus==="completed").length}
           />
         )}
         {activeTab==="rvp" && (
@@ -2232,11 +2234,16 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
     const updated = [...apps, newApp];
     onChange(updated);
     setExpandedIdx(updated.length - 1);
-    setShowChecklist(newApp.id);
+    // Don't show checklist until name is entered
   };
 
   const updateApp = (id, field, value) => {
-    onChange(apps.map(a => a.id !== id ? a : { ...a, [field]: value }));
+    const updated = apps.map(a => a.id !== id ? a : { ...a, [field]: value });
+    onChange(updated);
+    // Show checklist popup when client name is first entered
+    if (field === "clientName" && value.trim() && !apps.find(a => a.id === id)?.clientName) {
+      setTimeout(() => setShowChecklist(id), 300);
+    }
   };
 
   const submitted = apps.filter(a => a.clientName).length;
@@ -2290,7 +2297,7 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
           const statusColor = STATUS_COLORS[app.status] || "#ffffff50";
           return (
             <div key={app.id} style={{ background:"#ffffff07", border:`1px solid ${statusColor}30`, borderRadius:12, overflow:"hidden" }}>
-              <div style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 14px", cursor:"pointer" }} onClick={() => { setExpandedIdx(isExpanded ? null : idx); if (!readOnly) setShowChecklist(app.id); }}>
+              <div style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 14px", cursor:"pointer" }} onClick={() => { setExpandedIdx(isExpanded ? null : idx); if (!readOnly && app.clientName) setShowChecklist(app.id); }}>
                 <div style={{ flex:1 }}>
                   <div style={{ fontSize:14, fontWeight:"bold", color:"#f0ede8" }}>{app.clientName}</div>
                   <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>
@@ -2377,9 +2384,10 @@ function getWeekKey() {
   return start.toISOString().split("T")[0];
 }
 
-function WeeklyScorecard({ activity = {}, onChange, readOnly = false }) {
+function WeeklyScorecard({ activity = {}, onChange, readOnly = false, autoLifeApps = 0, autoInvestments = 0 }) {
   const weekKey = getWeekKey();
-  const current = activity[weekKey] || { contacts:0, apptSet:0, apptDone:0, lifeApps:0, investments:0 };
+  const rawCurrent = activity[weekKey] || { contacts:0, apptSet:0, apptDone:0, lifeApps:0, investments:0 };
+  const current = { ...rawCurrent, lifeApps: autoLifeApps || rawCurrent.lifeApps, investments: autoInvestments || rawCurrent.investments };
 
   const update = (field, val) => {
     const num = Math.max(0, Number(val)||0);
@@ -2409,9 +2417,10 @@ function WeeklyScorecard({ activity = {}, onChange, readOnly = false }) {
                   <div style={{ fontSize:11, color:"#ffffff40" }}>Goal: {f.goal}</div>
                   {!readOnly ? (
                     <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                      <button onClick={() => update(f.key, val-1)} style={{ background:"#ffffff10", border:"none", color:"#f0ede8", width:26, height:26, borderRadius:6, cursor:"pointer", fontSize:16, lineHeight:1 }}>-</button>
+                      {(f.key !== "lifeApps" && f.key !== "investments") && <button onClick={() => update(f.key, val-1)} style={{ background:"#ffffff10", border:"none", color:"#f0ede8", width:26, height:26, borderRadius:6, cursor:"pointer", fontSize:16, lineHeight:1 }}>-</button>}
                       <div style={{ fontSize:18, fontWeight:"bold", color:f.color, minWidth:30, textAlign:"center" }}>{val}</div>
-                      <button onClick={() => update(f.key, val+1)} style={{ background:`${f.color}30`, border:`1px solid ${f.color}50`, color:f.color, width:26, height:26, borderRadius:6, cursor:"pointer", fontSize:16, lineHeight:1 }}>+</button>
+                      {(f.key !== "lifeApps" && f.key !== "investments") && <button onClick={() => update(f.key, val+1)} style={{ background:`${f.color}30`, border:`1px solid ${f.color}50`, color:f.color, width:26, height:26, borderRadius:6, cursor:"pointer", fontSize:16, lineHeight:1 }}>+</button>}
+                      {(f.key === "lifeApps" || f.key === "investments") && <div style={{ fontSize:10, color:"#ffffff30", fontStyle:"italic" }}>auto-tracked</div>}
                     </div>
                   ) : (
                     <div style={{ fontSize:18, fontWeight:"bold", color:f.color }}>{val}</div>
@@ -2522,6 +2531,8 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
             <WeeklyScorecard
               activity={weeklyActivity}
               onChange={act => onUpdate({ ...myProduction, weeklyActivity:act })}
+              autoLifeApps={lifeApps.filter(a=>a.clientName).length}
+              autoInvestments={lifeApps.filter(a=>a.investStatus==="completed").length}
             />
           )}
           {activeTab === "investments" && (
@@ -3143,6 +3154,8 @@ export default function App() {
               activity={rep.weeklyActivity||{}}
               onChange={() => {}}
               readOnly={true}
+              autoLifeApps={(rep.lifeApps||[]).filter(a=>a.clientName).length}
+              autoInvestments={(rep.lifeApps||[]).filter(a=>a.investStatus==="completed").length}
             />
           )}
           {activeTab==="rvp" && (
