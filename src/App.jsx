@@ -2099,10 +2099,16 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
         </div>
       )}
 
-      {/* Rep Production Input */}
-      <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, padding:"18px 20px" }}>
-        <div style={{ fontSize:12, color:"#ffffff50", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:14 }}>💼 Update Rep Production</div>
-        <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+      {/* Rep Production Input — collapsible */}
+      {(() => {
+        const [prodOpen, setProdOpen] = React.useState(false);
+        return (
+          <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, overflow:"hidden" }}>
+            <div onClick={() => setProdOpen(o => !o)} style={{ padding:"14px 20px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+              <div style={{ fontSize:12, color:"#ffffff50", letterSpacing:"0.08em", textTransform:"uppercase", fontWeight:"bold" }}>💼 Update Rep Production ({filteredReps.length} reps)</div>
+              <div style={{ fontSize:16, color:"#ffffff40" }}>{prodOpen ? "▲" : "▼"}</div>
+            </div>
+            {prodOpen && <div style={{ padding:"0 20px 20px", display:"flex", flexDirection:"column", gap:8 }}>
           {filteredReps.map(rep => (
             <div key={rep.id} style={{ background:"#ffffff05", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 14px" }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:8 }}>
@@ -2139,8 +2145,10 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
               </div>
             </div>
           ))}
-        </div>
-      </div>
+        </div>}
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -2379,11 +2387,11 @@ function WeeklyScorecard({ activity = {}, onChange, readOnly = false }) {
   };
 
   const FIELDS = [
-    { key:"contacts",    label:"Contacts Made",           color:"#3b82f6", emoji:"📞", goal:30 },
-    { key:"apptSet",     label:"Appointments Set",         color:"#8b5cf6", emoji:"📅", goal:10 },
-    { key:"apptDone",    label:"Appointments Completed",   color:"#06b6d4", emoji:"✅", goal:5  },
-    { key:"lifeApps",    label:"Life Apps Submitted",      color:"#f59e0b", emoji:"📋", goal:3  },
-    { key:"investments", label:"Investments Completed",    color:"#10b981", emoji:"💰", goal:2  },
+    { key:"contacts",    label:"Contacts Made",           color:"#3b82f6", emoji:"📞", goal:100 },
+    { key:"apptSet",     label:"Appointments Set",         color:"#8b5cf6", emoji:"📅", goal:20  },
+    { key:"apptDone",    label:"Appointments Completed",   color:"#06b6d4", emoji:"✅", goal:15  },
+    { key:"lifeApps",    label:"Life Apps Submitted",      color:"#f59e0b", emoji:"📋", goal:20  },
+    { key:"investments", label:"Investments Completed",    color:"#10b981", emoji:"💰", goal:10  },
   ];
 
   return (
