@@ -2557,7 +2557,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, investmentClients
       <div style={{ fontSize:12, color:"#ffffff50", marginBottom:12 }}>
         {isLicensed
           ? "Track every client investment you are responsible for. These will need to be moved over when you get your investment license!"
-          : "Every investment you are responsible for builds your clients AUM. Goal: 10 during training!"}
+          : "Every investment you are responsible for builds your future AUM. Goal: 10 during training!"}
       </div>
 
       {!isLicensed && pacCount >= goal && (
@@ -2934,10 +2934,12 @@ export default function App() {
   const handleLogin = (role, id) => { const s = { role, id }; setSession(s); saveSession(role, id); };
   const handleLogout = () => { setSession(null); clearSession(); };
   const updateRepDirect = (updatedRep) => {
-    setReps(prev => prev.map(r => r.id !== updatedRep.id ? r : updatedRep));
-    // Save immediately to Firebase so trainer sees changes in real time
-    const updatedReps = reps.map(r => r.id !== updatedRep.id ? r : updatedRep);
-    saveToFirebase(STORAGE_KEY, updatedReps);
+    setReps(prev => {
+      const updatedReps = prev.map(r => r.id !== updatedRep.id ? r : updatedRep);
+      // Save immediately to Firebase so trainer sees changes in real time
+      saveToFirebase(STORAGE_KEY, updatedReps);
+      return updatedReps;
+    });
   };
 
   const deleteRep = (repId) => { setReps(prev => prev.filter(r => r.id !== repId)); setShowDeleteConfirm(null); if (selectedRepId === repId) setView("dashboard"); };
