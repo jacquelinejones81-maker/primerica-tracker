@@ -220,6 +220,20 @@ function getApptLink(trainer, admin) {
   return DEFAULT_APPT_LINK;
 }
 const STORAGE_KEY = "primerica_reps_v6";
+const MONTHLY_KEY = "primerica_monthly_v1";
+
+function getMonthKey() {
+  const now = new Date();
+  return String(now.getFullYear()) + "-" + String(now.getMonth()+1).padStart(2,"0");
+}
+function getMonthLabel(key) {
+  if (!key) return "";
+  const parts = key.split("-");
+  return new Date(parts[0], parts[1]-1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+function getPrevMonths(data) {
+  return Object.keys(data||{}).sort().reverse().slice(0, 6);
+}
 const TRAINERS_KEY = "primerica_trainers_v1";
 const ACTIVE_TRAINER_KEY = "primerica_active_trainer";
 const ADMINS_KEY = "primerica_admins_v1";
@@ -616,8 +630,7 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
                 return (
                   <div key={r.id} onClick={() => { setSelectedRepLogin(r); setError(""); }} style={{ background:sel?`${track.color}18`:"#ffffff06", border:`1px solid ${sel?track.color+"50":"#ffffff10"}`, borderRadius:10, padding:"12px 14px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
                     <div>
-                      <div style={{ fontSize:14, fontWeight:"bold", color:sel?track.color:"#f0ede8" }}>{r.name}</div>
-                      <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>{track.label}</div>
+                      <div style={{ display:"flex", alignItems:"center", gap:10 }}>{r.photo && <img src={r.photo} alt="" style={{ width:36, height:36, borderRadius:"50%", objectFit:"cover", border:`2px solid ${sel?track.color:"#ffffff30"}` }} />}<div><div style={{ fontSize:14, fontWeight:"bold", color:sel?track.color:"#f0ede8" }}>{r.name}</div><div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>{track.label}</div></div></div>
                     </div>
                     {sel && <div style={{ color:track.color, fontSize:18 }}>✓</div>}
                   </div>
@@ -1379,6 +1392,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             👁 You are previewing this rep’s view as admin. All interactions are live — changes will save.
           </div>
         )}
+        <RepPhotoUpload photo={rep.photo||null} onUpdate={(photo) => onUpdate({ ...rep, photo, lastActivity:new Date().toISOString() })} />
         <DailyBanner schedule={schedule} appointments={rep.appointments||[]} />
         {!graduated && <RepAccountabilityBanner rep={rep} />}
         {graduated && (
@@ -1554,7 +1568,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
         ))}
         {activeTab==="appointments" && (
-          <RepAppointmentTracker appointments={rep.appointments||[]} onChange={appts => onUpdate({ ...rep, appointments:appts, lastActivity:new Date().toISOString() })} trainerLink={trainerLink} />
+          <div><AppointmentReminderBanner /><RepAppointmentTracker appointments={rep.appointments||[]} onChange={appts => onUpdate({ ...rep, appointments:appts, lastActivity:new Date().toISOString() })} trainerLink={trainerLink} /></div>
         )}
         {activeTab==="schedule" && (
           <TeamScheduleView schedule={schedule} isAdmin={false} onUpdate={() => {}} />
@@ -1839,6 +1853,251 @@ function AdminAdder({ onAdd }) {
 
 
 
+
+// ─── REP PHOTO UPLOAD ─────────────────────────────────────────────────────────
+function RepPhotoUpload({ photo, onUpdate }) {
+  const fileRef = React.useRef();
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) { alert("Photo must be under 2MB"); return; }
+    const reader = new FileReader();
+    reader.onload = () => onUpdate(reader.result);
+    reader.readAsDataURL(file);
+  };
+  return (
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", marginBottom:20 }}>
+      <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} style={{ display:"none" }} />
+      <div onClick={() => fileRef.current.click()} style={{ cursor:"pointer", position:"relative" }}>
+        {photo
+          ? <img src={photo} alt="Profile" style={{ width:90, height:90, borderRadius:"50%", objectFit:"cover", border:"3px solid #f59e0b" }} />
+          : <div style={{ width:90, height:90, borderRadius:"50%", background:"#ffffff10", border:"2px dashed #ffffff30", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
+              <div style={{ fontSize:28 }}>📷</div>
+              <div style={{ fontSize:10, color:"#ffffff40", marginTop:4 }}>Add Photo</div>
+            </div>
+        }
+        <div style={{ position:"absolute", bottom:0, right:0, background:"#f59e0b", borderRadius:"50%", width:26, height:26, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14 }}>✏️</div>
+      </div>
+      {photo && <button onClick={() => onUpdate(null)} style={{ background:"none", border:"none", color:"#f43f5e80", cursor:"pointer", fontSize:11, marginTop:6 }}>Remove photo</button>}
+    </div>
+  );
+}
+
+// ─── APPOINTMENT REMINDER BANNER ──────────────────────────────────────────────
+function AppointmentReminderBanner() {
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed) return null;
+  return (
+    <div style={{ background:"linear-gradient(135deg,#f59e0b18,#f43f5e0f)", border:"1px solid #f59e0b40", borderLeft:"4px solid #f59e0b", borderRadius:14, padding:"18px 20px", marginBottom:20, position:"relative" }}>
+      <button onClick={() => setDismissed(true)} style={{ position:"absolute", top:10, right:12, background:"none", border:"none", color:"#ffffff40", fontSize:20, cursor:"pointer" }}>x</button>
+      <div style={{ fontSize:20, marginBottom:8 }}>🎯</div>
+      <div style={{ fontSize:15, fontWeight:"bold", color:"#f59e0b", marginBottom:10 }}>Remember Your Purpose!</div>
+      <div style={{ fontSize:13, color:"#ffffff70", lineHeight:1.7, marginBottom:12 }}>
+        Your training appointments are primarily for <strong style={{ color:"#f0ede8" }}>YOUR development</strong>, not to recruit or sell.
+        If a client or recruit comes out of it — amazing! But your <strong style={{ color:"#f0ede8" }}>#1 goal</strong> is to get in front of your trainer and sharpen your skills.
+      </div>
+      <div style={{ background:"#ffffff0a", border:"1px solid #ffffff15", borderRadius:10, padding:"10px 14px", fontSize:12, color:"#f59e0b", display:"flex", alignItems:"center", gap:8 }}>
+        <span style={{ fontSize:16 }}>📜</span>
+        <span>Need help setting appointments? <strong>Tap the Scripts tab</strong> — it has everything you need to make the call with confidence!</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── MONTHLY HISTORY ──────────────────────────────────────────────────────────
+function MonthlyHistory({ monthlyData }) {
+  const months = getPrevMonths(monthlyData);
+  if (months.length === 0) return null;
+  return (
+    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+      <div style={{ fontSize:12, color:"#ffffff50", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:14 }}>📅 Monthly History</div>
+      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+        {months.map(key => {
+          const m = monthlyData[key];
+          return (
+            <div key={key} style={{ background:"#ffffff05", border:"1px solid #ffffff10", borderRadius:10, padding:"12px 16px" }}>
+              <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b", marginBottom:8 }}>{m.label || getMonthLabel(key)}</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
+                {[
+                  { label:"Premium", value:"$"+(m.premium||0).toLocaleString(), color:"#10b981" },
+                  { label:"Recruits", value:m.recruits||0, color:"#3b82f6" },
+                  { label:"Licensed", value:m.licensed||0, color:"#a78bfa" },
+                  { label:"Appts Done", value:m.apptsDone||0, color:"#f43f5e" },
+                ].map(s => (
+                  <div key={s.label} style={{ textAlign:"center" }}>
+                    <div style={{ fontSize:16, fontWeight:"bold", color:s.color }}>{s.value}</div>
+                    <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.06em" }}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── GOAL BAR ─────────────────────────────────────────────────────────────────
+function GoalBar({ label, value, goal, color, prefix, suffix, emoji }) {
+  prefix = prefix || "";
+  suffix = suffix || "";
+  const p = Math.min(100, Math.round((value/goal)*100));
+  return (
+    <div style={{ marginBottom:16 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+        <div style={{ fontSize:13, fontWeight:"bold", color:"#f0ede8" }}>{emoji} {label}</div>
+        <div style={{ fontSize:13, fontWeight:"bold", color:p>=100?"#10b981":color }}>
+          {prefix}{value.toLocaleString()}{suffix} <span style={{ color:"#ffffff40", fontWeight:"normal" }}>/ {prefix}{goal.toLocaleString()}{suffix}</span>
+        </div>
+      </div>
+      <div style={{ background:"#ffffff10", borderRadius:99, height:12, overflow:"hidden", position:"relative" }}>
+        <div style={{ width:`${p}%`, height:"100%", background:p>=100?"#10b981":`linear-gradient(90deg,${color},${color}cc)`, borderRadius:99, transition:"width 0.6s ease" }} />
+      </div>
+      {p>=100 && <div style={{ fontSize:11, color:"#10b981", marginTop:4, fontWeight:"bold" }}>Goal reached!</div>}
+    </div>
+  );
+}
+
+// ─── PRODUCTION DASHBOARD ─────────────────────────────────────────────────────
+const PROD_GOALS = { premium:10000, recruits:10, licenses:100 };
+
+function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAdmin, onUpdateRep, onSnapshot, monthlyData }) {
+  const [activeFilter, setActiveFilter] = useState(currentAdminId || "all");
+  const [showRepInput, setShowRepInput] = useState(null);
+  const [premiumInput, setPremiumInput] = useState("");
+
+  const filteredReps = isSuperAdmin && activeFilter === "all"
+    ? reps
+    : reps.filter(r => {
+        const tr = trainers.find(t => t.id === r.trainerId);
+        return tr?.adminId === (isSuperAdmin ? activeFilter : currentAdminId) || r.adminId === (isSuperAdmin ? activeFilter : currentAdminId);
+      });
+
+  const totalPremium = filteredReps.filter(r => r.isLicensed || r.examCompleted).reduce((s,r) => s+(Number(r.premiumSubmitted)||0), 0);
+  const totalRecruits = filteredReps.filter(r => r.isRecruited).length;
+  const totalLicensed = filteredReps.filter(r => r.isLicensed || r.examCompleted).length;
+  const apptsDone = filteredReps.reduce((s,r) => s+(r.appointments||[]).filter(a=>a.completed||a.status==="completed").length, 0);
+
+  const trainerStats = trainers
+    .filter(t => isSuperAdmin ? (activeFilter==="all"||t.adminId===activeFilter) : t.adminId===currentAdminId)
+    .map(t => {
+      const tr = filteredReps.filter(r => r.trainerId===t.id);
+      return { trainer:t, reps:tr.length, premium:tr.reduce((s,r)=>s+(Number(r.premiumSubmitted)||0),0), licensed:tr.filter(r=>r.isLicensed||r.examCompleted).length, appts:tr.reduce((s,r)=>s+(r.appointments||[]).filter(a=>a.completed||a.status==="completed").length,0) };
+    }).sort((a,b) => b.premium-a.premium);
+
+  return (
+    <div style={{ marginBottom:24 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:16, flexWrap:"wrap", gap:10 }}>
+        <div style={{ fontSize:14, fontWeight:"bold", color:"#f59e0b" }}>📊 Team Production Dashboard</div>
+        {isSuperAdmin && (
+          <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+            <button onClick={() => setActiveFilter("all")} style={{ padding:"5px 12px", borderRadius:20, border:`1px solid ${activeFilter==="all"?"#f59e0b":"#ffffff20"}`, background:activeFilter==="all"?"#f59e0b18":"transparent", color:activeFilter==="all"?"#f59e0b":"#ffffff50", cursor:"pointer", fontSize:11 }}>All</button>
+            {admins.map(a => (
+              <button key={a.id} onClick={() => setActiveFilter(a.id)} style={{ padding:"5px 12px", borderRadius:20, border:`1px solid ${activeFilter===a.id?a.color:"#ffffff20"}`, background:activeFilter===a.id?`${a.color}18`:"transparent", color:activeFilter===a.id?a.color:"#ffffff50", cursor:"pointer", fontSize:11 }}>{a.name}</button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* New month banner */}
+      {onSnapshot && (
+        <div style={{ textAlign:"right", marginBottom:12 }}>
+          <button onClick={onSnapshot} style={{ background:"none", border:"1px solid #f59e0b40", color:"#f59e0b", padding:"6px 14px", borderRadius:8, cursor:"pointer", fontSize:12 }}>📅 Save Month and Reset</button>
+        </div>
+      )}
+
+      {/* Monthly History */}
+      <MonthlyHistory monthlyData={monthlyData} />
+
+      {/* Goal Bars */}
+      <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, padding:"20px 22px", marginBottom:16 }}>
+        <div style={{ fontSize:12, color:"#ffffff50", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:16 }}>Team Goals</div>
+        <GoalBar label="Premium Submitted" value={totalPremium} goal={PROD_GOALS.premium} color="#10b981" prefix="$" emoji="💰" />
+        <GoalBar label="New Recruits" value={totalRecruits} goal={PROD_GOALS.recruits} color="#3b82f6" emoji="👥" />
+        <GoalBar label="Licensed Agents" value={totalLicensed} goal={PROD_GOALS.licenses} color="#a78bfa" emoji="📜" />
+        <div style={{ borderTop:"1px solid #ffffff10", paddingTop:14, marginTop:4, display:"flex", gap:12, flexWrap:"wrap" }}>
+          {[
+            { label:"Appointments Done", value:apptsDone, color:"#f43f5e", emoji:"📅" },
+            { label:"Active Reps", value:filteredReps.length, color:"#f59e0b", emoji:"🌟" },
+          ].map(s => (
+            <div key={s.label} style={{ flex:1, minWidth:120, background:"#ffffff06", borderRadius:10, padding:"12px 14px", textAlign:"center" }}>
+              <div style={{ fontSize:24, fontWeight:"bold", color:s.color }}>{s.value}</div>
+              <div style={{ fontSize:11, color:"#ffffff50", marginTop:3 }}>{s.emoji} {s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Trainer Leaderboard */}
+      {trainerStats.length > 0 && (
+        <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+          <div style={{ fontSize:12, color:"#ffffff50", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:14 }}>🏆 Trainer Leaderboard</div>
+          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+            {trainerStats.map((ts,idx) => (
+              <div key={ts.trainer.id} style={{ background:idx===0?"#f59e0b0a":"#ffffff05", border:`1px solid ${idx===0?"#f59e0b25":"#ffffff10"}`, borderRadius:10, padding:"12px 16px", display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
+                <div style={{ fontSize:18, fontWeight:"bold", color:idx===0?"#f59e0b":"#ffffff30", width:28 }}>{idx===0?"🥇":idx===1?"🥈":idx===2?"🥉":"#"+(idx+1)}</div>
+                <div style={{ width:10, height:10, borderRadius:"50%", background:ts.trainer.color, flexShrink:0 }} />
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:14, fontWeight:"bold" }}>{ts.trainer.name}</div>
+                  <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>{ts.reps} reps · {ts.appts} appts done</div>
+                </div>
+                <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
+                  <div style={{ textAlign:"center" }}><div style={{ fontSize:15, fontWeight:"bold", color:"#10b981" }}>${ts.premium.toLocaleString()}</div><div style={{ fontSize:9, color:"#ffffff40", textTransform:"uppercase" }}>Premium</div></div>
+                  <div style={{ textAlign:"center" }}><div style={{ fontSize:15, fontWeight:"bold", color:"#a78bfa" }}>{ts.licensed}</div><div style={{ fontSize:9, color:"#ffffff40", textTransform:"uppercase" }}>Licensed</div></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Rep Production Input */}
+      <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, padding:"18px 20px" }}>
+        <div style={{ fontSize:12, color:"#ffffff50", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:14 }}>💼 Update Rep Production</div>
+        <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+          {filteredReps.map(rep => (
+            <div key={rep.id} style={{ background:"#ffffff05", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 14px" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:8 }}>
+                <div>
+                  <div style={{ fontSize:13, fontWeight:"bold" }}>{rep.name}</div>
+                  <div style={{ fontSize:11, color:"#ffffff40" }}>
+                    Premium: <span style={{ color:"#10b981", fontWeight:"bold" }}>${(Number(rep.premiumSubmitted)||0).toLocaleString()}</span>
+                    {(rep.isLicensed||rep.examCompleted) && <span style={{ color:"#a78bfa", marginLeft:8 }}>📜 Licensed</span>}
+                  </div>
+                </div>
+                <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
+                  <div onClick={() => onUpdateRep(rep.id,"isLicensed",!rep.isLicensed)}
+                    style={{ background:(rep.isLicensed||rep.examCompleted)?"#a78bfa20":"#ffffff10", border:`1px solid ${(rep.isLicensed||rep.examCompleted)?"#a78bfa50":"#ffffff20"}`, borderRadius:20, padding:"4px 12px", fontSize:11, color:(rep.isLicensed||rep.examCompleted)?"#a78bfa":"#ffffff50", cursor:"pointer", fontWeight:"bold" }}>
+                    {(rep.isLicensed||rep.examCompleted) ? "Licensed" : "Mark Licensed"}
+                  </div>
+                  {(rep.isLicensed||rep.examCompleted) && showRepInput===rep.id ? (
+                    <div style={{ display:"flex", gap:6 }}>
+                      <input type="number" value={premiumInput} onChange={e=>setPremiumInput(e.target.value)} placeholder="Enter amount"
+                        style={{ background:"#ffffff0d", border:"1px solid #10b98140", borderRadius:6, padding:"4px 10px", color:"#f0ede8", fontSize:12, outline:"none", width:120 }} autoFocus />
+                      <button onClick={() => { onUpdateRep(rep.id,"premiumSubmitted",Number(premiumInput)||0); setShowRepInput(null); setPremiumInput(""); }}
+                        style={{ background:"#10b981", border:"none", color:"#0f0f11", padding:"4px 12px", borderRadius:6, cursor:"pointer", fontSize:12, fontWeight:"bold" }}>Save</button>
+                      <button onClick={() => { setShowRepInput(null); setPremiumInput(""); }}
+                        style={{ background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"4px 10px", borderRadius:6, cursor:"pointer", fontSize:12 }}>X</button>
+                    </div>
+                  ) : (rep.isLicensed||rep.examCompleted) ? (
+                    <button onClick={() => { setShowRepInput(rep.id); setPremiumInput(rep.premiumSubmitted||""); }}
+                      style={{ background:"#10b98115", border:"1px solid #10b98140", color:"#10b981", padding:"4px 12px", borderRadius:6, cursor:"pointer", fontSize:11, fontWeight:"bold" }}>
+                      💰 Update Premium
+                    </button>
+                  ) : (
+                    <div style={{ fontSize:11, color:"#ffffff25", fontStyle:"italic" }}>License first</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 // inject pulse animation
 if (typeof document !== 'undefined' && !document.getElementById('pulse-style')) {
@@ -1873,6 +2132,8 @@ export default function App() {
   const [noteDraft, setNoteDraft] = useState("");
 
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [monthlyData, setMonthlyData] = useState(() => load(MONTHLY_KEY, {}));
+  const [showNewMonthBanner, setShowNewMonthBanner] = useState(false);
   const activeAdmin = admins.find(a => a.id === session?.id);
   const activeTrainer = trainers.find(t => t.id === activeTrainerId) || trainers[0];
   const isSuperAdmin = session?.role === "superadmin";
@@ -1883,6 +2144,7 @@ export default function App() {
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(TRAINERS_KEY, trainers); }, [trainers]);
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(ADMINS_KEY, admins); }, [admins]);
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(SCHEDULE_KEY, schedule); }, [schedule]);
+  useEffect(() => { if (!dataLoaded) return; saveToFirebase(MONTHLY_KEY, monthlyData); }, [monthlyData]);
   useEffect(() => { save(ACTIVE_TRAINER_KEY, activeTrainerId); }, [activeTrainerId]);
 
   // ── FIREBASE REAL-TIME LISTENERS ──────────────────────────────────────────
@@ -1913,12 +2175,14 @@ export default function App() {
       if (data && Array.isArray(data) && data.length > 0) setSchedule(data);
       markLoaded();
     });
+    fbLoad(MONTHLY_KEY, {}).then(data => { if (data) setMonthlyData(data); });
 
     // Listen for real-time updates from other devices
     unsubs.push(fbListen(STORAGE_KEY, data => { if (Array.isArray(data)) setReps(data); }));
     unsubs.push(fbListen(TRAINERS_KEY, data => { if (Array.isArray(data)) setTrainers(data); }));
     unsubs.push(fbListen(ADMINS_KEY, data => { if (Array.isArray(data) && data.length > 0) setAdmins(data); }));
     unsubs.push(fbListen(SCHEDULE_KEY, data => { if (Array.isArray(data) && data.length > 0) setSchedule(data); }));
+    unsubs.push(fbListen(MONTHLY_KEY, data => { if (data) setMonthlyData(data); }));
 
     return () => unsubs.forEach(u => u());
   }, []);
@@ -1969,6 +2233,35 @@ export default function App() {
 
   const updateAdminPin = (adminId, pin) => setAdmins(prev => prev.map(a => a.id !== adminId ? a : { ...a, pin }));
   const updateAdminCalendly = (adminId, link) => setAdmins(prev => prev.map(a => a.id !== adminId ? a : { ...a, calendlyLink: link }));
+  const updateRepProduction = (repId, field, value) => updateRep(repId, r => ({ ...r, [field]: value }));
+  const updateRepPhoto = (repId, photo) => updateRep(repId, r => ({ ...r, photo }));
+
+  const doSnapshot = () => {
+    const monthKey = getMonthKey();
+    const snap = {
+      month: monthKey,
+      label: getMonthLabel(monthKey),
+      premium: reps.reduce((s,r) => s + (Number(r.premiumSubmitted)||0), 0),
+      recruits: reps.filter(r => r.isRecruited).length,
+      licensed: reps.filter(r => r.isLicensed || r.examCompleted).length,
+      apptsDone: reps.reduce((s,r) => s + (r.appointments||[]).filter(a=>a.completed||a.status==="completed").length, 0),
+      repCount: reps.length,
+      savedAt: new Date().toISOString(),
+    };
+    setMonthlyData(prev => ({ ...prev, [monthKey]: snap }));
+    setReps(prev => prev.map(r => ({ ...r, premiumSubmitted: 0, isRecruited: false })));
+    setShowNewMonthBanner(false);
+  };
+
+  useEffect(() => {
+    if (!dataLoaded) return;
+    const currentMonth = getMonthKey();
+    const months = Object.keys(monthlyData||{});
+    if (months.length > 0) {
+      const lastMonth = months.sort().reverse()[0];
+      if (lastMonth !== currentMonth) setShowNewMonthBanner(true);
+    }
+  }, [dataLoaded]);
 
   const updateTrainerPin = (trainerId, pin) => setTrainers(prev => prev.map(t => t.id !== trainerId ? t : { ...t, pin }));
 
@@ -2537,6 +2830,33 @@ export default function App() {
       )}
 
       <div style={{ maxWidth:860, margin:"0 auto", padding:"20px 16px" }}>
+
+        {/* New Month Banner */}
+        {showNewMonthBanner && isAdmin && (
+          <div style={{ background:"linear-gradient(135deg,#10b98120,#f59e0b15)", border:"1px solid #10b98140", borderRadius:14, padding:"20px 24px", marginBottom:20, textAlign:"center" }}>
+            <div style={{ fontSize:28, marginBottom:8 }}>🎉</div>
+            <div style={{ fontSize:18, fontWeight:"bold", color:"#10b981", marginBottom:6 }}>New Month — Fresh Start!</div>
+            <div style={{ fontSize:13, color:"#ffffff60", marginBottom:16 }}>Save last months numbers then reset the counters for a new month.</div>
+            <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
+              <button onClick={doSnapshot} style={{ background:"#10b981", border:"none", color:"#0f0f11", padding:"10px 24px", borderRadius:8, cursor:"pointer", fontWeight:"bold", fontSize:14 }}>Save and Reset for New Month</button>
+              <button onClick={() => setShowNewMonthBanner(false)} style={{ background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"10px 20px", borderRadius:8, cursor:"pointer", fontSize:13 }}>Remind me later</button>
+            </div>
+          </div>
+        )}
+
+        {/* Production Dashboard */}
+        {isAdmin && (
+          <ProductionDashboard
+            reps={visibleReps}
+            trainers={trainers}
+            admins={admins}
+            currentAdminId={currentAdminId}
+            isSuperAdmin={isSuperAdmin}
+            onUpdateRep={(repId, field, value) => updateRepProduction(repId, field, value)}
+            onSnapshot={doSnapshot}
+            monthlyData={monthlyData}
+          />
+        )}
 
         {/* How to Access the App */}
         <div style={{ background:"linear-gradient(135deg,#3b82f610,#8b5cf610)", border:"1px solid #3b82f630", borderRadius:14, padding:"18px 20px", marginBottom:20 }}>
