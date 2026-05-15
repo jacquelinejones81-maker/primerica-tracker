@@ -1439,7 +1439,9 @@ function ScriptsSection() {
 
 // ─── REP VIEW ─────────────────────────────────────────────────────────────────
 function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK, cancellations = {} }) {
-  const tourKey = "primerica_tour_rep_" + rep.id;
+  const isLicensedRep = rep.track === "licensed" || rep.track === "rvp";
+  const tourSteps = isLicensedRep ? LICENSED_TOUR_STEPS : REP_TOUR_STEPS;
+  const tourKey = "primerica_tour_rep_" + rep.id + "_" + rep.track;
   const [showTour, setShowTour] = useState(() => { try { return !localStorage.getItem(tourKey); } catch(e) { return false; } });
   const [activeTab, setActiveTab] = useState("checklist");
   const [showConditional, setShowConditional] = useState(false);
@@ -1481,7 +1483,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
       </div>
 
       <div style={{ maxWidth:600, margin:"0 auto", padding:"20px 16px" }}>
-        {showTour && !isPreview && <AppTour steps={REP_TOUR_STEPS} onClose={() => setShowTour(false)} storageKey={tourKey} />}
+        {showTour && !isPreview && <AppTour steps={tourSteps} onClose={() => setShowTour(false)} storageKey={tourKey} />}
         {isPreview && (
           <div style={{ background:"#8b5cf615", border:"1px solid #8b5cf640", borderRadius:10, padding:"10px 16px", marginBottom:16, fontSize:12, color:"#8b5cf6", textAlign:"center" }}>
             👁 You are previewing this rep’s view as admin. All interactions are live — changes will save.
@@ -1752,6 +1754,40 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
                   {showConditional && conditionalCats.map(cat => (
                     <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
                   ))}
+                  {showConditional && (
+                    <div style={{ display:"flex", flexDirection:"column", gap:12, marginTop:8 }}>
+                      {/* DGO Card for already-licensed */}
+                      <div style={{ background:"#06b6d410", border:"1px solid #06b6d430", borderRadius:12, padding:"14px 16px" }}>
+                        <div style={{ fontSize:12, fontWeight:"bold", color:"#06b6d4", marginBottom:10 }}>🎉 Schedule Your DGO</div>
+                        <div style={{ fontSize:12, color:"#ffffff60", marginBottom:10 }}>Book your Direction of Growth Objective meeting with your trainer.</div>
+                        <div style={{ display:"flex", gap:12, alignItems:"center", flexWrap:"wrap" }}>
+                          <div style={{ flex:1 }}>
+                            <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>DGO Date</div>
+                            <input type="date" value={rep.licensedDgoDate||""} onChange={e => onUpdate({ ...rep, licensedDgoDate:e.target.value, lastActivity:new Date().toISOString() })}
+                              style={{ background:"transparent", border:"none", borderBottom:"1px solid #06b6d440", color: rep.licensedDgoDate?"#f0ede8":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
+                          </div>
+                          <div onClick={() => { onUpdate({ ...rep, licensedDgoComplete:!rep.licensedDgoComplete, lastActivity:new Date().toISOString() }); if (!rep.licensedDgoComplete) { spawnConfetti(window.innerWidth/2,200); } }}
+                            style={{ background: rep.licensedDgoComplete?"#10b98120":"#ffffff10", border:`1px solid ${rep.licensedDgoComplete?"#10b98150":"#ffffff20"}`, borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, color: rep.licensedDgoComplete?"#10b981":"#ffffff60", fontWeight:"bold" }}>
+                            {rep.licensedDgoComplete ? "✓ Completed!" : "Mark Complete"}
+                          </div>
+                        </div>
+                      </div>
+                      {/* References expansion */}
+                      {rep.repCompleted.includes("l3") && (
+                        <LicensedRefsInput
+                          refs={rep.licensedRefs||[]}
+                          onChange={refs => onUpdate({ ...rep, licensedRefs:refs, lastActivity:new Date().toISOString() })}
+                        />
+                      )}
+                      {/* MACHO list expansion */}
+                      {rep.repCompleted.includes("l4") && (
+                        <LicensedMachoList
+                          contacts={rep.licensedMachoList||[]}
+                          onChange={list => onUpdate({ ...rep, licensedMachoList:list, lastActivity:new Date().toISOString() })}
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
               {repCats.filter(cat => !conditionalCats.includes(cat)).map(cat => (
@@ -2865,20 +2901,31 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
 
 // ─── APP TOUR ─────────────────────────────────────────────────────────────────
 const REP_TOUR_STEPS = [
-  { emoji:"👋", title:"Welcome to Your Onboarding App!", body:"This app guides you through every step of your Primerica journey. Whether you are brand new or already licensed — this app keeps you on track. Let us show you around!" },
-  { emoji:"🔐", title:"Your PIN is Your Key", body:"You created a 4-digit PIN when you logged in. You will need it every time you access your checklist. Keep it private — no one else should access your account!" },
-  { emoji:"✅", title:"My Checklist", body:"This is your main to-do list. Complete each task to move through your onboarding. Check items off as you finish them and watch your progress bar grow!" },
-  { emoji:"⭐", title:"Already Life Licensed? Read This First!", body:"If you joined already life licensed and skipped new rep training — tap the gold alert at the top of your checklist first. Those steps are required for you. If you went through the full new rep training — skip that section, it is not for you." },
-  { emoji:"📜", title:"Securities License — Start Now!", body:"As soon as you are life licensed, start working toward your securities license. You will see it near the top of your checklist. SIE first, then Series 6, 63, and 26 if you are going for RVP!" },
-  { emoji:"📅", title:"Appointments Tab", body:"Log all your training appointments here. Enter your contact name, phone, date, and MACHO score. Your goal is 15-20 training appointments!" },
-  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate each contact M-A-C-H-O (Married, Age 25-55, Children, Homeowner, Occupation). 3 or more stars means they are a great candidate. Set appointments with your best people!" },
-  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references with name, phone, and relationship. Your trainer can see these and will use them to help you set training appointments." },
-  { emoji:"📜", title:"Scripts Tab", body:"Your appointment setting scripts live here. Practice before every call. You do not have to say them word for word — understand the psychology and make it your own!" },
-  { emoji:"👁", title:"Field Training Observations", body:"Every time you watch your trainer complete a life app — tap + on the Field Training Observations counter. Goal is 20 observations before you get licensed. Pay close attention to the entire process!" },
-  { emoji:"📋", title:"Life App Counter", body:"Every time you are present for a completed life application during training, tap + on the Life Application counter. Goal is 10 during training!" },
-  { emoji:"💰", title:"Future Investment Clients", body:"Every time a client gets an investment while you are training, tap + and enter their name. These clients will be moved over to you when you pass your investment exam — this is your future AUM!" },
-  { emoji:"🗓", title:"Team Schedule and Daily Banner", body:"A banner at the top of your app shows what is scheduled today. Check it every time you log in so you never miss a meeting. If a meeting is canceled your trainer marks it and you will see it immediately!" },
-  { emoji:"🎯", title:"You Are All Set!", body:"Complete your checklist, attend every meeting, set 15-20 appointments, and reach out to your trainer daily. Let us go build something great!" },
+  { emoji:"👋", title:"Welcome to Your Training App!", body:"This app guides you through every step of your new rep training. Complete your checklist, log appointments, and track your progress all in one place!" },
+  { emoji:"🔐", title:"Your PIN is Your Key", body:"You created a 4-digit PIN when you logged in. You will need it every time you log in. Keep it private — no one else can access your checklist!" },
+  { emoji:"✅", title:"My Checklist", body:"Work through your checklist top to bottom. Check off each item as you complete it and watch your progress bar grow. Your trainer can see everything you check off!" },
+  { emoji:"📅", title:"Appointments Tab", body:"Log every training appointment here. Enter the contact name, phone, date, and notes. Your goal is 15-20 training appointments!" },
+  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate each contact using M-A-C-H-O — Married, Age 25-55, Children under 17, Homeowner, Occupation. 3 or more stars means they are a great appointment candidate!" },
+  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references with name, phone, and relationship. Your trainer will reach out to help you set training appointments with them." },
+  { emoji:"📜", title:"Scripts Tab", body:"Your appointment setting scripts are here. Practice them before every call. You do not have to say them word for word — understand the message and make it your own!" },
+  { emoji:"👁", title:"Field Training Observations", body:"Every time you observe your trainer complete a life app, tap + on the FTO counter. Goal is 20 observations before licensing. Pay close attention to the entire process!" },
+  { emoji:"📋", title:"Life App Counter", body:"Tap + every time you are present for a completed life application during training. Goal is 10 during training!" },
+  { emoji:"💰", title:"Future Investment Clients", body:"Tap + and enter a name every time a client gets an investment while you are training. These will be moved over to you when you pass your investment exam — this is your future AUM!" },
+  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner at the top shows what meetings are scheduled today. Check it every time you log in. If a meeting is canceled your trainer marks it and you will see it right away!" },
+  { emoji:"🎯", title:"You Are All Set!", body:"Complete your checklist, set 15-20 appointments, attend every meeting, and check in with your trainer daily. Let us go build something great!" },
+];
+
+const LICENSED_TOUR_STEPS = [
+  { emoji:"👋", title:"Welcome — You Are Life Licensed!", body:"Congratulations on getting licensed! This checklist guides you through everything you need to do now that you have your life license. Let us get you started!" },
+  { emoji:"⭐", title:"Already Licensed When You Joined?", body:"If you joined already life licensed and skipped new rep training — tap the gold alert at the top of your checklist first. Those onboarding steps are required for you and must be done before anything else." },
+  { emoji:"📜", title:"Start Your Securities License Now!", body:"As soon as you have your life license, start your securities license. You will see it near the top of your checklist. Begin with the SIE, then Series 6, 63, and 26 if you are going RVP!" },
+  { emoji:"🏅", title:"Milestones", body:"Track your first policy, first recruit, and other key milestones at the top of your checklist. These are celebrations — check them off when you hit them!" },
+  { emoji:"📋", title:"Life Application Tracker", body:"Log every life app you write here. After entering a client name you will be asked about Beneficiary and Emergency Contacts, and whether you scheduled an investment. Every life app should come with an investment!" },
+  { emoji:"💰", title:"Investment Tracker", body:"Log every future investment client here. Enter their name so your trainer knows exactly who to move over to you when you pass your investment exam. This is your AUM in progress!" },
+  { emoji:"📊", title:"Weekly Scorecard", body:"Track your weekly activity — contacts made, appointments set and completed, life apps submitted, and investments done. This keeps you accountable to your own goals!" },
+  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner at the top of your app shows what is scheduled today. Check it every time you log in so you never miss a team meeting. Canceled meetings show up here too!" },
+  { emoji:"👑", title:"RVP Path", body:"When you are ready to pursue RVP promotion, check the RVP Path box on your checklist to unlock your full RVP checklist with all the steps to get promoted!" },
+  { emoji:"🎯", title:"You Are All Set!", body:"Write business, build your team, and stay consistent. Log your activity, attend every meeting, and work with your trainer daily. Let us go build something great!" },
 ];
 
 const TRAINER_TOUR_STEPS = [
@@ -2970,6 +3017,79 @@ function FieldObsCounter({ count = 0, onChange }) {
             style={{ background:"#8b5cf630", border:"1px solid #8b5cf650", color:"#8b5cf6", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20, fontWeight:"bold" }}>+</button>
         </div>
       )}
+    </div>
+  );
+}
+
+
+// ─── LICENSED REFS INPUT ──────────────────────────────────────────────────────
+function LicensedRefsInput({ refs = [], onChange }) {
+  const REL_OPTIONS = ["Friend","Family","Coworker","Neighbor","Church Member","Business Contact","Other"];
+  const slots = Array.from({ length: 5 }, (_, i) => refs[i] || { name:"", phone:"", relationship:"" });
+  const update = (idx, field, val) => {
+    const updated = slots.map((r, i) => i !== idx ? r : { ...r, [field]: val });
+    onChange(updated.filter(r => r.name || r.phone || r.relationship));
+  };
+  return (
+    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:10, padding:"14px 16px", marginTop:8 }}>
+      <div style={{ fontSize:11, color:"#10b981", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:12 }}>👥 Enter Your 5 References</div>
+      {slots.map((ref, idx) => (
+        <div key={idx} style={{ marginBottom: idx < 4 ? 14 : 0, paddingBottom: idx < 4 ? 14 : 0, borderBottom: idx < 4 ? "1px solid #ffffff08" : "none" }}>
+          <div style={{ fontSize:10, color:"#ffffff40", marginBottom:6, fontWeight:"bold" }}>Reference {idx+1}</div>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"6px 12px" }}>
+            <div>
+              <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:2 }}>Full Name</div>
+              <input value={ref.name||""} onChange={e => update(idx,"name",e.target.value)} placeholder="Full name"
+                style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff15", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
+            </div>
+            <div>
+              <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:2 }}>Phone</div>
+              <input value={ref.phone||""} onChange={e => update(idx,"phone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12}
+                style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff15", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
+            </div>
+            <div style={{ gridColumn:"1/-1" }}>
+              <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:2 }}>Relationship</div>
+              <select value={ref.relationship||""} onChange={e => update(idx,"relationship",e.target.value)}
+                style={{ background:"#ffffff0d", border:"none", borderBottom:"1px solid #ffffff15", color: ref.relationship?"#f0ede8":"#ffffff40", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }}>
+                <option value="" style={{ background:"#1a1a2e" }}>Select relationship</option>
+                {REL_OPTIONS.map(r => <option key={r} value={r} style={{ background:"#1a1a2e" }}>{r}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── LICENSED MACHO LIST ──────────────────────────────────────────────────────
+function LicensedMachoList({ contacts = [], onChange }) {
+  const slots = Array.from({ length: 20 }, (_, i) => contacts[i] || { name:"", phone:"" });
+  const update = (idx, field, val) => {
+    const updated = slots.map((c, i) => i !== idx ? c : { ...c, [field]: val });
+    onChange(updated.filter(c => c.name || c.phone));
+  };
+  const filled = slots.filter(c => c.name).length;
+  return (
+    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:10, padding:"14px 16px", marginTop:8 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
+        <div style={{ fontSize:11, color:"#3b82f6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em" }}>📝 Enter Your 20 MACHO Contacts</div>
+        <div style={{ fontSize:12, color: filled>=20?"#10b981":"#ffffff50", fontWeight:"bold" }}>{filled}/20</div>
+      </div>
+      <div style={{ background:"#ffffff10", borderRadius:99, height:6, overflow:"hidden", marginBottom:14 }}>
+        <div style={{ width:`${Math.min(100,Math.round((filled/20)*100))}%`, height:"100%", background: filled>=20?"#10b981":"#3b82f6", borderRadius:99, transition:"width 0.4s" }} />
+      </div>
+      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+        {slots.map((contact, idx) => (
+          <div key={idx} style={{ display:"grid", gridTemplateColumns:"24px 1fr 1fr", gap:8, alignItems:"center" }}>
+            <div style={{ fontSize:11, color:"#ffffff30", textAlign:"center", fontWeight:"bold" }}>{idx+1}</div>
+            <input value={contact.name||""} onChange={e => update(idx,"name",e.target.value)} placeholder="Full name"
+              style={{ background:"#ffffff08", border:"1px solid #ffffff12", borderRadius:6, color:"#f0ede8", fontSize:12, outline:"none", padding:"6px 10px", fontFamily:"inherit" }} />
+            <input value={contact.phone||""} onChange={e => update(idx,"phone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12}
+              style={{ background:"#ffffff08", border:"1px solid #ffffff12", borderRadius:6, color:"#f0ede8", fontSize:12, outline:"none", padding:"6px 10px", fontFamily:"inherit" }} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -3096,7 +3216,7 @@ export default function App() {
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0 }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0, licensedRefs: [], licensedMachoList: [], licensedDgoDate: "", licensedDgoComplete: false }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
@@ -3415,6 +3535,45 @@ export default function App() {
               </div>
             )}
           </div>
+
+          {/* Licensed DGO, Refs, and MACHO List feed to trainer */}
+          {(rep.track === "licensed" || rep.track === "rvp") && (rep.licensedDgoDate || (rep.licensedRefs||[]).length > 0 || (rep.licensedMachoList||[]).length > 0) && (
+            <div style={{ background:"#06b6d408", border:"1px solid #06b6d425", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
+              <div style={{ fontSize:11, color:"#06b6d4", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:12 }}>⭐ Already Licensed Onboarding Data</div>
+
+              {/* DGO */}
+              {rep.licensedDgoDate && (
+                <div style={{ marginBottom:10 }}>
+                  <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:4 }}>🎉 DGO Date</div>
+                  <div style={{ fontSize:13, fontWeight:"bold", color: rep.licensedDgoComplete?"#10b981":"#f59e0b" }}>{rep.licensedDgoDate} {rep.licensedDgoComplete ? "✓ Completed" : "— Scheduled"}</div>
+                </div>
+              )}
+
+              {/* References */}
+              {(rep.licensedRefs||[]).filter(r=>r.name).length > 0 && (
+                <div style={{ marginBottom:10 }}>
+                  <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:6 }}>👥 References ({(rep.licensedRefs||[]).filter(r=>r.name).length}/5)</div>
+                  {(rep.licensedRefs||[]).filter(r=>r.name).map((ref,i) => (
+                    <div key={i} style={{ fontSize:12, color:"#f0ede8", marginBottom:3 }}>
+                      {i+1}. <strong>{ref.name}</strong> {ref.phone && `· ${ref.phone}`} {ref.relationship && `· ${ref.relationship}`}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* MACHO List */}
+              {(rep.licensedMachoList||[]).filter(c=>c.name).length > 0 && (
+                <div>
+                  <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:6 }}>📝 Training List ({(rep.licensedMachoList||[]).filter(c=>c.name).length}/20)</div>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"4px 12px" }}>
+                    {(rep.licensedMachoList||[]).filter(c=>c.name).map((c,i) => (
+                      <div key={i} style={{ fontSize:11, color:"#f0ede8" }}>{i+1}. {c.name} {c.phone && `· ${c.phone}`}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Investment Clients — standalone prominent panel */}
           <div style={{ background:"#f59e0b08", border:"1px solid #f59e0b30", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
