@@ -1523,6 +1523,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           pacCount={rep.pacCount||0}
           onChange={count => onUpdate({ ...rep, pacCount:count, lastActivity:new Date().toISOString() })}
           onUpdateClients={clients => onUpdate({ ...rep, investmentClients:clients, lastActivity:new Date().toISOString() })}
+          onUpdateBoth={(clients, count) => onUpdate({ ...rep, investmentClients:clients, pacCount:count, lastActivity:new Date().toISOString() })}
           investmentClients={rep.investmentClients||[]}
           isLicensed={rep.track === "licensed" || rep.track === "rvp"}
         />
@@ -2462,6 +2463,31 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
                     <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Notes</div>
                     <input value={app.notes||""} onChange={e => updateApp(app.id,"notes",e.target.value)} placeholder="Any additional notes" style={fieldStyle} />
                   </div>
+
+                  {/* Beneficiary and Emergency Contact Section */}
+                  <div style={{ background:"#8b5cf610", border:"1px solid #8b5cf630", borderRadius:10, padding:"14px 16px", marginBottom:10 }}>
+                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:12 }}>👤 Beneficiary Information</div>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px", marginBottom:12 }}>
+                      {[["beneName","Beneficiary Name","Full name"],["beneRelationship","Relationship","e.g. Spouse, Child"],["benePhone","Beneficiary Phone","Phone number"],["beneEmail","Beneficiary Email","Email address"]].map(([field,label,placeholder]) => (
+                        <div key={field}>
+                          <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>{label}</div>
+                          <input value={app[field]||""} onChange={e => updateApp(app.id, field, field==="benePhone"?formatPhone(e.target.value):e.target.value)} placeholder={placeholder}
+                            style={fieldStyle} />
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:12, marginTop:4, paddingTop:10, borderTop:"1px solid #8b5cf620" }}>🚨 Emergency Contact</div>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px" }}>
+                      {[["emergName","Emergency Contact Name","Full name"],["emergRelationship","Relationship","e.g. Spouse, Parent"],["emergPhone","Phone Number","Phone number"],["emergEmail","Email Address","Email address"]].map(([field,label,placeholder]) => (
+                        <div key={field}>
+                          <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>{label}</div>
+                          <input value={app[field]||""} onChange={e => updateApp(app.id, field, field==="emergPhone"?formatPhone(e.target.value):e.target.value)} placeholder={placeholder}
+                            style={fieldStyle} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Checklist status */}
                   <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginTop:8 }}>
                     <div style={{ fontSize:11, background: app.beneCollected==="yes"?"#10b98120":"#f43f5e15", border:`1px solid ${app.beneCollected==="yes"?"#10b98140":"#f43f5e30"}`, borderRadius:20, padding:"4px 12px", color: app.beneCollected==="yes"?"#10b981":"#f43f5e" }}>
@@ -2562,7 +2588,7 @@ function WeeklyScorecard({ activity = {}, onChange, readOnly = false, autoLifeAp
 }
 
 // ─── PAC COUNTER ──────────────────────────────────────────────────────────────
-function PacCounter({ pacCount = 0, onChange, onUpdateClients, investmentClients = [], isLicensed = false, readOnly = false }) {
+function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, investmentClients = [], isLicensed = false, readOnly = false }) {
   const goal = 10;
   const p = Math.min(100, Math.round((pacCount/goal)*100));
   const [showAddModal, setShowAddModal] = useState(false);
@@ -2572,21 +2598,32 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, investmentClients
   const handleAdd = () => {
     if (!newClientName.trim()) return;
     const entry = { id: Date.now().toString(), name: newClientName.trim(), date: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), movedOver: false };
-    if (onUpdateClients) onUpdateClients([...investmentClients, entry]);
-    if (onChange) {
-      onChange(pacCount + 1);
-      if ((pacCount + 1) === goal && !isLicensed) {
-        spawnConfetti(window.innerWidth/2, 200);
-        spawnEmoji(window.innerWidth/2, 180, "💰");
-      }
+    const newClients = [...investmentClients, entry];
+    const newCount = pacCount + 1;
+    // Single atomic update — prevents race condition overwriting clients
+    if (onUpdateBoth) {
+      onUpdateBoth(newClients, newCount);
+    } else {
+      if (onUpdateClients) onUpdateClients(newClients);
+      if (onChange) onChange(newCount);
+    }
+    if (newCount === goal && !isLicensed) {
+      spawnConfetti(window.innerWidth/2, 200);
+      spawnEmoji(window.innerWidth/2, 180, "💰");
     }
     setNewClientName("");
     setShowAddModal(false);
   };
 
   const handleRemove = (id) => {
-    if (onUpdateClients) onUpdateClients(investmentClients.filter(c => c.id !== id));
-    if (onChange) onChange(Math.max(0, pacCount - 1));
+    const newClients = investmentClients.filter(c => c.id !== id);
+    const newCount = Math.max(0, pacCount - 1);
+    if (onUpdateBoth) {
+      onUpdateBoth(newClients, newCount);
+    } else {
+      if (onUpdateClients) onUpdateClients(newClients);
+      if (onChange) onChange(newCount);
+    }
   };
 
   const toggleMoved = (id) => {
@@ -2760,6 +2797,7 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
               pacCount={pacCount}
               onChange={count => onUpdate({ ...myProduction, pacCount:count })}
               onUpdateClients={clients => onUpdate({ ...myProduction, investmentClients:clients })}
+              onUpdateBoth={(clients, count) => onUpdate({ ...myProduction, investmentClients:clients, pacCount:count })}
               investmentClients={myProduction.investmentClients||[]}
               isLicensed={true}
             />
@@ -2774,27 +2812,31 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
 // ─── APP TOUR ─────────────────────────────────────────────────────────────────
 const REP_TOUR_STEPS = [
   { emoji:"👋", title:"Welcome to Your Onboarding App!", body:"This app guides you through every step of your Primerica journey. Let us show you around real quick!" },
-  { emoji:"✅", title:"My Checklist", body:"This is your main to-do list. Complete each task to move through your onboarding. Check off items as you finish them!" },
-  { emoji:"📅", title:"Appointments Tab", body:"Log all your training appointments here with your contacts name, phone, date, and MACHO score. Aim for 15-20!" },
-  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate each contact using M-A-C-H-O (Married, Age 25-55, Children, Homeowner, Occupation). 3 or more stars means they are a great candidate for an appointment!" },
-  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references here. Your trainer can see these and will reach out to help set appointments." },
-  { emoji:"📜", title:"Scripts Tab", body:"Find your appointment setting scripts here. Practice them before making calls — you do not have to say them word for word!" },
-  { emoji:"📋", title:"Life Apps Tab", body:"Once you start writing business, log every life application here. You will be reminded to collect beneficiary info and schedule an investment." },
-  { emoji:"💰", title:"Investment Tracker", body:"Tap Log Future Investment Client each time you help a client get an investment. Enter their name so your trainer knows exactly who to move over to you when you pass your investment exam!" },
-  { emoji:"🗓", title:"Team Schedule", body:"See all weekly team meetings here. Check it daily so you never miss a meeting. Canceled meetings will show up here too!" },
-  { emoji:"🎯", title:"You Are All Set!", body:"Explore the app, complete your checklist, and reach out to your trainer if you need help. Let us go build something great!" },
+  { emoji:"🔐", title:"Your PIN is Your Key", body:"You created a 4-digit PIN when you logged in. You will need it every time you access your checklist. Keep it private — no one else should access your account!" },
+  { emoji:"✅", title:"My Checklist", body:"This is your main to-do list. Complete each task to move through your onboarding. Check items off as you finish them and watch your progress bar grow!" },
+  { emoji:"📅", title:"Appointments Tab", body:"Log all your training appointments here. Enter your contact name, phone, date, and MACHO score. Your goal is 15-20 training appointments!" },
+  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate each contact M-A-C-H-O (Married, Age 25-55, Children, Homeowner, Occupation). 3 or more stars means they are a great candidate. Set appointments with your best people!" },
+  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references with name, phone, and relationship. Your trainer can see these and will use them to help you set training appointments." },
+  { emoji:"📜", title:"Scripts Tab", body:"Your appointment setting scripts live here. Practice before every call. You do not have to say them word for word — understand the psychology and make it your own!" },
+  { emoji:"👁", title:"Field Training Observations", body:"Every time you watch your trainer complete a life app — tap the + on the Field Training Observations counter. Goal is 20 observations before you get licensed. Pay close attention!" },
+  { emoji:"📋", title:"Life App Counter", body:"Every time you are present for a completed life application during training, tap + on the Life Application counter. Goal is 10 during training!" },
+  { emoji:"💰", title:"Future Investment Clients", body:"Every time a client gets an investment while you are training, tap + and enter their name. These clients will be moved over to you when you pass your investment exam — this is your future AUM!" },
+  { emoji:"🗓", title:"Team Schedule", body:"See all weekly meetings here — Monday through Saturday. Check it daily. If a meeting is canceled your trainer will mark it and you will see it right here!" },
+  { emoji:"🎯", title:"You Are All Set!", body:"Complete your checklist, attend every meeting, set 15-20 appointments, and reach out to your trainer daily. Let us go build something great!" },
 ];
 
 const TRAINER_TOUR_STEPS = [
   { emoji:"👋", title:"Welcome to Your Training Dashboard!", body:"This app helps you manage and track all your reps through their onboarding journey. Here is a quick overview!" },
-  { emoji:"👥", title:"Rep Dashboard", body:"See all your reps at a glance with their progress bars, appointment counts, and status. Click any rep to open their full profile." },
-  { emoji:"📋", title:"Rep Profile Tabs", body:"Each rep has tabs for Trainer Checklist, Rep Checklist, Appointments, References, Life Apps, Scorecard, RVP Path, and Schedule." },
-  { emoji:"📊", title:"Rep-Entered Details", body:"When a rep enters their business commitment, DGO date, class info, exam date, or references it feeds directly into their profile here." },
-  { emoji:"✅", title:"Check-Ins", body:"Log check-ins with notes on each rep. You will see alerts if a rep has not been contacted in 3 or more days." },
-  { emoji:"📊", title:"My Production", body:"Track your own life apps, weekly scorecard, and investment counter in the My Production section at the top of your dashboard." },
-  { emoji:"🗓", title:"Team Schedule", body:"The Schedule tab on each rep shows the weekly meetings. As an admin you can cancel a meeting for the day and reps will see it immediately." },
-  { emoji:"⚙️", title:"Manage Trainers", body:"Add trainers, set PINs, and add booking links in Manage Trainers. Each trainer gets their own booking link for scheduling." },
-  { emoji:"🎯", title:"You Are All Set!", body:"Your team is counting on you. Use this app daily to stay on top of your reps and build a winning team!" },
+  { emoji:"👥", title:"Rep Dashboard", body:"See all your reps with progress bars, appointment counts, check-in status, and stall alerts. Click any rep card to open their full profile." },
+  { emoji:"📋", title:"Rep Profile Tabs", body:"Each rep profile has tabs for Trainer Checklist, Rep Checklist, Appointments, References, Life Apps, Investments, Scorecard, RVP Path, and Schedule. Everything in one place!" },
+  { emoji:"📊", title:"Rep-Entered Details Panel", body:"When a rep enters their business commitment, DGO date, class info, exam date, or references it feeds directly into their profile. You can see it all without asking them!" },
+  { emoji:"💰", title:"Future Investment Clients", body:"When a rep logs a future investment client you see their name right in the rep profile. These are the clients you will move over to the rep when they pass their investment exam." },
+  { emoji:"👁", title:"Field Training Observations", body:"You can update the Field Training Observation counter directly from the rep profile. Both you and the rep can tap + after each life app observation during training." },
+  { emoji:"✅", title:"Check-Ins", body:"Log check-ins with notes on each rep profile. You will get alerts when a rep has not been contacted in 3 or more days so nobody falls through the cracks." },
+  { emoji:"📊", title:"My Production", body:"Your own life apps, weekly scorecard, and investment tracking lives in the My Production section at the top of your dashboard. Track your own business here!" },
+  { emoji:"🗓", title:"Cancel Meetings", body:"Go to the Schedule tab on any rep profile and tap Cancel Today next to any meeting. Reps will immediately see a CANCELED banner on their app that day." },
+  { emoji:"⚙️", title:"Manage Trainers", body:"Add trainers, set their PINs, and add their booking links in Manage Trainers. Each trainer gets their own booking link that shows up for their reps." },
+  { emoji:"🎯", title:"You Are All Set!", body:"Check in daily, monitor your reps progress, log your own production, and build a winning team. Your team is counting on you!" },
 ];
 
 function AppTour({ steps, onClose, storageKey }) {
@@ -3302,32 +3344,6 @@ export default function App() {
                 />
               </div>
             )}
-
-            {/* Investment Clients Feed — always show */}
-            <div style={{ marginTop:12, paddingTop:12, borderTop:"1px solid #ffffff10" }}>
-              <div style={{ fontSize:10, color:"#f59e0b", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 }}>
-                💰 Future Investment Clients ({(rep.investmentClients||[]).length}) — to move over when rep gets investment licensed
-              </div>
-              {(rep.investmentClients||[]).length === 0
-                ? <div style={{ fontSize:12, color:"#ffffff30", fontStyle:"italic" }}>No investment clients logged yet</div>
-                : (
-                  <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-                    {(rep.investmentClients||[]).map(client => (
-                      <div key={client.id} style={{ background: client.movedOver?"#10b98110":"#ffffff06", border:`1px solid ${client.movedOver?"#10b98130":"#ffffff10"}`, borderRadius:8, padding:"8px 12px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                        <div>
-                          <div style={{ fontSize:13, color: client.movedOver?"#ffffff50":"#f0ede8", textDecoration: client.movedOver?"line-through":"none", fontWeight:"bold" }}>{client.name}</div>
-                          <div style={{ fontSize:10, color:"#ffffff30" }}>{client.date}</div>
-                        </div>
-                        <div onClick={() => updateRep(rep.id, r => ({ ...r, investmentClients: (r.investmentClients||[]).map(c => c.id!==client.id?c:{...c,movedOver:!c.movedOver}) }))}
-                          style={{ fontSize:11, background: client.movedOver?"#10b98120":"#ffffff10", border:`1px solid ${client.movedOver?"#10b98140":"#ffffff20"}`, color: client.movedOver?"#10b981":"#ffffff50", borderRadius:20, padding:"3px 10px", cursor:"pointer" }}>
-                          {client.movedOver ? "✓ Moved" : "Mark Moved"}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )
-              }
-            </div>
           </div>
 
           {/* Investment Clients — standalone prominent panel */}
