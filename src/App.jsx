@@ -1800,7 +1800,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
                       isRepView={true}
                       inlineContent={{
                         "l3": <LicensedRefsInput refs={rep.licensedRefs||[]} onChange={refs => onUpdate({ ...rep, licensedRefs:refs, lastActivity:new Date().toISOString() })} />,
-                        "l4": <LicensedMachoList contacts={rep.licensedMachoList||[]} onChange={list => onUpdate({ ...rep, licensedMachoList:list, lastActivity:new Date().toISOString() })} />,
+                        "l4": <div style={{ background:"#f59e0b10", border:"1px solid #f59e0b30", borderLeft:"3px solid #f59e0b", borderRadius:10, padding:"12px 16px", marginTop:4 }}><div style={{ fontSize:13, color:"#f59e0b", fontWeight:"bold", marginBottom:4 }}>⭐ Ready to build your list?</div><div style={{ fontSize:12, color:"#ffffff60" }}>Head to the <strong style={{ color:"#f0ede8" }}>📅 Appointments tab</strong> to log your 20 MACHO contacts and score them — everything is already set up there!</div></div>,
                       }}
                     />
                   ))}
@@ -3071,152 +3071,6 @@ function LicensedRefsInput({ refs = [], onChange }) {
   );
 }
 
-// ─── LICENSED MACHO TRAINING LIST ────────────────────────────────────────────
-function LicensedMachoList({ contacts = [], onChange }) {
-  const total = 20;
-
-  const filledContacts = contacts.filter(a => a.name).sort((a, b) => {
-    if (!a.date && !b.date) return 0;
-    if (!a.date) return 1;
-    if (!b.date) return -1;
-    return new Date(a.date) - new Date(b.date);
-  });
-  const emptySlots = Array.from({ length: Math.max(0, total - filledContacts.length) }, (_, i) => ({
-    id: `mc-empty-${i}`, name: "", phone: "", email: "", date: "", apptNote: "", macho: []
-  }));
-  const rows = [...filledContacts, ...emptySlots];
-
-  const filled = rows.filter(a => a.name);
-  const setCount = filled.length;
-  const qualifiedCount = filled.filter(a => (a.macho||[]).length >= 3).length;
-
-  const updateContact = (idx, field, value) => {
-    const updated = [...contacts];
-    if (!updated[idx]) updated[idx] = { id: `mc-${idx}`, name: "", phone: "", email: "", date: "", apptNote: "", macho: [] };
-    updated[idx] = { ...updated[idx], [field]: value };
-    onChange(updated);
-  };
-
-  return (
-    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:12, padding:"16px", marginTop:8 }}>
-      {/* Header */}
-      <div style={{ paddingBottom:8, borderBottom:"1px solid #f59e0b30", marginBottom:14 }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
-          <div style={{ fontSize:11, letterSpacing:"0.15em", textTransform:"uppercase", color:"#f59e0b", fontWeight:"bold" }}>⭐ My MACHO Training List</div>
-          <div style={{ fontSize:12, color:"#ffffff40" }}>{setCount} logged · {qualifiedCount} qualified · goal: 20</div>
-        </div>
-        <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
-          {[{label:"LOGGED", val:Math.round(setCount/total*100), color:"#3b82f6", count:setCount},
-            {label:"QUALIFIED (3+)", val:Math.round(qualifiedCount/total*100), color:"#10b981", count:qualifiedCount}].map(b => (
-            <div key={b.label} style={{ display:"flex", alignItems:"center", gap:10 }}>
-              <div style={{ fontSize:10, color:"#ffffff35", width:90, textTransform:"uppercase" }}>{b.label}</div>
-              <div style={{ flex:1, background:"#ffffff10", borderRadius:99, height:6, overflow:"hidden" }}>
-                <div style={{ width:`${b.val}%`, height:"100%", background:`linear-gradient(90deg,${b.color},#f59e0b)`, borderRadius:99, transition:"width 0.4s" }} />
-              </div>
-              <div style={{ fontSize:11, color:"#ffffff40", width:40, textAlign:"right" }}>{b.count}/20</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* MACHO Legend */}
-      <div style={{ background:"#f59e0b0a", border:"1px solid #f59e0b25", borderRadius:10, padding:"12px 14px", marginBottom:12 }}>
-        <div style={{ fontSize:12, fontWeight:"bold", color:"#f59e0b", marginBottom:8 }}>⭐ MACHO Qualification Guide — aim for 3–5 stars</div>
-        <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-          {[["M","Married"],["A","Age 25–55"],["C","Children"],["H","Homeowner"],["O","Occupation"]].map(([k,v]) => (
-            <div key={k} style={{ background:"#ffffff08", borderRadius:8, padding:"5px 10px", fontSize:11, color:"#ffffff60" }}>
-              <span style={{ color:"#f59e0b", fontWeight:"bold" }}>{k}</span> — {v}
-            </div>
-          ))}
-        </div>
-        <div style={{ fontSize:11, color:"#ffffff40", marginTop:8 }}>Tap the M·A·C·H·O letters on each contact to score them. 3+ stars = qualified. Set appointments with your best people!</div>
-      </div>
-
-      {/* Contact cards */}
-      <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-        {rows.map((contact, idx) => {
-          const isFilled = !!contact.name;
-          const isQualified = (contact.macho||[]).length >= 3;
-          const fieldStyle = {
-            background:"transparent", border:"none",
-            borderBottom:`1px solid #ffffff15`,
-            color: isFilled ? "#f0ede8" : "#ffffff35",
-            fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit",
-          };
-          return (
-            <div key={idx} style={{
-              background: isQualified ? "#10b98108" : isFilled ? "#ffffff08" : "#ffffff03",
-              border:`1px solid ${isQualified ? "#10b98130" : isFilled ? "#ffffff15" : "#ffffff08"}`,
-              borderRadius:12, padding:"14px 16px", transition:"all 0.2s"
-            }}>
-              <div style={{ fontSize:11, color: isFilled?"#ffffff50":"#ffffff20", fontWeight:"bold", letterSpacing:"0.1em", marginBottom:12 }}>CONTACT #{idx+1}</div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px", marginBottom:10 }}>
-                {[["name","Name","Contact name"],["phone","Phone","111-111-1111"],["email","Email","Email address"],["date","Date",null]].map(([field,label,placeholder]) => (
-                  <div key={field}>
-                    <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>{label}</div>
-                    <input
-                      type={field==="date"?"date":field==="email"?"email":"text"}
-                      value={contact[field]||""}
-                      onChange={e => updateContact(idx, field, field==="phone"?formatPhone(e.target.value):e.target.value)}
-                      placeholder={field==="phone"?"111-111-1111":(placeholder||"")}
-                      maxLength={field==="phone"?12:undefined}
-                      style={{ ...fieldStyle, colorScheme: field==="date"?"dark":undefined }}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div style={{ marginBottom:10 }}>
-                <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>Notes / Follow-up</div>
-                <input value={contact.apptNote||""} onChange={e => updateContact(idx,"apptNote",e.target.value)} placeholder="What was discussed? Next steps?" style={{ ...fieldStyle, fontSize:12 }} />
-              </div>
-              {/* MACHO Qualifier — exact same as new rep */}
-              {isFilled && (
-                <MachoQualifier
-                  contact={contact}
-                  onUpdate={(updated) => {
-                    const arr = [...contacts];
-                    arr[idx] = updated;
-                    onChange(arr);
-                  }}
-                />
-              )}
-              {isFilled && (contact.macho||[]).length > 0 && (
-                <div style={{ marginTop:8, padding:"8px 10px", background: isQualified?"#10b98110":"#f59e0b0a", border:`1px solid ${isQualified?"#10b98130":"#f59e0b25"}`, borderRadius:8 }}>
-                  <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:6 }}>MACHO Score</div>
-                  <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-                    {["M","A","C","H","O"].map(k => {
-                      const active = (contact.macho||[]).includes(k);
-                      const labels = {M:"Married",A:"Age 25-55",C:"Children",H:"Homeowner",O:"Occupation"};
-                      return (
-                        <div key={k} style={{ fontSize:11, background: active?"#f59e0b20":"#ffffff08", border:`1px solid ${active?"#f59e0b50":"#ffffff10"}`, borderRadius:20, padding:"3px 10px", color: active?"#f59e0b":"#ffffff25", fontWeight: active?"bold":"normal" }}>
-                          {active?"⭐":"☆"} {k} {active?`— ${labels[k]}`:""}
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div style={{ fontSize:12, color: isQualified?"#10b981":"#f59e0b", fontWeight:"bold", marginTop:6 }}>
-                    {(contact.macho||[]).length} ⭐ — {isQualified ? "✓ Qualified!" : `${3-(contact.macho||[]).length} more stars needed`}
-                    {(contact.macho||[]).length === 5 && " 🔥 Top priority!"}
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Goal badges */}
-      <div style={{ display:"flex", gap:8, marginTop:14, flexWrap:"wrap" }}>
-        {[["1–5 logged",5],["6–10 logged",10],["11–15 logged",15],["🎯 Goal: 20!",20]].map(([label,threshold]) => (
-          <div key={label} style={{ background: setCount>=threshold?"#10b98118":"#ffffff08", border:`1px solid ${setCount>=threshold?"#10b98140":"#ffffff15"}`, borderRadius:20, padding:"4px 12px", fontSize:11, color: setCount>=threshold?"#10b981":"#ffffff40", fontWeight: setCount>=threshold?"bold":"normal" }}>
-            {setCount>=threshold?"✓ ":""}{label}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ─── REP MESSAGING ──────────────────────────────────────────────────────────
 function RepMessaging({ rep, onUpdate, isTrainer = false }) {
   const [text, setText] = useState("");
@@ -3504,7 +3358,7 @@ export default function App() {
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0, licensedRefs: [], licensedMachoList: [], licensedDgoDate: "", licensedDgoComplete: false, repMessages: [], unreadByTrainer: false, unreadByRep: false, incomeGoal: 0 }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0, licensedRefs: [], licensedDgoDate: "", licensedDgoComplete: false, repMessages: [], unreadByTrainer: false, unreadByRep: false, incomeGoal: 0 }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
