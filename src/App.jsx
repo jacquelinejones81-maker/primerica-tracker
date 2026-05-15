@@ -2078,7 +2078,7 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
 
       {/* Manual month reset button */}
       <div style={{ textAlign: "right", marginBottom: 12 }}>
-        <button onClick={() => { if (window.confirm("Save this month\'s numbers and reset production counters for the new month?")) { const monthKey = getMonthKey(); const snapshot = { month: monthKey, label: getMonthLabel(monthKey), premium: reps.reduce((s,r)=>s+(Number(r.premiumSubmitted)||0),0), recruits: reps.filter(r=>r.isRecruited).length, licensed: reps.filter(r=>r.isLicensed||r.examCompleted).length, apptsDone: reps.reduce((s,r)=>s+(r.appointments||[]).filter(a=>a.completed||a.status==="completed").length,0), repCount: reps.length, savedAt: new Date().toISOString() }; onUpdateRep("__snapshot__", "monthly", snapshot); } }}
+        <button onClick={() => { if (window.confirm("Save this months numbers and reset production counters for the new month?")) { const monthKey = getMonthKey(); const snapshot = { month: monthKey, label: getMonthLabel(monthKey), premium: reps.reduce((s,r)=>s+(Number(r.premiumSubmitted)||0),0), recruits: reps.filter(r=>r.isRecruited).length, licensed: reps.filter(r=>r.isLicensed||r.examCompleted).length, apptsDone: reps.reduce((s,r)=>s+(r.appointments||[]).filter(a=>a.completed||a.status==="completed").length,0), repCount: reps.length, savedAt: new Date().toISOString() }; onUpdateRep("__snapshot__", "monthly", snapshot); } }}
           style={{ background: "none", border: "1px solid #f59e0b40", color: "#f59e0b", padding: "6px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>
           📅 Save Month & Reset
         </button>
