@@ -1376,7 +1376,7 @@ function ScriptsSection() {
 
 
 // ─── REP VIEW ─────────────────────────────────────────────────────────────────
-function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK }) {
+function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK, cancellations = {} }) {
   const [activeTab, setActiveTab] = useState("checklist");
   const track = TRACK_INFO[rep.track];
   const repChecklist = track.checklist;
@@ -2335,7 +2335,7 @@ export default function App() {
           </div>
           <div style={{ marginLeft: "auto", background: "#f59e0b20", border: "1px solid #f59e0b40", borderRadius: 20, padding: "4px 14px", fontSize: 12, color: "#f59e0b" }}>👁 Read-only preview</div>
         </div>
-        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(trainers.find(t => t.id === previewRep.trainerId))} />
+        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(trainers.find(t => t.id === previewRep.trainerId))} schedule={schedule} cancellations={cancellations} />
       </div>
     );
   }
@@ -2349,7 +2349,7 @@ export default function App() {
     const repTrainerData = trainers.find(t => t.id === repData.trainerId);
     const repAdminData = admins.find(a => a.id === repTrainerData?.adminId);
     const repTrainerLink = getApptLink(repTrainerData, repAdminData);
-    return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} trainerLink={repTrainerLink} />;
+    return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} trainerLink={repTrainerLink} schedule={schedule} cancellations={cancellations} />;
   }
 
   // ── DETAIL VIEW ──────────────────────────────────────────────────────────────
