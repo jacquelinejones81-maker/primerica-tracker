@@ -74,9 +74,9 @@ const FAST_START_CHECKLIST = [
   { id: "f8",   category: "FNA",                 task: "Complete Financial Needs Analysis  -  Roth IRA", note: null, link: null },
   { id: "f10",  category: "Events",              task: "Schedule Digital Grand Opening  -  enter your DGO date in the DGO card on your dashboard", note: null, link: null },
   { id: "f10b", category: "Events",              task: "Attend DGO  -  mark complete in the DGO card on your dashboard", note: "Review who attended, appointments set, and next steps", link: null },
-  { id: "f15",  category: "Bonus Goals",         task: "3×$3,000 done  -  $650 Bonus + District Manager Promotion", note: null, link: null },
-  { id: "f16",  category: "Bonus Goals",         task: "6×$6,000 done  -  $1,250 Bonus + District Manager Promotion", note: null, link: null },
-  { id: "f17",  category: "Bonus Goals",         task: "10×$10,000 done  -  $2,050 Bonus + District Manager Promotion", note: null, link: null },
+  { id: "f15",  category: "Bonus Goals",         task: "3x$3,000 done  -  $650 Bonus + District Manager Promotion", note: null, link: null },
+  { id: "f16",  category: "Bonus Goals",         task: "6x$6,000 done  -  $1,250 Bonus + District Manager Promotion", note: null, link: null },
+  { id: "f17",  category: "Bonus Goals",         task: "10x$10,000 done  -  $2,050 Bonus + District Manager Promotion", note: null, link: null },
   { id: "f18",  category: "Licensing",           task: "Schedule and complete pre-licensing class", note: "Scroll down to the Pre-Licensing Class card  -  enter your class start date, type (In-Person, Zoom, or Online), and mark complete when done", link: null },
   { id: "f19",  category: "Licensing",           task: "Schedule exam within 5 days of completing class  -  enter your exam date in the Exam section on your dashboard", note: null, link: null },
   { id: "f22b", category: "Licensing",           task: "Access Live Life Exam Review Sessions with Licensing Coaches", note: "Path: primericaonline.com → Life Licensing → Pre-Licensing Education (select your state) → Life Exam Study Resources → Life Review Sessions → Live Life Exam Review Sessions", link: "https://www.primericaonline.com" },
@@ -126,7 +126,7 @@ const LICENSED_NOW_WHAT = [
   { id: "l10", category: "Business Commitment",       task: "Set up Business Account", note: null, link: null },
   { id: "l11", category: "Business Commitment",       task: "Complete FNA  -  Life Insurance", note: null, link: null },
   { id: "l12", category: "Business Commitment",       task: "Complete FNA  -  Roth IRA", note: null, link: null },
-  { id: "l13", category: "Bonus Opportunity",         task: "Earn $200+ bonus  -  1 recruit + $1,000 field training observation premium before license shows up", note: "⚡ You have less than 5 days before your license shows up  -  move NOW! 3×$3,000 = $600 + District Leader Promotion", link: null },
+  { id: "l13", category: "Bonus Opportunity",         task: "Earn $200+ bonus  -  1 recruit + $1,000 field training observation premium before license shows up", note: "⚡ You have less than 5 days before your license shows up  -  move NOW! 3x$3,000 = $600 + District Leader Promotion", link: null },
 
   // ── Learning Activity ──
   { id: "l17",  category: "Learning Activity",        task: "Complete Life Training Hub (POL > Products > Life Insurance > Life Training Hub)", note: null, link: "https://www.primericaonline.com" },
@@ -173,8 +173,8 @@ const RVP_CHECKLIST = [
   { id: "rvp11", category: "Licensed Agents",    task: "License agents 17 - 20", note: "20 of 20  -  milestone reached! 🎉", link: null },
   // Production
   { id: "rvp12", category: "Production",         task: "Achieve QBI at 75% minimum", note: null, link: null },
-  { id: "rvp13", category: "Production",         task: "Month 1: 10 recruits × $10k in premium (20×20 goal)", note: "10 recs × $10k in premium  -  Month 1 of 2", link: null },
-  { id: "rvp14", category: "Production",         task: "Month 2: 10 recruits × $10k in premium (20×20 goal)", note: "10 recs × $10k in premium  -  Month 2 of 2", link: null },
+  { id: "rvp13", category: "Production",         task: "Month 1: 10 recruits x $10k in premium (20x20 goal)", note: "10 recs x $10k in premium  -  Month 1 of 2", link: null },
+  { id: "rvp14", category: "Production",         task: "Month 2: 10 recruits x $10k in premium (20x20 goal)", note: "10 recs x $10k in premium  -  Month 2 of 2", link: null },
   // Financial
   { id: "rvp15", category: "Financial Goals",    task: "Rolling 12-month income minimum of $20,000", note: null, link: null },
   { id: "rvp16", category: "Financial Goals",    task: "Receive $20k in company stock", note: null, link: null },
@@ -3990,7 +3990,7 @@ export default function App() {
             <div>
               <div style={{ fontSize:11, letterSpacing:"0.2em", color:"#f59e0b", textTransform:"uppercase", marginBottom:4 }}>Primerica Field Training</div>
               <div style={{ fontSize:20, fontWeight:"bold" }}>Rep Onboarding Tracker</div>
-              <div style={{ fontSize:12, color:"#ffffff50", marginTop:2 }}>Goal: 3×$3,000 - $750 Bonus - DM Promotion</div>
+              <div style={{ fontSize:12, color:"#ffffff50", marginTop:2 }}>Goal: 3x$3,000 - $750 Bonus - DM Promotion</div>
             </div>
             <div style={{ display:"flex", gap:10, alignItems:"center", flexWrap:"wrap" }}>
               {saveIndicator && <div style={{ fontSize:11, color:"#10b981" }}>✓ Saved</div>}
@@ -4010,7 +4010,7 @@ export default function App() {
           <div style={{ background:"#16213e", border:"1px solid #ffffff18", borderRadius:16, padding:28, width:"100%", maxWidth:540, maxHeight:"90vh", overflowY:"auto" }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
               <div style={{ fontSize:16, fontWeight:"bold" }}>Manage Admins & Trainers</div>
-              <button onClick={() => setShowTrainerMgr(false)} style={{ background:"none", border:"none", color:"#ffffff60", fontSize:20, cursor:"pointer" }}>×</button>
+              <button onClick={() => setShowTrainerMgr(false)} style={{ background:"none", border:"none", color:"#ffffff60", fontSize:20, cursor:"pointer" }}>x</button>
             </div>
 
             {/* ADMINS SECTION */}
