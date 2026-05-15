@@ -1444,6 +1444,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
   const [activeTab, setActiveTab] = useState("checklist");
   const [showConditional, setShowConditional] = useState(false);
   const track = TRACK_INFO[rep.track] || TRACK_INFO["fast"];
+  const repChecklist = track.checklist;
   const repCats = [...new Set(repChecklist.map(i => i.category))];
   const rp = pct(rep.repCompleted.length, repChecklist.length);
   const graduated = rep.repCompleted.length === repChecklist.length;
