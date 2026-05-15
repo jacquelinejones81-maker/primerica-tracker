@@ -157,7 +157,6 @@ const LICENSED_NOW_WHAT = [
   { id: "l42", category: "RVP Path",                  task: "Request RVP checklist (if RVP promotion is your desire)", note: null, link: null },
 ];
 
-
 const RVP_CHECKLIST = [
   // Licensing
   { id: "rvp1",  category: "Licensing",          task: "Become Life Licensed", note: null, link: null },
@@ -318,7 +317,6 @@ function exportRepCSV(rep, trainers) {
   a.href = url; a.download = `${rep.name.replace(/\s+/g, "_")}_onboarding.csv`; a.click();
   URL.revokeObjectURL(url);
 }
-
 
 // ─── MOTIVATIONAL QUOTES ─────────────────────────────────────────────────────
 const QUOTES = [
@@ -568,7 +566,6 @@ function AppointmentTracker({ appointments = [], onChange }) {
   );
 }
 
-
 const LOGIN_KEY = "primerica_session";
 
 function saveSession(role, id) { try { localStorage.setItem(LOGIN_KEY, JSON.stringify({ role, id, ts: Date.now() })); } catch {} }
@@ -726,8 +723,6 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
     </div>
   );
 }
-
-
 
 // ─── MACHO QUALIFIER ─────────────────────────────────────────────────────────
 const MACHO_CRITERIA = [
@@ -970,8 +965,6 @@ function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFA
   );
 }
 
-
-
 // ─── RVP CHECKLIST ────────────────────────────────────────────────────────────
 function RvpChecklist({ completedIds, promotionDate, onToggle, onSetDate, isRepView = false }) {
   const categories = [...new Set(RVP_CHECKLIST.map(i => i.category))];
@@ -1165,7 +1158,6 @@ function TeamScheduleView({ schedule, isAdmin, onUpdate, cancellations = {}, onC
   );
 }
 
-
 // ─── DAILY BANNER ─────────────────────────────────────────────────────────────
 const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const TYPE_EMOJIS = { study:"📖", training:"💪", event:"🎉", meeting:"🎖️" };
@@ -1269,7 +1261,6 @@ function DailyBanner({ schedule, appointments = [], cancellations = {} }) {
     </div>
   );
 }
-
 
 // ─── REFERENCES SECTION ───────────────────────────────────────────────────────
 const RELATIONSHIP_OPTIONS = ["Friend","Family","Coworker","Neighbor","Church Member","Classmate","Associate","Other"];
@@ -1461,7 +1452,6 @@ function ScriptsSection() {
     </div>
   );
 }
-
 
 // ─── REP VIEW ─────────────────────────────────────────────────────────────────
 function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK, cancellations = {}, allReps = [], trainers = [] }) {
@@ -1868,8 +1858,6 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
 const inputStyle = { background: "#ffffff0d", border: "1px solid #ffffff20", borderRadius: 8, padding: "10px 14px", color: "#f0ede8", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };
 const labelStyle = { fontSize: 11, color: "#ffffff60", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6, display: "block" };
 
-
-
 // ─── TRAINER ACCOUNTABILITY HELPERS ──────────────────────────────────────────
 function getTrainerActivityScore(trainerReps) {
   if (!trainerReps.length) return { grade: "N/A", color: "#ffffff40", score: 0 };
@@ -1995,8 +1983,6 @@ function CheckInSection({ checkIns = [], onAddCheckIn }) {
   );
 }
 
-
-
 // ─── REP ACCOUNTABILITY BANNER ───────────────────────────────────────────────
 function RepAccountabilityBanner({ rep }) {
   const track = TRACK_INFO[rep.track];
@@ -2088,7 +2074,6 @@ function RepAccountabilityBanner({ rep }) {
   );
 }
 
-
 // ─── ADMIN ADDER ─────────────────────────────────────────────────────────────
 function AdminAdder({ onAdd }) {
   const [name, setName] = useState("");
@@ -2121,9 +2106,6 @@ function AdminAdder({ onAdd }) {
     </div>
   );
 }
-
-
-
 
 // ─── REP PHOTO UPLOAD ─────────────────────────────────────────────────────────
 function RepPhotoUpload({ photo, onUpdate }) {
@@ -2372,7 +2354,6 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
     </div>
   );
 }
-
 
 // ─── LIFE APPLICATION TRACKER ─────────────────────────────────────────────────
 const APP_STATUSES = ["Submitted","Approved","Pending","Declined"];
@@ -2857,7 +2838,6 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
   );
 }
 
-
 // ─── MY PRODUCTION SECTION ────────────────────────────────────────────────────
 function MyProductionSection({ myProduction, onUpdate, trainerName }) {
   const [expanded, setExpanded] = useState(false);
@@ -2931,49 +2911,47 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
   );
 }
 
-
 // ─── APP TOUR ─────────────────────────────────────────────────────────────────
 const REP_TOUR_STEPS = [
-  { emoji:"👋", title:"Welcome to Your Training App!", body:"This app guides you through every step of your new rep training. Complete your checklist, log appointments, and track your progress all in one place!" },
-  { emoji:"🔐", title:"Your PIN is Your Key", body:"You created a 4-digit PIN when you logged in. You will need it every time you log in. Keep it private — no one else can access your checklist!" },
-  { emoji:"✅", title:"My Checklist", body:"Work through your checklist top to bottom. Check off each item as you complete it and watch your progress bar grow. Your trainer can see everything you check off!" },
-  { emoji:"📅", title:"Appointments Tab", body:"Log every training appointment here. Enter the contact name, phone, date, and notes. Your goal is 15-20 training appointments!" },
-  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate each contact using M-A-C-H-O — Married, Age 25-55, Children under 17, Homeowner, Occupation. 3 or more stars means they are a great appointment candidate!" },
-  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references with name, phone, and relationship. Your trainer will reach out to help you set training appointments with them." },
-  { emoji:"📜", title:"Scripts Tab", body:"Your appointment setting scripts are here. Practice them before every call. You do not have to say them word for word — understand the message and make it your own!" },
-  { emoji:"👁", title:"Field Training Observations", body:"Every time you observe your trainer complete a life app, tap + on the FTO counter. Goal is 20 observations before licensing. Pay close attention to the entire process!" },
-  { emoji:"📋", title:"Life App Counter", body:"Tap + every time you are present for a completed life application during training. Goal is 10 during training!" },
-  { emoji:"💰", title:"Future Investment Clients", body:"Tap + and enter a name every time a client gets an investment while you are training. These will be moved over to you when you pass your investment exam — this is your future AUM!" },
-  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner at the top shows what meetings are scheduled today. Check it every time you log in. If a meeting is canceled your trainer marks it and you will see it right away!" },
-  { emoji:"🎯", title:"You Are All Set!", body:"Complete your checklist, set 15-20 appointments, attend every meeting, and check in with your trainer daily. Let us go build something great!" },
+  { emoji:"👋", title:"Welcome to Your Training App!", body:"This app guides you through your new rep training. Complete your checklist, log appointments, and track your progress!" },
+  { emoji:"🔐", title:"Your PIN is Your Key", body:"You created a 4-digit PIN at login. You need it every time you log in. Keep it private!" },
+  { emoji:"✅", title:"My Checklist", body:"Work top to bottom. Check off each item as you complete it. Your trainer can see everything!" },
+  { emoji:"📅", title:"Appointments Tab", body:"Log every training appointment here with name, phone, date, and MACHO score. Goal: 15-20 appointments!" },
+  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate contacts M-A-C-H-O — Married, Age 25-55, Children, Homeowner, Occupation. 3+ stars = great candidate!" },
+  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references. Your trainer will use them to help set training appointments." },
+  { emoji:"📜", title:"Scripts Tab", body:"Your appointment setting scripts live here. Practice before every call — understand the message and make it your own!" },
+  { emoji:"👁", title:"Field Training Observations", body:"Tap + every time you observe your trainer complete a life app. Goal: 20 observations before licensing!" },
+  { emoji:"📋", title:"Life App Counter", body:"Tap + every time you are present for a completed life application during training. Goal: 10!" },
+  { emoji:"💰", title:"Future Investment Clients", body:"Tap + and enter a name every time a client gets an investment. These will be moved to you when you pass your investment exam!" },
+  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner shows what meetings are today. Check it every login. Canceled meetings show up here too!" },
+  { emoji:"🎯", title:"You Are All Set!", body:"Complete your checklist, set 15-20 appointments, attend every meeting, and check in with your trainer daily!" },
 ];
 
 const LICENSED_TOUR_STEPS = [
-  { emoji:"👋", title:"Welcome — You Are Life Licensed!", body:"Congratulations on getting licensed! This checklist guides you through everything you need to do now that you have your life license. Let us get you started!" },
-  { emoji:"⭐", title:"Already Licensed When You Joined?", body:"If you joined already life licensed and skipped new rep training — tap the gold alert at the top of your checklist first. Those onboarding steps are required for you and must be done before anything else." },
-  { emoji:"📜", title:"Start Your Securities License Now!", body:"As soon as you have your life license, start your securities license. You will see it near the top of your checklist. Begin with the SIE, then Series 6, 63, and 26 if you are going RVP!" },
-  { emoji:"🏅", title:"Milestones", body:"Track your first policy, first recruit, and other key milestones at the top of your checklist. These are celebrations — check them off when you hit them!" },
-  { emoji:"📋", title:"Life Application Tracker", body:"Log every life app you write here. After entering a client name you will be asked about Beneficiary and Emergency Contacts, and whether you scheduled an investment. Every life app should come with an investment!" },
-  { emoji:"💰", title:"Investment Tracker", body:"Log every future investment client here. Enter their name so your trainer knows exactly who to move over to you when you pass your investment exam. This is your AUM in progress!" },
-  { emoji:"📊", title:"Weekly Scorecard", body:"Track your weekly activity — contacts made, appointments set and completed, life apps submitted, and investments done. This keeps you accountable to your own goals!" },
-  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner at the top of your app shows what is scheduled today. Check it every time you log in so you never miss a team meeting. Canceled meetings show up here too!" },
-  { emoji:"👑", title:"RVP Path", body:"When you are ready to pursue RVP promotion, check the RVP Path box on your checklist to unlock your full RVP checklist with all the steps to get promoted!" },
-  { emoji:"🎯", title:"You Are All Set!", body:"Write business, build your team, and stay consistent. Log your activity, attend every meeting, and work with your trainer daily. Let us go build something great!" },
+  { emoji:"👋", title:"Welcome — You Are Life Licensed!", body:"Congratulations! This checklist guides you through everything you need to do now that you have your life license!" },
+  { emoji:"⭐", title:"Already Licensed When You Joined?", body:"If you joined already licensed and skipped new rep training — tap the gold alert at the top first. Those steps are required for you!" },
+  { emoji:"📜", title:"Start Securities License Now!", body:"Start your securities license immediately after life licensing. SIE first, then Series 6, 63, and 26 for RVP!" },
+  { emoji:"🏅", title:"Milestones", body:"Track your first policy, first recruit, and key milestones at the top of your checklist. Check them off when you hit them!" },
+  { emoji:"📋", title:"Life Application Tracker", body:"Log every life app here. You will be asked about Emergency Contacts and whether you scheduled an investment. Every life app should come with an investment!" },
+  { emoji:"💰", title:"Investment Tracker", body:"Log every future investment client by name. Your trainer knows exactly who to move over when you pass your investment exam!" },
+  { emoji:"📊", title:"Weekly Scorecard", body:"Track weekly activity — contacts, appointments, life apps, and investments. Keeps you accountable to your goals!" },
+  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner shows what is scheduled today. Check it every login so you never miss a meeting!" },
+  { emoji:"👑", title:"RVP Path", body:"Check the RVP Path box on your checklist to unlock your full RVP promotion checklist!" },
+  { emoji:"🎯", title:"You Are All Set!", body:"Write business, build your team, log your activity, and work with your trainer daily. Let us go!" },
 ];
 
 const TRAINER_TOUR_STEPS = [
-  { emoji:"👋", title:"Welcome to Your Training Dashboard!", body:"This app helps you manage and track all your reps through their onboarding journey. Here is a quick overview!" },
-  { emoji:"👥", title:"Rep Dashboard", body:"See all your reps with progress bars, appointment counts, check-in status, and stall alerts. Click any rep card to open their full profile." },
-  { emoji:"📋", title:"Rep Profile Tabs", body:"Each rep profile has tabs for Trainer Checklist, Rep Checklist, Appointments, References, Life Apps, Investments, Scorecard, RVP Path, and Schedule. Everything in one place!" },
-  { emoji:"📊", title:"Rep-Entered Details Panel", body:"When a rep enters their business commitment, DGO date, class info, exam date, or references it feeds directly into their profile. You can see it all without asking them!" },
-  { emoji:"💰", title:"Future Investment Clients", body:"When a rep logs a future investment client you see their name right in the rep profile. These are the clients you will move over to the rep when they pass their investment exam." },
-  { emoji:"👁", title:"Field Training Observations", body:"You can update the Field Training Observation counter directly from the rep profile. Both you and the rep can tap + after each life app observation during training." },
-  { emoji:"⭐", title:"Already Licensed Reps", body:"When a rep joins already life licensed, they see a gold alert at the top of their checklist guiding them to complete the onboarding steps specific to them. If they went through new rep training those steps are hidden — no confusion!" },
-  { emoji:"✅", title:"Check-Ins", body:"Log check-ins with notes on each rep profile. You will get alerts when a rep has not been contacted in 3 or more days so nobody falls through the cracks." },
-  { emoji:"📊", title:"My Production", body:"Your own life apps, weekly scorecard, and investment tracking lives in the My Production section at the top of your dashboard. Track your own business here!" },
-  { emoji:"🗓", title:"Cancel Meetings", body:"Go to the Schedule tab on any rep profile and tap Cancel Today next to any meeting. Reps will immediately see a CANCELED banner on their app that day." },
-  { emoji:"⚙️", title:"Manage Trainers", body:"Add trainers, set their PINs, and add their booking links in Manage Trainers. Each trainer gets their own booking link that shows up for their reps." },
-  { emoji:"🎯", title:"You Are All Set!", body:"Check in daily, monitor your reps progress, log your own production, and build a winning team. Your team is counting on you!" },
+  { emoji:"👋", title:"Welcome to Your Training Dashboard!", body:"This app helps you manage and track all your reps through their onboarding journey!" },
+  { emoji:"👥", title:"Rep Dashboard", body:"See all your reps with progress bars, appointment counts, and stall alerts. Click any rep to open their full profile." },
+  { emoji:"📋", title:"Rep Profile Tabs", body:"Each rep has tabs for Checklist, Appointments, References, Life Apps, Investments, Scorecard, Messages, RVP, and Schedule." },
+  { emoji:"📊", title:"Rep-Entered Details", body:"When a rep enters their DGO date, class info, exam date, or references it feeds directly into their profile!" },
+  { emoji:"💰", title:"Future Investment Clients", body:"When a rep logs a future investment client you see their name right in the rep profile to move over later." },
+  { emoji:"👁", title:"Field Training Observations", body:"Update the FTO counter directly from the rep profile. Both you and the rep can tap + after each observation." },
+  { emoji:"✅", title:"Check-Ins", body:"Log check-ins with notes on each rep. Get alerts when a rep has not been contacted in 3 or more days!" },
+  { emoji:"📊", title:"My Production", body:"Track your own life apps, weekly scorecard, and investments in My Production at the top of your dashboard." },
+  { emoji:"🗓", title:"Cancel Meetings", body:"Go to the Schedule tab on any rep and tap Cancel Today. Reps immediately see a CANCELED banner!" },
+  { emoji:"⚙️", title:"Manage Trainers", body:"Add trainers, set PINs, and add booking links. Each trainer gets their own booking link for their reps." },
+  { emoji:"🎯", title:"You Are All Set!", body:"Check in daily, monitor your reps, log your own production, and build a winning team!" },
 ];
 
 function AppTour({ steps, onClose, storageKey }) {
@@ -3019,7 +2997,6 @@ function TourButton({ onClick }) {
   );
 }
 
-
 // ─── FIELD TRAINING OBSERVATION COUNTER ──────────────────────────────────────
 function FieldObsCounter({ count = 0, onChange }) {
   const goal = 20;
@@ -3053,7 +3030,6 @@ function FieldObsCounter({ count = 0, onChange }) {
     </div>
   );
 }
-
 
 // ─── LICENSED REFS INPUT ──────────────────────────────────────────────────────
 function LicensedRefsInput({ refs = [], onChange }) {
@@ -3094,7 +3070,6 @@ function LicensedRefsInput({ refs = [], onChange }) {
     </div>
   );
 }
-
 
 // ─── LICENSED MACHO TRAINING LIST ────────────────────────────────────────────
 function LicensedMachoList({ contacts = [], onChange }) {
@@ -3242,66 +3217,53 @@ function LicensedMachoList({ contacts = [], onChange }) {
   );
 }
 
-
-// ─── REP MESSAGING ────────────────────────────────────────────────────────────
+// ─── REP MESSAGING ──────────────────────────────────────────────────────────
 function RepMessaging({ rep, onUpdate, isTrainer = false }) {
   const [text, setText] = useState("");
   const messages = rep.repMessages || [];
-  const unread = isTrainer ? rep.unreadByTrainer : rep.unreadByRep;
 
   const send = () => {
     if (!text.trim()) return;
-    const msg = { id: Date.now().toString(), text: text.trim(), sender: isTrainer ? "trainer" : "rep", timestamp: new Date().toISOString(), resolved: false };
-    const updated = [...messages, msg];
-    onUpdate({ ...rep, repMessages: updated, unreadByTrainer: !isTrainer, unreadByRep: isTrainer, lastActivity: new Date().toISOString() });
+    const msg = { id:Date.now().toString(), text:text.trim(), sender:isTrainer?"trainer":"rep", timestamp:new Date().toISOString(), resolved:false };
+    onUpdate({ ...rep, repMessages:[...messages, msg], unreadByTrainer:!isTrainer, unreadByRep:isTrainer, lastActivity:new Date().toISOString() });
     setText("");
   };
 
-  const resolve = (id) => {
-    const updated = messages.map(m => m.id !== id ? m : { ...m, resolved: true });
-    onUpdate({ ...rep, repMessages: updated, lastActivity: new Date().toISOString() });
-  };
+  const resolve = (id) => onUpdate({ ...rep, repMessages:messages.map(m=>m.id!==id?m:{...m,resolved:true}), lastActivity:new Date().toISOString() });
 
-  const markRead = () => {
-    if (isTrainer && rep.unreadByTrainer) onUpdate({ ...rep, unreadByTrainer: false });
-    if (!isTrainer && rep.unreadByRep) onUpdate({ ...rep, unreadByRep: false, lastActivity: new Date().toISOString() });
-  };
+  React.useEffect(() => {
+    if (isTrainer && rep.unreadByTrainer) onUpdate({ ...rep, unreadByTrainer:false });
+    if (!isTrainer && rep.unreadByRep) onUpdate({ ...rep, unreadByRep:false, lastActivity:new Date().toISOString() });
+  }, []);
 
-  React.useEffect(() => { markRead(); }, []);
-
-  const active = messages.filter(m => !m.resolved);
-  const resolved = messages.filter(m => m.resolved);
+  const active = messages.filter(m=>!m.resolved);
+  const resolved = messages.filter(m=>m.resolved);
+  const unread = isTrainer ? rep.unreadByTrainer : rep.unreadByRep;
 
   return (
     <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, padding:"16px 18px", marginBottom:16 }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
         <div style={{ fontSize:13, fontWeight:"bold", color:"#3b82f6" }}>
-          💬 {isTrainer ? `Messages from ${rep.name}` : "Message My Trainer"}
+          💬 {isTrainer?`Messages from ${rep.name}`:"Message My Trainer"}
           {unread && <span style={{ background:"#f43f5e", color:"#fff", borderRadius:"50%", fontSize:10, padding:"1px 6px", marginLeft:8, fontWeight:"bold" }}>NEW</span>}
         </div>
       </div>
-
-      {/* Active messages */}
-      {active.length === 0 && <div style={{ fontSize:12, color:"#ffffff30", fontStyle:"italic", marginBottom:14 }}>No active messages</div>}
+      {active.length===0 && <div style={{ fontSize:12, color:"#ffffff30", fontStyle:"italic", marginBottom:14 }}>No active messages</div>}
       <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:14 }}>
         {active.map(msg => (
-          <div key={msg.id} style={{ background: msg.sender==="rep"?"#3b82f610":"#10b98110", border:`1px solid ${msg.sender==="rep"?"#3b82f630":"#10b98130"}`, borderRadius:10, padding:"10px 14px" }}>
+          <div key={msg.id} style={{ background:msg.sender==="rep"?"#3b82f610":"#10b98110", border:`1px solid ${msg.sender==="rep"?"#3b82f630":"#10b98130"}`, borderRadius:10, padding:"10px 14px" }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
-              <div style={{ fontSize:10, color: msg.sender==="rep"?"#3b82f6":"#10b981", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em" }}>
-                {msg.sender === "rep" ? rep.name : "Trainer"}
-              </div>
+              <div style={{ fontSize:10, color:msg.sender==="rep"?"#3b82f6":"#10b981", fontWeight:"bold", textTransform:"uppercase" }}>{msg.sender==="rep"?rep.name:"Trainer"}</div>
               <div style={{ display:"flex", gap:8, alignItems:"center" }}>
                 <div style={{ fontSize:10, color:"#ffffff30" }}>{new Date(msg.timestamp).toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</div>
-                <button onClick={() => resolve(msg.id)} style={{ background:"#ffffff10", border:"1px solid #ffffff20", color:"#ffffff50", borderRadius:20, padding:"2px 10px", fontSize:10, cursor:"pointer" }}>✓ Resolve</button>
+                <button onClick={()=>resolve(msg.id)} style={{ background:"#ffffff10", border:"1px solid #ffffff20", color:"#ffffff50", borderRadius:20, padding:"2px 10px", fontSize:10, cursor:"pointer" }}>✓ Resolve</button>
               </div>
             </div>
             <div style={{ fontSize:13, color:"#f0ede8", lineHeight:1.6 }}>{msg.text}</div>
           </div>
         ))}
       </div>
-
-      {/* Resolved messages — collapsed */}
-      {resolved.length > 0 && (
+      {resolved.length>0 && (
         <details style={{ marginBottom:14 }}>
           <summary style={{ fontSize:11, color:"#ffffff30", cursor:"pointer", marginBottom:8 }}>✓ {resolved.length} resolved message{resolved.length!==1?"s":""}</summary>
           <div style={{ display:"flex", flexDirection:"column", gap:8, marginTop:8 }}>
@@ -3314,23 +3276,15 @@ function RepMessaging({ rep, onUpdate, isTrainer = false }) {
           </div>
         </details>
       )}
-
-      {/* Compose */}
       <div style={{ display:"flex", gap:8 }}>
-        <input value={text} onChange={e => setText(e.target.value)} onKeyDown={e => e.key==="Enter" && send()}
-          placeholder={isTrainer ? "Reply to rep..." : "Send a message to your trainer..."}
-          style={{ flex:1, background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:13, outline:"none", fontFamily:"inherit" }} />
-        <button onClick={send} disabled={!text.trim()}
-          style={{ background: text.trim()?"#3b82f6":"#ffffff15", border:"none", color: text.trim()?"#fff":"#ffffff30", borderRadius:8, padding:"10px 18px", cursor: text.trim()?"pointer":"default", fontWeight:"bold", fontSize:13 }}>
-          Send
-        </button>
+        <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder={isTrainer?"Reply to rep...":"Send a message to your trainer..."} style={{ flex:1, background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:13, outline:"none", fontFamily:"inherit" }} />
+        <button onClick={send} disabled={!text.trim()} style={{ background:text.trim()?"#3b82f6":"#ffffff15", border:"none", color:text.trim()?"#fff":"#ffffff30", borderRadius:8, padding:"10px 18px", cursor:text.trim()?"pointer":"default", fontWeight:"bold", fontSize:13 }}>Send</button>
       </div>
     </div>
   );
 }
 
-
-// ─── CHECK-IN STREAK ──────────────────────────────────────────────────────────
+// ─── CHECK-IN STREAK ────────────────────────────────────────────────────────
 function CheckInStreak({ checkIns = [] }) {
   if (checkIns.length === 0) return (
     <div style={{ background:"#f43f5e10", border:"1px solid #f43f5e30", borderRadius:12, padding:"12px 16px", marginBottom:16, display:"flex", alignItems:"center", gap:12 }}>
@@ -3339,53 +3293,38 @@ function CheckInStreak({ checkIns = [] }) {
     </div>
   );
   const sorted = [...checkIns].sort((a,b) => new Date(b.date)-new Date(a.date));
-  const lastDate = new Date(sorted[0].date);
-  const daysSince = Math.floor((new Date()-lastDate)/86400000);
+  const daysSince = Math.floor((new Date()-new Date(sorted[0].date))/86400000);
   let streak = 0;
   const today = new Date(); today.setHours(0,0,0,0);
   for (let i=0; i<sorted.length; i++) {
     const d = new Date(sorted[i].date); d.setHours(0,0,0,0);
-    const diff = Math.floor((today-d)/86400000);
-    if (diff <= i+1) streak++;
+    if (Math.floor((today-d)/86400000) <= i+1) streak++;
     else break;
   }
-  const color = daysSince === 0 ? "#10b981" : daysSince <= 2 ? "#f59e0b" : "#f43f5e";
-  const emoji = streak >= 7 ? "🔥🔥🔥" : streak >= 3 ? "🔥🔥" : streak >= 1 ? "🔥" : "💤";
+  const color = daysSince===0?"#10b981":daysSince<=2?"#f59e0b":"#f43f5e";
+  const emoji = streak>=7?"🔥🔥🔥":streak>=3?"🔥🔥":"🔥";
   return (
     <div style={{ background:`${color}10`, border:`1px solid ${color}30`, borderRadius:12, padding:"12px 16px", marginBottom:16, display:"flex", alignItems:"center", gap:14 }}>
-      <div style={{ fontSize:28 }}>{emoji}</div>
+      <div style={{ fontSize:28 }}>{streak>0?emoji:"💤"}</div>
       <div style={{ flex:1 }}>
         <div style={{ fontSize:14, fontWeight:"bold", color }}>{streak} day check-in streak!</div>
-        <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>
-          {daysSince === 0 ? "Checked in today — great work!" : daysSince === 1 ? "Last checked in yesterday — keep it up!" : `Last checked in ${daysSince} days ago — reach out to your trainer today!`}
-        </div>
+        <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>{daysSince===0?"Checked in today — great work!":daysSince===1?"Last checked in yesterday — keep it up!":`Last checked in ${daysSince} days ago — reach out to your trainer today!`}</div>
       </div>
-      {streak >= 7 && <div style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:20, padding:"4px 12px", fontSize:11, color:"#f59e0b", fontWeight:"bold" }}>7 day streak!</div>}
+      {streak>=7 && <div style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:20, padding:"4px 12px", fontSize:11, color:"#f59e0b", fontWeight:"bold" }}>7 day streak!</div>}
     </div>
   );
 }
 
-
-// ─── TEAM LEADERBOARD ─────────────────────────────────────────────────────────
-function TeamLeaderboard({ currentRep, allReps, trainers }) {
+// ─── TEAM LEADERBOARD ───────────────────────────────────────────────────────
+function TeamLeaderboard({ currentRep, allReps }) {
   const [expanded, setExpanded] = useState(false);
-  const trainerReps = allReps.filter(r => r.trainerId === currentRep.trainerId && r.id !== currentRep.id);
-  const teamReps = [currentRep, ...trainerReps];
-  const ranked = [...teamReps].map(r => ({
-    id: r.id,
-    name: r.id === currentRep.id ? "You" : r.name.split(" ")[0],
-    isMe: r.id === currentRep.id,
-    appts: (r.appointments||[]).filter(a=>a.name).length,
-    fto: r.fieldObsCount||0,
-    lifeApps: r.lifeAppCount||0,
-    score: (r.appointments||[]).filter(a=>a.name).length + (r.fieldObsCount||0) + (r.lifeAppCount||0),
-  })).sort((a,b) => b.score - a.score);
-  const myRank = ranked.findIndex(r => r.isMe) + 1;
+  const teamReps = [currentRep, ...allReps.filter(r => r.trainerId===currentRep.trainerId && r.id!==currentRep.id)];
+  const ranked = teamReps.map(r => ({ id:r.id, name:r.id===currentRep.id?"You":r.name.split(" ")[0], isMe:r.id===currentRep.id, appts:(r.appointments||[]).filter(a=>a.name).length, fto:r.fieldObsCount||0, lifeApps:r.lifeAppCount||0, score:(r.appointments||[]).filter(a=>a.name).length+(r.fieldObsCount||0)+(r.lifeAppCount||0) })).sort((a,b)=>b.score-a.score);
+  const myRank = ranked.findIndex(r=>r.isMe)+1;
   const medals = ["🥇","🥈","🥉"];
-
   return (
     <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, marginBottom:16, overflow:"hidden" }}>
-      <div onClick={() => setExpanded(s=>!s)} style={{ padding:"14px 18px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+      <div onClick={()=>setExpanded(s=>!s)} style={{ padding:"14px 18px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
         <div>
           <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b" }}>🏆 Team Leaderboard</div>
           <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>You are ranked #{myRank} on your team</div>
@@ -3393,53 +3332,44 @@ function TeamLeaderboard({ currentRep, allReps, trainers }) {
         <div style={{ fontSize:16, color:"#ffffff40" }}>{expanded?"▲":"▼"}</div>
       </div>
       {expanded && (
-        <div style={{ padding:"0 18px 16px" }}>
-          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-            {ranked.map((r,idx) => (
-              <div key={r.id} style={{ background: r.isMe?"#f59e0b10":"#ffffff05", border:`1px solid ${r.isMe?"#f59e0b30":"#ffffff10"}`, borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:12 }}>
-                <div style={{ fontSize:18, width:28, textAlign:"center" }}>{medals[idx]||`#${idx+1}`}</div>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:13, fontWeight:"bold", color: r.isMe?"#f59e0b":"#f0ede8" }}>{r.name}{r.isMe?" (You)":""}</div>
-                  <div style={{ fontSize:10, color:"#ffffff40", marginTop:2 }}>{r.appts} appts · {r.fto} FTOs · {r.lifeApps} life apps</div>
-                </div>
-                <div style={{ fontSize:16, fontWeight:"bold", color: r.isMe?"#f59e0b":"#ffffff50" }}>{r.score}</div>
+        <div style={{ padding:"0 18px 16px", display:"flex", flexDirection:"column", gap:8 }}>
+          {ranked.map((r,idx) => (
+            <div key={r.id} style={{ background:r.isMe?"#f59e0b10":"#ffffff05", border:`1px solid ${r.isMe?"#f59e0b30":"#ffffff10"}`, borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:12 }}>
+              <div style={{ fontSize:18, width:28, textAlign:"center" }}>{medals[idx]||`#${idx+1}`}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:13, fontWeight:"bold", color:r.isMe?"#f59e0b":"#f0ede8" }}>{r.name}{r.isMe?" (You)":""}</div>
+                <div style={{ fontSize:10, color:"#ffffff40", marginTop:2 }}>{r.appts} appts · {r.fto} FTOs · {r.lifeApps} life apps</div>
               </div>
-            ))}
-          </div>
-          <div style={{ fontSize:10, color:"#ffffff30", textAlign:"center", marginTop:10 }}>Score = appointments + FTO observations + life apps</div>
+              <div style={{ fontSize:16, fontWeight:"bold", color:r.isMe?"#f59e0b":"#ffffff50" }}>{r.score}</div>
+            </div>
+          ))}
+          <div style={{ fontSize:10, color:"#ffffff30", textAlign:"center", marginTop:6 }}>Score = appointments + FTO observations + life apps</div>
         </div>
       )}
     </div>
   );
 }
 
-
-// ─── INCOME GOAL CALCULATOR ───────────────────────────────────────────────────
-function IncomeGoalCalculator({ goal = 0, onSave }) {
-  const [input, setInput] = useState(goal ? String(goal) : "");
-  const g = Number(input) || 0;
-  const appsPerMonth = Math.ceil(g / 500);
-  const apptsPerMonth = Math.ceil(appsPerMonth * 3);
-  const apptsPerWeek = Math.ceil(apptsPerMonth / 4);
-  const contactsPerWeek = apptsPerWeek * 3;
+// ─── INCOME GOAL CALCULATOR ─────────────────────────────────────────────────
+function IncomeGoalCalculator({ goal=0, onSave }) {
+  const [input, setInput] = useState(goal?String(goal):"");
+  const g = Number(input)||0;
+  const appsNeeded = Math.ceil(g/500);
+  const apptsNeeded = Math.ceil(appsNeeded*3);
+  const apptsPerWeek = Math.ceil(apptsNeeded/4);
+  const contactsPerWeek = apptsPerWeek*3;
   return (
     <div style={{ background:"#10b98110", border:"1px solid #10b98130", borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
       <div style={{ fontSize:14, fontWeight:"bold", color:"#10b981", marginBottom:4 }}>🎯 Income Goal Calculator</div>
       <div style={{ fontSize:12, color:"#ffffff50", marginBottom:14 }}>Enter your monthly income goal and see exactly how much activity you need to hit it.</div>
       <div style={{ display:"flex", gap:10, alignItems:"center", marginBottom:16 }}>
         <div style={{ fontSize:20, color:"#10b981" }}>$</div>
-        <input type="number" value={input} onChange={e => setInput(e.target.value)} placeholder="Monthly income goal"
-          style={{ flex:1, background:"#ffffff0d", border:"1px solid #10b98140", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:16, outline:"none", fontFamily:"inherit" }} />
-        <button onClick={() => onSave(g)} style={{ background:"#10b981", border:"none", color:"#0f0f11", borderRadius:8, padding:"10px 16px", cursor:"pointer", fontWeight:"bold", fontSize:13 }}>Save</button>
+        <input type="number" value={input} onChange={e=>setInput(e.target.value)} placeholder="Monthly income goal" style={{ flex:1, background:"#ffffff0d", border:"1px solid #10b98140", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:16, outline:"none", fontFamily:"inherit" }} />
+        <button onClick={()=>onSave(g)} style={{ background:"#10b981", border:"none", color:"#0f0f11", borderRadius:8, padding:"10px 16px", cursor:"pointer", fontWeight:"bold", fontSize:13 }}>Save</button>
       </div>
-      {g > 0 && (
+      {g>0 && (
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-          {[
-            { label:"Life Apps per Month", value:appsPerMonth, color:"#3b82f6", emoji:"📋" },
-            { label:"Appointments per Month", value:apptsPerMonth, color:"#8b5cf6", emoji:"📅" },
-            { label:"Appointments per Week", value:apptsPerWeek, color:"#f59e0b", emoji:"🗓" },
-            { label:"Contacts per Week", value:contactsPerWeek, color:"#10b981", emoji:"📞" },
-          ].map(s => (
+          {[{label:"Life Apps / Month",value:appsNeeded,color:"#3b82f6",emoji:"📋"},{label:"Appts / Month",value:apptsNeeded,color:"#8b5cf6",emoji:"📅"},{label:"Appts / Week",value:apptsPerWeek,color:"#f59e0b",emoji:"🗓"},{label:"Contacts / Week",value:contactsPerWeek,color:"#10b981",emoji:"📞"}].map(s => (
             <div key={s.label} style={{ background:"#ffffff07", border:`1px solid ${s.color}25`, borderRadius:10, padding:"12px 14px", textAlign:"center" }}>
               <div style={{ fontSize:24, fontWeight:"bold", color:s.color }}>{s.value}</div>
               <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.06em", marginTop:4 }}>{s.emoji} {s.label}</div>
@@ -3447,7 +3377,7 @@ function IncomeGoalCalculator({ goal = 0, onSave }) {
           ))}
         </div>
       )}
-      {g > 0 && <div style={{ fontSize:10, color:"#ffffff30", marginTop:10, textAlign:"center" }}>Based on avg $500 premium per policy and 1 app per 3 appointments. Update as you learn your own numbers!</div>}
+      {g>0 && <div style={{ fontSize:10, color:"#ffffff30", marginTop:10, textAlign:"center" }}>Based on avg $500 premium per policy and 1 app per 3 appointments.</div>}
     </div>
   );
 }
