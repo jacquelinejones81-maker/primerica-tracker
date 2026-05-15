@@ -53,60 +53,60 @@ const TRAINER_CHECKLIST = [
   { id: "t2c", category: "Apps & Access", task: "Share the team onboarding app URL with new rep and confirm they've saved it", note: "Send them the link and have them bookmark it or save it to their phone's home screen so they can track their own checklist progress", link: null },
   { id: "t3", category: "Apps & Access", task: "Confirm recruit downloaded Telegram and joined the group", note: "Send them the link to be added", link: "https://t.me/+WjPWktwvOpVhZDlh" },
   { id: "t4", category: "Apps & Access", task: "Give recruit access to new student folder", note: "Google Drive study resources", link: "https://drive.google.com/drive/folders/1IrsYPZyMlaClTLftKSkK6pCxAzVavTPl" },
-  { id: "t5", category: "References", task: "Get 5 character references (names & phone numbers)", note: "MACHO people  -  most influential in their life", link: null },
+  { id: "t5", category: "References", task: "Get 5 character references (names & phone numbers)", note: "MACHO people — most influential in their life", link: null },
   { id: "t7", category: "Onboarding Videos", task: "Send Orientation video to watch", note: "Advise note-taking; be prepared to answer questions", link: null },
-  { id: "t8", category: "References", task: "Complete character reference calls & book training appointments", note: "Use the call script link  -  rep logs appointments in the Appointments tab", link: "https://docs.google.com/document/d/1ju_kh_QbSc5whqLpm8r9190Jr7raYfcGoi2jdDxP49U/edit?usp=sharing" },
-  { id: "t9", category: "Appointments", task: "Review rep's Appointments tab  -  confirm 15 - 20 training appointments logged", note: "Open the Appointments tab to see full details: name, phone, email, date, status", link: null },
+  { id: "t8", category: "References", task: "Complete character reference calls & book training appointments", note: "Use the call script link — rep logs appointments in the Appointments tab", link: "https://docs.google.com/document/d/1ju_kh_QbSc5whqLpm8r9190Jr7raYfcGoi2jdDxP49U/edit?usp=sharing" },
+  { id: "t9", category: "Appointments", task: "Review rep's Appointments tab — confirm 15–20 training appointments logged", note: "Open the Appointments tab to see full details: name, phone, email, date, status", link: null },
   { id: "t11", category: "Events", task: "Choose Digital Grand Opening (DGO) date", note: "Contact RVP to confirm date and time availability", link: null },
-  { id: "t11b", category: "Events", task: "Follow up after DGO  -  debrief, next steps, and pipeline review", note: "Who attended? Any appointments set? What's the next action?", link: null },
-  { id: "t12", category: "FNA & Personal Plan", task: "Schedule time with RVP to complete personal FNA  -  Life Insurance & Investment (PAC/Roth IRA)", note: "Add yourself as a guest on the appointment", link: "https://calendly.com/jacquelinejones81/meet-with-coach" },
-  { id: "t14", category: "Milestones", task: "🏆 First sale milestone  -  rep writes their first policy", note: "Log the date and celebrate!", link: null },
+  { id: "t11b", category: "Events", task: "Follow up after DGO — debrief, next steps, and pipeline review", note: "Who attended? Any appointments set? What's the next action?", link: null },
+  { id: "t12", category: "FNA & Personal Plan", task: "Schedule time with RVP to complete personal FNA — Life Insurance & Investment (PAC/Roth IRA)", note: "Add yourself as a guest on the appointment", link: "https://calendly.com/jacquelinejones81/meet-with-coach" },
+  { id: "t14", category: "Milestones", task: "🏆 First sale milestone — rep writes their first policy", note: "Log the date and celebrate!", link: null },
 ];
 
 const FAST_START_CHECKLIST = [
   { id: "f1",   category: "Apps & Setup",        task: "Download Primerica app, register, and log in within 24 hours of IBA submission", note: "🎉 Earn a $50 Scholarship Bonus!", link: "https://www.primericaonline.com" },
-  { id: "f1b",  category: "Apps & Setup",        task: "Confirm POL login is active on primericaonline.com", note: "Not just registered  -  actually log in and confirm access", link: null },
+  { id: "f1b",  category: "Apps & Setup",        task: "Confirm POL login is active on primericaonline.com", note: "Not just registered — actually log in and confirm access", link: null },
   { id: "f2",   category: "Apps & Setup",        task: "Download the Telegram app", note: "Team communication app", link: null },
   { id: "f3",   category: "References",          task: "Provide 5 professional character references to your trainer", note: null, link: null },
   { id: "f4",   category: "Onboarding",          task: "Complete Orientation", note: null, link: null },
 
-  { id: "f7",   category: "FNA",                 task: "Complete Financial Needs Analysis  -  Life Insurance", note: null, link: null },
-  { id: "f8",   category: "FNA",                 task: "Complete Financial Needs Analysis  -  Roth IRA", note: null, link: null },
-  { id: "f10",  category: "Events",              task: "Schedule Digital Grand Opening  -  enter your DGO date in the DGO card on your dashboard", note: null, link: null },
-  { id: "f10b", category: "Events",              task: "Attend DGO  -  mark complete in the DGO card on your dashboard", note: "Review who attended, appointments set, and next steps", link: null },
-  { id: "f15",  category: "Bonus Goals",         task: "3x$3,000 done  -  $650 Bonus + District Manager Promotion", note: null, link: null },
-  { id: "f16",  category: "Bonus Goals",         task: "6x$6,000 done  -  $1,250 Bonus + District Manager Promotion", note: null, link: null },
-  { id: "f17",  category: "Bonus Goals",         task: "10x$10,000 done  -  $2,050 Bonus + District Manager Promotion", note: null, link: null },
-  { id: "f18",  category: "Licensing",           task: "Schedule and complete pre-licensing class", note: "Scroll down to the Pre-Licensing Class card  -  enter your class start date, type (In-Person, Zoom, or Online), and mark complete when done", link: null },
-  { id: "f19",  category: "Licensing",           task: "Schedule exam within 5 days of completing class  -  enter your exam date in the Exam section on your dashboard", note: null, link: null },
+  { id: "f7",   category: "FNA",                 task: "Complete Financial Needs Analysis — Life Insurance", note: null, link: null },
+  { id: "f8",   category: "FNA",                 task: "Complete Financial Needs Analysis — Roth IRA", note: null, link: null },
+  { id: "f10",  category: "Events",              task: "Schedule Digital Grand Opening — enter your DGO date in the DGO card on your dashboard", note: null, link: null },
+  { id: "f10b", category: "Events",              task: "Attend DGO — mark complete in the DGO card on your dashboard", note: "Review who attended, appointments set, and next steps", link: null },
+  { id: "f15",  category: "Bonus Goals",         task: "3×$3,000 done — $650 Bonus + District Manager Promotion", note: null, link: null },
+  { id: "f16",  category: "Bonus Goals",         task: "6×$6,000 done — $1,250 Bonus + District Manager Promotion", note: null, link: null },
+  { id: "f17",  category: "Bonus Goals",         task: "10×$10,000 done — $2,050 Bonus + District Manager Promotion", note: null, link: null },
+  { id: "f18",  category: "Licensing",           task: "Schedule and complete pre-licensing class", note: "Scroll down to the Pre-Licensing Class card — enter your class start date, type (In-Person, Zoom, or Online), and mark complete when done", link: null },
+  { id: "f19",  category: "Licensing",           task: "Schedule exam within 5 days of completing class — enter your exam date in the Exam section on your dashboard", note: null, link: null },
   { id: "f22b", category: "Licensing",           task: "Access Live Life Exam Review Sessions with Licensing Coaches", note: "Path: primericaonline.com → Life Licensing → Pre-Licensing Education (select your state) → Life Exam Study Resources → Life Review Sessions → Live Life Exam Review Sessions", link: "https://www.primericaonline.com" },
-  { id: "f23",  category: "Licensing",           task: "Pass exam  -  upload pass notice and required docs in Primerica App", note: "🎉 Congratulations!!", link: null },
-  { id: "f24",  category: "Licensing",           task: "Request License  -  Now What Checklist", note: null, link: null },
+  { id: "f23",  category: "Licensing",           task: "Pass exam — upload pass notice and required docs in Primerica App", note: "🎉 Congratulations!!", link: null },
+  { id: "f24",  category: "Licensing",           task: "Request License — Now What Checklist", note: null, link: null },
 ];
 
 const REGULAR_START_CHECKLIST = [
   { id: "r1",   category: "Apps & Setup",        task: "Download Primerica app, register, and log in within 24 hours of IBA submission", note: "🎉 Earn a $50 Scholarship Bonus!", link: "https://www.primericaonline.com" },
-  { id: "r1b",  category: "Apps & Setup",        task: "Confirm POL login is active on primericaonline.com", note: "Not just registered  -  actually log in and confirm access", link: null },
+  { id: "r1b",  category: "Apps & Setup",        task: "Confirm POL login is active on primericaonline.com", note: "Not just registered — actually log in and confirm access", link: null },
   { id: "r2",   category: "Apps & Setup",        task: "Download the Telegram app", note: "Team communication app", link: null },
   { id: "r3",   category: "References",          task: "Provide 5 character references to your trainer", note: null, link: null },
   { id: "r4",   category: "Onboarding",          task: "Complete Orientation", note: null, link: null },
-  { id: "r8",   category: "FNA",                 task: "Complete Financial Needs Analysis  -  Life Insurance", note: null, link: null },
-  { id: "r9",   category: "FNA",                 task: "Complete Financial Needs Analysis  -  Roth IRA", note: null, link: null },
-  { id: "r12",  category: "Events",              task: "Schedule Digital Grand Opening  -  enter your DGO date in the DGO card on your dashboard", note: null, link: null },
-  { id: "r12b", category: "Events",              task: "Attend DGO  -  mark complete in the DGO card on your dashboard", note: "Review who attended, appointments set, and next steps", link: null },
-  { id: "r10",  category: "Licensing",           task: "Schedule and complete pre-licensing class", note: "Scroll down to the Pre-Licensing Class card  -  enter your class start date, type (In-Person, Zoom, or Online), and mark complete when done", link: null },
-  { id: "r11",  category: "Licensing",           task: "Schedule exam within 5 days of completing class  -  enter your exam date in the Exam section on your dashboard", note: null, link: null },
+  { id: "r8",   category: "FNA",                 task: "Complete Financial Needs Analysis — Life Insurance", note: null, link: null },
+  { id: "r9",   category: "FNA",                 task: "Complete Financial Needs Analysis — Roth IRA", note: null, link: null },
+  { id: "r12",  category: "Events",              task: "Schedule Digital Grand Opening — enter your DGO date in the DGO card on your dashboard", note: null, link: null },
+  { id: "r12b", category: "Events",              task: "Attend DGO — mark complete in the DGO card on your dashboard", note: "Review who attended, appointments set, and next steps", link: null },
+  { id: "r10",  category: "Licensing",           task: "Schedule and complete pre-licensing class", note: "Scroll down to the Pre-Licensing Class card — enter your class start date, type (In-Person, Zoom, or Online), and mark complete when done", link: null },
+  { id: "r11",  category: "Licensing",           task: "Schedule exam within 5 days of completing class — enter your exam date in the Exam section on your dashboard", note: null, link: null },
   { id: "r19b", category: "Licensing",           task: "Access Live Life Exam Review Sessions with Licensing Coaches", note: "Path: primericaonline.com → Life Licensing → Pre-Licensing Education (select your state) → Life Exam Study Resources → Life Review Sessions → Live Life Exam Review Sessions", link: "https://www.primericaonline.com" },
-  { id: "r20",  category: "Licensing",           task: "Pass exam  -  upload pass notice and required docs in Primerica App", note: "🎉 Congratulations!!", link: null },
-  { id: "r21",  category: "Licensing",           task: "Request License  -  Now What Checklist", note: null, link: null },
+  { id: "r20",  category: "Licensing",           task: "Pass exam — upload pass notice and required docs in Primerica App", note: "🎉 Congratulations!!", link: null },
+  { id: "r21",  category: "Licensing",           task: "Request License — Now What Checklist", note: null, link: null },
 ];
 
 const LICENSED_NOW_WHAT = [
   // ── Always shown first: Milestones ──
   { id: "l41", category: "Milestones",               task: "🏆 Write first policy", note: "Log the date!", link: null },
 
-  // ── Securities License  -  start immediately after life license ──
-  { id: "l28", category: "Securities License",        task: "Start securities license process  -  SIE", note: null, link: null },
+  // ── Securities License — start immediately after life license ──
+  { id: "l28", category: "Securities License",        task: "Start securities license process — SIE", note: null, link: null },
   { id: "l29", category: "Securities License",        task: "Series 6", note: null, link: null },
   { id: "l30", category: "Securities License",        task: "Series 63", note: null, link: null },
   { id: "l31", category: "Securities License",        task: "Series 65", note: null, link: null },
@@ -118,15 +118,15 @@ const LICENSED_NOW_WHAT = [
   { id: "l1b", category: "If Already Licensed",       task: "Confirm POL login is active on primericaonline.com", note: null, link: null },
   { id: "l2",  category: "If Already Licensed",       task: "Download Telegram or Telegram Messenger app", note: "Team communication app", link: null },
   { id: "l3",  category: "If Already Licensed",       task: "Provide 5 professional character references to your trainer", note: null, link: null },
-  { id: "l4",  category: "If Already Licensed",       task: "Create training list of 20 names and numbers (MACHO people)", note: "Married, Age 25-55, Children 0-17, Homeowners, Occupation  -  at least 3 of these", link: null },
+  { id: "l4",  category: "If Already Licensed",       task: "Create training list of 20 names and numbers (MACHO people)", note: "Married, Age 25-55, Children 0-17, Homeowners, Occupation — at least 3 of these", link: null },
   { id: "l5",  category: "If Already Licensed",       task: "Complete Orientation", note: null, link: null },
   { id: "l6",  category: "If Already Licensed",       task: "Upload contacts into Contact Manager in Primerica app", note: null, link: null },
   { id: "l7",  category: "If Already Licensed",       task: "Complete digital marketing checklist", note: null, link: null },
   { id: "l8",  category: "Business Commitment",       task: "Make business commitment", note: "Confirm dollar amount with trainer", link: null },
   { id: "l10", category: "Business Commitment",       task: "Set up Business Account", note: null, link: null },
-  { id: "l11", category: "Business Commitment",       task: "Complete FNA  -  Life Insurance", note: null, link: null },
-  { id: "l12", category: "Business Commitment",       task: "Complete FNA  -  Roth IRA", note: null, link: null },
-  { id: "l13", category: "Bonus Opportunity",         task: "Earn $200+ bonus  -  1 recruit + $1,000 field training observation premium before license shows up", note: "⚡ You have less than 5 days before your license shows up  -  move NOW! 3x$3,000 = $600 + District Leader Promotion", link: null },
+  { id: "l11", category: "Business Commitment",       task: "Complete FNA — Life Insurance", note: null, link: null },
+  { id: "l12", category: "Business Commitment",       task: "Complete FNA — Roth IRA", note: null, link: null },
+  { id: "l13", category: "Bonus Opportunity",         task: "Earn $200+ bonus — 1 recruit + $1,000 field training observation premium before license shows up", note: "⚡ You have less than 5 days before your license shows up — move NOW! 3×$3,000 = $600 + District Leader Promotion", link: null },
 
   // ── Learning Activity ──
   { id: "l17",  category: "Learning Activity",        task: "Complete Life Training Hub (POL > Products > Life Insurance > Life Training Hub)", note: null, link: "https://www.primericaonline.com" },
@@ -134,52 +134,53 @@ const LICENSED_NOW_WHAT = [
   { id: "l17b", category: "Learning Activity",        task: "Access the Licensed Now What Google Drive Folder", note: "All 7 Fundamentals resources are in this folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
   { id: "l21",  category: "Learning Activity",        task: "Complete 3 practice life apps in Primerica app", note: null, link: null },
   { id: "l22",  category: "Learning Activity",        task: "Complete 3 practice IBAs in Primerica app", note: null, link: null },
-  { id: "l19",  category: "Learning Activity",        task: "1. Master the 7 Fundamentals  -  Prospecting", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l20",  category: "Learning Activity",        task: "2. Master the 7 Fundamentals  -  Setting Appointments", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l23",  category: "Learning Activity",        task: "3. Master the 7 Fundamentals  -  Giving a Winning Presentation", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l24",  category: "Learning Activity",        task: "4. Master the 7 Fundamentals  -  Overcoming Objections", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l25",  category: "Learning Activity",        task: "5. Master the 7 Fundamentals  -  Closing (Life Insurance)", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l25b", category: "Learning Activity",        task: "6. Master the 7 Fundamentals  -  Getting Referrals", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l25c", category: "Learning Activity",        task: "7. Master the 7 Fundamentals  -  Getting a New Rep Started", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l19",  category: "Learning Activity",        task: "1. Master the 7 Fundamentals — Prospecting", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l20",  category: "Learning Activity",        task: "2. Master the 7 Fundamentals — Setting Appointments", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l23",  category: "Learning Activity",        task: "3. Master the 7 Fundamentals — Giving a Winning Presentation", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l24",  category: "Learning Activity",        task: "4. Master the 7 Fundamentals — Overcoming Objections", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25",  category: "Learning Activity",        task: "5. Master the 7 Fundamentals — Closing (Life Insurance)", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25b", category: "Learning Activity",        task: "6. Master the 7 Fundamentals — Getting Referrals", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25c", category: "Learning Activity",        task: "7. Master the 7 Fundamentals — Getting a New Rep Started", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
   { id: "l26",  category: "Learning Activity",        task: "Master the Products (Life, Investments, etc.)", note: null, link: null },
   { id: "l27",  category: "Learning Activity",        task: "Beneficiary and Emergency Contacts process", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
 
   // ── Income Producing Activity ──
   { id: "l34", category: "Income Producing Activity", task: "Determine objective: Part-time income ($100-$300/mo)", note: "5 qualified contacts per week", link: null },
   { id: "l35", category: "Income Producing Activity", task: "Determine objective: Consistent part-time income ($500-$1,000/wk)", note: "30-60 qualified contacts per week", link: null },
-  { id: "l36", category: "Income Producing Activity", task: "Weekly contacts logged  -  5 qualified (part-time goal)", note: "Qualified: at least 3 of  -  Married, Age 25-55, Children under 17, Homeowner, Occupation", link: null },
-  { id: "l37", category: "Income Producing Activity", task: "Weekly contacts logged  -  30-60 qualified (full-time goal)", note: null, link: null },
+  { id: "l36", category: "Income Producing Activity", task: "Weekly contacts logged — 5 qualified (part-time goal)", note: "Qualified: at least 3 of — Married, Age 25-55, Children under 17, Homeowner, Occupation", link: null },
+  { id: "l37", category: "Income Producing Activity", task: "Weekly contacts logged — 30-60 qualified (full-time goal)", note: null, link: null },
   { id: "l38", category: "Income Producing Activity", task: "Add contacts to CRM", note: null, link: null },
-  { id: "l39", category: "Income Producing Activity", task: "Weekly set appointments / follow-ups  -  2 qualified (part-time goal)", note: null, link: null },
-  { id: "l40", category: "Income Producing Activity", task: "Weekly set appointments / follow-ups  -  15-30 qualified (full-time goal)", note: null, link: null },
+  { id: "l39", category: "Income Producing Activity", task: "Weekly set appointments / follow-ups — 2 qualified (part-time goal)", note: null, link: null },
+  { id: "l40", category: "Income Producing Activity", task: "Weekly set appointments / follow-ups — 15-30 qualified (full-time goal)", note: null, link: null },
 
   // ── RVP Path ──
   { id: "l42", category: "RVP Path",                  task: "Request RVP checklist (if RVP promotion is your desire)", note: null, link: null },
 ];
 
+
 const RVP_CHECKLIST = [
   // Licensing
   { id: "rvp1",  category: "Licensing",          task: "Become Life Licensed", note: null, link: null },
-  { id: "rvp2",  category: "Licensing",          task: "Get Securities Licensed  -  SIE", note: null, link: null },
-  { id: "rvp3",  category: "Licensing",          task: "Get Securities Licensed  -  Series 6", note: null, link: null },
-  { id: "rvp4",  category: "Licensing",          task: "Get Securities Licensed  -  Series 63", note: null, link: null },
-  { id: "rvp5",  category: "Licensing",          task: "Get Securities Licensed  -  Series 26", note: null, link: null },
+  { id: "rvp2",  category: "Licensing",          task: "Get Securities Licensed — SIE", note: null, link: null },
+  { id: "rvp3",  category: "Licensing",          task: "Get Securities Licensed — Series 6", note: null, link: null },
+  { id: "rvp4",  category: "Licensing",          task: "Get Securities Licensed — Series 63", note: null, link: null },
+  { id: "rvp5",  category: "Licensing",          task: "Get Securities Licensed — Series 26", note: null, link: null },
   // Licensed Agents
-  { id: "rvp6",  category: "Licensed Agents",    task: "License agents 1 - 3", note: "3 of 20 licensed agents", link: null },
-  { id: "rvp7",  category: "Licensed Agents",    task: "License agents 4 - 6", note: "6 of 20 licensed agents", link: null },
-  { id: "rvp8",  category: "Licensed Agents",    task: "License agents 7 - 9", note: "9 of 20 licensed agents", link: null },
-  { id: "rvp9",  category: "Licensed Agents",    task: "License agents 10 - 12", note: "12 of 20 licensed agents", link: null },
-  { id: "rvp10", category: "Licensed Agents",    task: "License agents 13 - 16", note: "16 of 20 licensed agents", link: null },
-  { id: "rvp11", category: "Licensed Agents",    task: "License agents 17 - 20", note: "20 of 20  -  milestone reached! 🎉", link: null },
+  { id: "rvp6",  category: "Licensed Agents",    task: "License agents 1–3", note: "3 of 20 licensed agents", link: null },
+  { id: "rvp7",  category: "Licensed Agents",    task: "License agents 4–6", note: "6 of 20 licensed agents", link: null },
+  { id: "rvp8",  category: "Licensed Agents",    task: "License agents 7–9", note: "9 of 20 licensed agents", link: null },
+  { id: "rvp9",  category: "Licensed Agents",    task: "License agents 10–12", note: "12 of 20 licensed agents", link: null },
+  { id: "rvp10", category: "Licensed Agents",    task: "License agents 13–16", note: "16 of 20 licensed agents", link: null },
+  { id: "rvp11", category: "Licensed Agents",    task: "License agents 17–20", note: "20 of 20 — milestone reached! 🎉", link: null },
   // Production
   { id: "rvp12", category: "Production",         task: "Achieve QBI at 75% minimum", note: null, link: null },
-  { id: "rvp13", category: "Production",         task: "Month 1: 10 recruits x $10k in premium (20x20 goal)", note: "10 recs x $10k in premium  -  Month 1 of 2", link: null },
-  { id: "rvp14", category: "Production",         task: "Month 2: 10 recruits x $10k in premium (20x20 goal)", note: "10 recs x $10k in premium  -  Month 2 of 2", link: null },
+  { id: "rvp13", category: "Production",         task: "Month 1: 10 recruits × $10k in premium (20×20 goal)", note: "10 recs × $10k in premium — Month 1 of 2", link: null },
+  { id: "rvp14", category: "Production",         task: "Month 2: 10 recruits × $10k in premium (20×20 goal)", note: "10 recs × $10k in premium — Month 2 of 2", link: null },
   // Financial
   { id: "rvp15", category: "Financial Goals",    task: "Rolling 12-month income minimum of $20,000", note: null, link: null },
   { id: "rvp16", category: "Financial Goals",    task: "Receive $20k in company stock", note: null, link: null },
   // Replacement
-  { id: "rvp17", category: "Replacement",        task: "Provide replacement  -  15 licenses OR 3 District Legs", note: "Must meet one of these two requirements", link: null },
+  { id: "rvp17", category: "Replacement",        task: "Provide replacement — 15 licenses OR 3 District Legs", note: "Must meet one of these two requirements", link: null },
   // Promotion
   { id: "rvp18", category: "RVP Promotion",      task: "Regional Vice President Promotion 🏆", note: "Set your goal date and go get it!", link: null },
 ];
@@ -203,7 +204,7 @@ const RVP_CAT_EMOJIS = {
 };
 
 const TRACK_INFO = {
-  fast:     { label: "Fast Start",         shortLabel: "Fast",     color: "#f59e0b", days: "7 - 14 days", checklist: FAST_START_CHECKLIST },
+  fast:     { label: "Fast Start",         shortLabel: "Fast",     color: "#f59e0b", days: "7–14 days", checklist: FAST_START_CHECKLIST },
   regular:  { label: "Regular Start",      shortLabel: "Regular",  color: "#3b82f6", days: "30 days",   checklist: REGULAR_START_CHECKLIST },
   licensed: { label: "Licensed, Now What", shortLabel: "Licensed", color: "#10b981", days: "Ongoing",   checklist: LICENSED_NOW_WHAT },
   rvp:      { label: "Becoming an RVP",      shortLabel: "RVP",      color: "#f43f5e",  days: "Goal-based", checklist: RVP_CHECKLIST },
@@ -318,6 +319,7 @@ function exportRepCSV(rep, trainers) {
   URL.revokeObjectURL(url);
 }
 
+
 // ─── MOTIVATIONAL QUOTES ─────────────────────────────────────────────────────
 const QUOTES = [
   { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
@@ -331,7 +333,7 @@ const QUOTES = [
   { text: "The key to success is to focus on goals, not obstacles.", author: "Unknown" },
   { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
   { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
-  { text: "Your limitation  -  it's only your imagination.", author: "Unknown" },
+  { text: "Your limitation — it's only your imagination.", author: "Unknown" },
   { text: "Hustle in silence and let your success make the noise.", author: "Unknown" },
   { text: "Don't stop when you're tired. Stop when you're done.", author: "Unknown" },
   { text: "Wake up with determination. Go to bed with satisfaction.", author: "Unknown" },
@@ -454,12 +456,7 @@ function CategorySection({ title, items, completedIds, onToggle, isRepView = fal
         <div style={{ fontSize: 12, color: allDone ? "#10b981" : "#ffffff40", fontWeight: allDone ? "bold" : "normal" }}>{done}/{items.length} {allDone && isRepView ? "🎉" : ""}</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {items.map(item => (
-          <React.Fragment key={item.id}>
-            <CheckItem item={item} done={completedIds.includes(item.id)} onToggle={() => onToggle(item.id)} isRepView={isRepView} />
-
-          </React.Fragment>
-        ))}
+        {items.map(item => <CheckItem key={item.id} item={item} done={completedIds.includes(item.id)} onToggle={() => onToggle(item.id)} isRepView={isRepView} />)}
       </div>
     </div>
   );
@@ -495,7 +492,7 @@ function AppointmentTracker({ appointments = [], onChange }) {
       <div style={{ paddingBottom: 8, borderBottom: "1px solid #f43f5e30", marginBottom: 14 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
           <div style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "#f43f5e", fontWeight: "bold" }}>Training Appointments</div>
-          <div style={{ fontSize: 12, color: "#ffffff40" }}>{setCount} set - {completedCount} completed - goal: 15 - 20</div>
+          <div style={{ fontSize: 12, color: "#ffffff40" }}>{setCount} set · {completedCount} completed · goal: 15–20</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
           {[{ label: "Set", val: pct(setCount, total), color: "#3b82f6", count: setCount }, { label: "Done", val: pct(completedCount, total), color: "#10b981", count: completedCount }].map(b => (
@@ -552,7 +549,7 @@ function AppointmentTracker({ appointments = [], onChange }) {
       </div>
 
       <div style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap" }}>
-        {[["1 - 4 set", 4], ["5 - 8 set", 8], ["9 - 12 set", 12], ["13 - 15 set", 15], ["🎯 Goal: 15 - 20!", 15]].map(([label, threshold]) => (
+        {[["1–4 set", 4], ["5–8 set", 8], ["9–12 set", 12], ["13–15 set", 15], ["🎯 Goal: 15–20!", 15]].map(([label, threshold]) => (
           <div key={label} style={{ background: setCount >= threshold ? "#10b98118" : "#ffffff08", border: `1px solid ${setCount >= threshold ? "#10b98140" : "#ffffff15"}`, borderRadius: 20, padding: "4px 12px", fontSize: 11, color: setCount >= threshold ? "#10b981" : "#ffffff40", fontWeight: setCount >= threshold ? "bold" : "normal" }}>
             {setCount >= threshold ? "✓ " : ""}{label}
           </div>
@@ -561,6 +558,7 @@ function AppointmentTracker({ appointments = [], onChange }) {
     </div>
   );
 }
+
 
 const LOGIN_KEY = "primerica_session";
 
@@ -609,12 +607,12 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
     if (!selectedRepLogin) { setError("Please select your name first."); return; }
     if (repPinStep === "create") {
       if (repPinEntry.length < 4) { setRepPinError("PIN must be 4 digits"); return; }
-      if (repPinEntry !== repPinConfirm) { setRepPinError("PINs do not match  -  try again"); return; }
+      if (repPinEntry !== repPinConfirm) { setRepPinError("PINs do not match — try again"); return; }
       onLogin("rep", selectedRepLogin.id, repPinEntry);
       return;
     }
     if (repPinStep === "enter") {
-      if (repPinEntry !== selectedRepLogin.repPin) { setRepPinError("Incorrect PIN  -  try again"); setRepPinEntry(""); return; }
+      if (repPinEntry !== selectedRepLogin.repPin) { setRepPinError("Incorrect PIN — try again"); setRepPinEntry(""); return; }
       onLogin("rep", selectedRepLogin.id);
       return;
     }
@@ -656,7 +654,7 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
               style={{ ...inputStyle, fontSize:22, letterSpacing:"0.3em", textAlign:"center", marginBottom:12 }} autoFocus />
             {error && <div style={{ fontSize:12, color:"#f43f5e", marginBottom:12, textAlign:"center" }}>{error}</div>}
             <button onClick={handleTrainerLogin} style={{ background:"#f59e0b", border:"none", color:"#0f0f11", padding:"12px", borderRadius:8, cursor:"pointer", fontWeight:"bold", fontSize:14, width:"100%" }}>Sign In</button>
-            <div style={{ fontSize:11, color:"#ffffff30", marginTop:12, textAlign:"center" }}>Default admin PIN: 1234 - Change in Manage Trainers</div>
+            <div style={{ fontSize:11, color:"#ffffff30", marginTop:12, textAlign:"center" }}>Default admin PIN: 1234 · Change in Manage Trainers</div>
           </div>
         </div>
       )}
@@ -686,7 +684,7 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
             </div>
             {error && <div style={{ fontSize:12, color:"#f43f5e", marginBottom:10, textAlign:"center" }}>{error}</div>}
 
-            {/* PIN entry  -  shows after selecting name */}
+            {/* PIN entry — shows after selecting name */}
             {selectedRepLogin && repPinStep === "create" && (
               <div style={{ background:"#10b98110", border:"1px solid #10b98130", borderRadius:10, padding:"14px", marginBottom:12 }}>
                 <div style={{ fontSize:13, fontWeight:"bold", color:"#10b981", marginBottom:4 }}>Create Your 4-Digit PIN</div>
@@ -720,11 +718,13 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
   );
 }
 
+
+
 // ─── MACHO QUALIFIER ─────────────────────────────────────────────────────────
 const MACHO_CRITERIA = [
   { key: "M", label: "Married", desc: "Married or in a committed relationship" },
-  { key: "A", label: "Age 25 - 55", desc: "Between 25 and 55 years old" },
-  { key: "C", label: "Children", desc: "Has children (0 - 17 yrs old)" },
+  { key: "A", label: "Age 25–55", desc: "Between 25 and 55 years old" },
+  { key: "C", label: "Children", desc: "Has children (0–17 yrs old)" },
   { key: "H", label: "Homeowner", desc: "Owns their home" },
   { key: "O", label: "Occupation", desc: "Has a job / steady income" },
 ];
@@ -742,7 +742,7 @@ function MachoQualifier({ contact, onUpdate }) {
   return (
     <div style={{ marginTop: 10 }}>
       <div style={{ fontSize: 10, color: "#ffffff30", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>
-        MACHO Score  -  tap to star qualifications
+        MACHO Score — tap to star qualifications
       </div>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
         {MACHO_CRITERIA.map(c => {
@@ -758,9 +758,9 @@ function MachoQualifier({ contact, onUpdate }) {
         })}
       </div>
       <div style={{ fontSize: 11, color: isQualified ? "#10b981" : stars >= 1 ? "#f59e0b" : "#ffffff30", fontWeight: isQualified ? "bold" : "normal" }}>
-        {stars} ⭐  -  {isQualified ? "✓ Qualified! Great candidate for an appointment." : stars === 0 ? "Tap letters above to score this contact" : `${3 - stars} more star${3 - stars !== 1 ? "s" : ""} needed to qualify`}
+        {stars} ⭐ — {isQualified ? "✓ Qualified! Great candidate for an appointment." : stars === 0 ? "Tap letters above to score this contact" : `${3 - stars} more star${3 - stars !== 1 ? "s" : ""} needed to qualify`}
       </div>
-      {isQualified && stars >= 5 && <div style={{ fontSize: 11, color: "#f59e0b", marginTop: 2 }}>🔥 5-star contact  -  top priority!</div>}
+      {isQualified && stars >= 5 && <div style={{ fontSize: 11, color: "#f59e0b", marginTop: 2 }}>🔥 5-star contact — top priority!</div>}
     </div>
   );
 }
@@ -801,7 +801,7 @@ function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFA
       <div style={{ paddingBottom: 8, borderBottom: "1px solid #f43f5e30", marginBottom: 14 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
           <div style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "#f43f5e", fontWeight: "bold" }}>📅 My Training Appointments</div>
-          <div style={{ fontSize: 12, color: "#ffffff40" }}>{setCount} logged - {completedCount} done - goal: 15 - 20</div>
+          <div style={{ fontSize: 12, color: "#ffffff40" }}>{setCount} logged · {completedCount} done · goal: 15–20</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
           {[{ label: "Logged", val: Math.round(setCount/total*100), color: "#3b82f6", count: setCount },
@@ -819,15 +819,15 @@ function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFA
 
       {/* MACHO Legend */}
       <div style={{ background: "#f59e0b0a", border: "1px solid #f59e0b25", borderRadius: 10, padding: "12px 14px", marginBottom: 12 }}>
-        <div style={{ fontSize: 12, fontWeight: "bold", color: "#f59e0b", marginBottom: 8 }}>⭐ MACHO Qualification Guide  -  aim for 3 - 5 stars</div>
+        <div style={{ fontSize: 12, fontWeight: "bold", color: "#f59e0b", marginBottom: 8 }}>⭐ MACHO Qualification Guide — aim for 3–5 stars</div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          {[["M","Married"],["A","Age 25 - 55"],["C","Children"],["H","Homeowner"],["O","Occupation"]].map(([k,v]) => (
+          {[["M","Married"],["A","Age 25–55"],["C","Children"],["H","Homeowner"],["O","Occupation"]].map(([k,v]) => (
             <div key={k} style={{ background: "#ffffff08", borderRadius: 8, padding: "5px 10px", fontSize: 11, color: "#ffffff60" }}>
-              <span style={{ color: "#f59e0b", fontWeight: "bold" }}>{k}</span>  -  {v}
+              <span style={{ color: "#f59e0b", fontWeight: "bold" }}>{k}</span> — {v}
             </div>
           ))}
         </div>
-        <div style={{ fontSize: 11, color: "#ffffff40", marginTop: 8 }}>Tap the M-A-C-H-O letters on each contact to score them. 3+ stars = qualified. Set appointments with your best people!</div>
+        <div style={{ fontSize: 11, color: "#ffffff40", marginTop: 8 }}>Tap the M·A·C·H·O letters on each contact to score them. 3+ stars = qualified. Set appointments with your best people!</div>
       </div>
 
       {/* Calendly reminder */}
@@ -933,13 +933,13 @@ function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFA
                       const labels = {M:"Married",A:"Age 25-55",C:"Children",H:"Homeowner",O:"Occupation"};
                       return (
                         <div key={k} style={{ fontSize: 11, background: active ? "#f59e0b20" : "#ffffff08", border: `1px solid ${active ? "#f59e0b50" : "#ffffff10"}`, borderRadius: 20, padding: "3px 10px", color: active ? "#f59e0b" : "#ffffff25", fontWeight: active ? "bold" : "normal" }}>
-                          {active ? "⭐" : "☆"} {k} {active ? ` -  ${labels[k]}` : ""}
+                          {active ? "⭐" : "☆"} {k} {active ? `— ${labels[k]}` : ""}
                         </div>
                       );
                     })}
                   </div>
                   <div style={{ fontSize: 12, color: (appt.macho||[]).length >= 3 ? "#10b981" : "#f59e0b", fontWeight: "bold", marginTop: 6 }}>
-                    {(appt.macho||[]).length} ⭐  -  {(appt.macho||[]).length >= 3 ? "✓ Qualified!" : `${3-(appt.macho||[]).length} more stars needed`}
+                    {(appt.macho||[]).length} ⭐ — {(appt.macho||[]).length >= 3 ? "✓ Qualified!" : `${3-(appt.macho||[]).length} more stars needed`}
                     {(appt.macho||[]).length === 5 && " 🔥 Top priority!"}
                   </div>
                 </div>
@@ -951,7 +951,7 @@ function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFA
 
       {/* Goal badges */}
       <div style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap" }}>
-        {[["1 - 4 logged", 4],["5 - 8 logged", 8],["9 - 12 logged", 12],["13 - 15 logged", 15],["🎯 Goal: 15 - 20!", 15]].map(([label, threshold]) => (
+        {[["1–4 logged", 4],["5–8 logged", 8],["9–12 logged", 12],["13–15 logged", 15],["🎯 Goal: 15–20!", 15]].map(([label, threshold]) => (
           <div key={label} style={{ background: setCount >= threshold ? "#10b98118" : "#ffffff08", border: `1px solid ${setCount >= threshold ? "#10b98140" : "#ffffff15"}`, borderRadius: 20, padding: "4px 12px", fontSize: 11, color: setCount >= threshold ? "#10b981" : "#ffffff40", fontWeight: setCount >= threshold ? "bold" : "normal" }}>
             {setCount >= threshold ? "✓ " : ""}{label}
           </div>
@@ -960,6 +960,8 @@ function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFA
     </div>
   );
 }
+
+
 
 // ─── RVP CHECKLIST ────────────────────────────────────────────────────────────
 function RvpChecklist({ completedIds, promotionDate, onToggle, onSetDate, isRepView = false }) {
@@ -1004,7 +1006,7 @@ function RvpChecklist({ completedIds, promotionDate, onToggle, onSetDate, isRepV
           <div style={{ marginTop: 14, background: "#10b98120", border: "1px solid #10b98140", borderRadius: 10, padding: "12px 16px", textAlign: "center" }}>
             <div style={{ fontSize: 22, marginBottom: 4 }}>👑🎉</div>
             <div style={{ fontSize: 16, fontWeight: "bold", color: "#10b981" }}>All RVP Requirements Complete!</div>
-            <div style={{ fontSize: 12, color: "#ffffff60", marginTop: 4 }}>Congratulations  -  time to claim your promotion!</div>
+            <div style={{ fontSize: 12, color: "#ffffff60", marginTop: 4 }}>Congratulations — time to claim your promotion!</div>
           </div>
         )}
       </div>
@@ -1094,7 +1096,7 @@ function TeamScheduleView({ schedule, isAdmin, onUpdate, cancellations = {}, onC
               <div style={{ width:4, height:40, background:color, borderRadius:99, flexShrink:0 }} />
               <div style={{ flex:1 }}>
                 <div style={{ fontSize:13, fontWeight:"bold", color:"#f0ede8" }}>{item.title}</div>
-                <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>{item.day} - {item.time}</div>
+                <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>{item.day} · {item.time}</div>
                 <div style={{ display:"flex", gap:6, marginTop:4 }}>
                   <div style={{ fontSize:10, color:color, background:`${color}15`, border:`1px solid ${color}30`, borderRadius:20, padding:"2px 8px" }}>{TYPE_LABELS[item.type]||item.type}</div>
     
@@ -1117,7 +1119,7 @@ function TeamScheduleView({ schedule, isAdmin, onUpdate, cancellations = {}, onC
         })}
       </div>
 
-      {/* Add new item  -  admin edit mode */}
+      {/* Add new item — admin edit mode */}
       {editing && (
         <div style={{ background:"#ffffff08", border:"1px solid #ffffff15", borderRadius:12, padding:"16px" }}>
           <div style={{ fontSize:12, color:"#f59e0b", fontWeight:"bold", marginBottom:12 }}>Add Meeting / Event</div>
@@ -1154,6 +1156,7 @@ function TeamScheduleView({ schedule, isAdmin, onUpdate, cancellations = {}, onC
   );
 }
 
+
 // ─── DAILY BANNER ─────────────────────────────────────────────────────────────
 const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const TYPE_EMOJIS = { study:"📖", training:"💪", event:"🎉", meeting:"🎖️" };
@@ -1162,9 +1165,6 @@ const TYPE_BG = { study:"#8b5cf6", training:"#3b82f6", event:"#f59e0b", meeting:
 function DailyBanner({ schedule, appointments = [], cancellations = {} }) {
   const today = DAY_NAMES[new Date().getDay()];
   const todayStr = new Date().toISOString().split("T")[0];
-  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
-  const tomorrowStr = tomorrow.toISOString().split("T")[0];
-  const upcomingAppts = appointments.filter(a => a.name && !a.completed && (a.date === todayStr || a.date === tomorrowStr));
 
   // Today's scheduled meetings
   const todayMeetings = schedule.filter(s => s.day === today);
@@ -1209,20 +1209,6 @@ function DailyBanner({ schedule, appointments = [], cancellations = {} }) {
         );
       })}
 
-      {/* Upcoming appointment reminders */}
-      {upcomingAppts.map(appt => (
-        <div key={appt.id||appt.name} style={{ background:"linear-gradient(135deg,#10b98120,#3b82f610)", border:"1px solid #10b98140", borderLeft:"4px solid #10b981", borderRadius:12, padding:"12px 16px", display:"flex", alignItems:"center", gap:12 }}>
-          <div style={{ fontSize:24 }}>📅</div>
-          <div>
-            <div style={{ fontSize:12, color:"#10b981", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>
-              {appt.date === todayStr ? "Training Appointment TODAY" : "Training Appointment TOMORROW"}
-            </div>
-            <div style={{ fontSize:14, fontWeight:"bold", color:"#f0ede8" }}>{appt.name}</div>
-            {appt.apptNote && <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>{appt.apptNote}</div>}
-          </div>
-        </div>
-      ))}
-
       {/* Appointment reminders */}
       {todayAppts.map((appt, i) => {
         const stars = (appt.macho || []).length;
@@ -1258,6 +1244,7 @@ function DailyBanner({ schedule, appointments = [], cancellations = {} }) {
   );
 }
 
+
 // ─── REFERENCES SECTION ───────────────────────────────────────────────────────
 const RELATIONSHIP_OPTIONS = ["Friend","Family","Coworker","Neighbor","Church Member","Classmate","Associate","Other"];
 
@@ -1282,7 +1269,7 @@ function ReferencesSection({ references = [], onChange, readOnly = false }) {
           <div style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8b5cf6", fontWeight: "bold" }}>👥 My 5 Character References</div>
           <div style={{ fontSize: 12, color: filled >= 5 ? "#10b981" : "#ffffff40", fontWeight: filled >= 5 ? "bold" : "normal" }}>{filled}/5 {filled >= 5 ? "✅" : ""}</div>
         </div>
-        <div style={{ fontSize: 11, color: "#ffffff40", marginTop: 4 }}>Enter 5 people your trainer can contact  -  MACHO people who are most influential in your life</div>
+        <div style={{ fontSize: 11, color: "#ffffff40", marginTop: 4 }}>Enter 5 people your trainer can contact — MACHO people who are most influential in your life</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {rows.map((ref, idx) => {
@@ -1295,7 +1282,7 @@ function ReferencesSection({ references = [], onChange, readOnly = false }) {
                   <div key={field}>
                     <div style={{ fontSize: 9, color: "#ffffff30", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>{label}</div>
                     {readOnly
-                      ? <div style={{ fontSize: 13, color: isFilled ? "#f0ede8" : "#ffffff20" }}>{ref[field] || " - "}</div>
+                      ? <div style={{ fontSize: 13, color: isFilled ? "#f0ede8" : "#ffffff20" }}>{ref[field] || "—"}</div>
                       : <input value={ref[field] || ""} onChange={e => updateRef(idx, field, field === "phone" ? formatPhone(e.target.value) : e.target.value)} placeholder={field === "phone" ? "111-111-1111" : placeholder} maxLength={field === "phone" ? 12 : undefined}
                           style={{ background: "transparent", border: "none", borderBottom: "1px solid #ffffff15", color: isFilled ? "#f0ede8" : "#ffffff35", fontSize: 13, outline: "none", width: "100%", padding: "4px 2px", fontFamily: "inherit" }} />
                     }
@@ -1304,7 +1291,7 @@ function ReferencesSection({ references = [], onChange, readOnly = false }) {
                 <div>
                   <div style={{ fontSize: 9, color: "#ffffff30", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Relationship</div>
                   {readOnly
-                    ? <div style={{ fontSize: 13, color: isFilled ? "#8b5cf6" : "#ffffff20" }}>{ref.relationship || " - "}</div>
+                    ? <div style={{ fontSize: 13, color: isFilled ? "#8b5cf6" : "#ffffff20" }}>{ref.relationship || "—"}</div>
                     : <select value={ref.relationship || "Friend"} onChange={e => updateRef(idx, "relationship", e.target.value)}
                         style={{ background: "#ffffff0d", border: "1px solid #8b5cf630", borderRadius: 6, color: "#f0ede8", fontSize: 12, padding: "4px 8px", outline: "none", width: "100%" }}>
                         {RELATIONSHIP_OPTIONS.map(r => <option key={r} value={r} style={{ background: "#1a1a2e" }}>{r}</option>)}
@@ -1352,7 +1339,7 @@ function ExamDateCard({ examDate, examCompleted, onSetDate, onSetCompleted, read
 const SCRIPTS = [
   {
     id: "appt_friend",
-    title: "Setting Appointments  -  Friend or Associate (Already knows you)",
+    title: "Setting Appointments — Friend or Associate (Already knows you)",
     category: "Appointments",
     color: "#3b82f6",
     content: `Hey [Name], how's everything going? (brief small talk) Well I'm not going to keep you. I need a huge favor (wait for acknowledgement).
@@ -1365,16 +1352,16 @@ Honestly, I just need you to sit and listen (laugh a little). I'll be licensed w
 (If "yes") Great, I appreciate it! Would evenings or weekends work better for you? (give 2 day options, then 2 time options)
 
 📅 To schedule, use one of these links:
-- Coach Tellis Bolton: calendly.com/tbolton81/meeting-with-rvp-tellis-bolton
-- Coach Jacqueline Jones: calendly.com/jacquelinejones81/trainingappointment
+• Coach Tellis Bolton: calendly.com/tbolton81/meeting-with-rvp-tellis-bolton
+• Coach Jacqueline Jones: calendly.com/jacquelinejones81/trainingappointment
   ⚠️ Add yourself as a guest on the appointment!
 
 Thanks! Again, I appreciate the help.`,
-    tip: "Remember: the appointment is primarily FOR YOUR TRAINING, not for them to join or become clients. Once the appointment is set  -  HANG UP! Don't keep talking. People like doing business with busy people.",
+    tip: "Remember: the appointment is primarily FOR YOUR TRAINING, not for them to join or become clients. Once the appointment is set — HANG UP! Don't keep talking. People like doing business with busy people.",
   },
   {
     id: "appt_new",
-    title: "Setting Appointments  -  Someone who doesn't know you're in financial services",
+    title: "Setting Appointments — Someone who doesn't know you're in financial services",
     category: "Appointments",
     color: "#3b82f6",
     content: `Hey [Name], how's everything going? (brief small talk) Well I'm not going to keep you. I need a huge favor (wait for acknowledgement).
@@ -1384,12 +1371,12 @@ I'm not sure if you knew, but I'm in the process of getting my license and certi
 (If "yes") Great, I appreciate it! Would evenings or weekends work better for you? (give 2 day options, then 2 time options)
 
 📅 To schedule, use one of these links:
-- Coach Tellis Bolton: calendly.com/tbolton81/meeting-with-rvp-tellis-bolton
-- Coach Jacqueline Jones: calendly.com/jacquelinejones81/trainingappointment
+• Coach Tellis Bolton: calendly.com/tbolton81/meeting-with-rvp-tellis-bolton
+• Coach Jacqueline Jones: calendly.com/jacquelinejones81/trainingappointment
   ⚠️ Add yourself as a guest on the appointment!
 
 Thanks! Again, I appreciate the help.`,
-    tip: "Scholarship requirement: 3 - 6 Qualified appointments set",
+    tip: "Scholarship requirement: 3–6 Qualified appointments set",
   },
   {
     id: "opportunity_night",
@@ -1402,8 +1389,8 @@ I'm in the process of getting my license and certifications to work in financial
 
 Thanks, I appreciate it! It's going to be at [time]. What's your email address so I can send you the confirmation and Zoom link? (wait for answer)
 
-Please don't forget  -  I need you on this one. Thanks again!`,
-    tip: "Thursday nights at 7:30 PM CST. Always invite 2 - 3 people to ensure at least 1 shows up.",
+Please don't forget — I need you on this one. Thanks again!`,
+    tip: "Thursday nights at 7:30 PM CST. Always invite 2–3 people to ensure at least 1 shows up.",
   },
 ];
 
@@ -1449,8 +1436,9 @@ function ScriptsSection() {
   );
 }
 
+
 // ─── REP VIEW ─────────────────────────────────────────────────────────────────
-function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK, cancellations = {}, allReps = [], trainers = [] }) {
+function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK, cancellations = {} }) {
   const isLicensedRep = rep.track === "licensed" || rep.track === "rvp";
   const tourSteps = isLicensedRep ? LICENSED_TOUR_STEPS : REP_TOUR_STEPS;
   const tourKey = "primerica_tour_rep_" + rep.id + "_" + rep.track;
@@ -1498,18 +1486,16 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
         {showTour && !isPreview && <AppTour steps={tourSteps} onClose={() => setShowTour(false)} storageKey={tourKey} />}
         {isPreview && (
           <div style={{ background:"#8b5cf615", border:"1px solid #8b5cf640", borderRadius:10, padding:"10px 16px", marginBottom:16, fontSize:12, color:"#8b5cf6", textAlign:"center" }}>
-            👁 You are previewing this reps view as admin. All interactions are live  -  changes will save.
+            👁 You are previewing this rep’s view as admin. All interactions are live — changes will save.
           </div>
         )}
         <RepPhotoUpload photo={rep.photo||null} onUpdate={(photo) => onUpdate({ ...rep, photo, lastActivity:new Date().toISOString() })} />
-        <CheckInStreak checkIns={rep.checkIns||[]} />
-        <TeamLeaderboard currentRep={rep} allReps={allReps} trainers={trainers} />
         <DailyBanner schedule={schedule} appointments={rep.appointments||[]} cancellations={cancellations} />
         {!graduated && <RepAccountabilityBanner rep={rep} />}
         {graduated && (
           <div style={{ background:"linear-gradient(135deg,#10b98120,#f59e0b15)", border:"1px solid #10b98130", borderRadius:14, padding:"20px 24px", textAlign:"center", marginBottom:20 }}>
             <div style={{ fontSize:32, marginBottom:8 }}>🎉</div>
-            <div style={{ fontSize:20, fontWeight:"bold", color:"#10b981" }}>Youre Graduated!</div>
+            <div style={{ fontSize:20, fontWeight:"bold", color:"#10b981" }}>You’re Graduated!</div>
             <div style={{ fontSize:13, color:"#ffffff60", marginTop:4 }}>All checklist items complete. Amazing work!</div>
           </div>
         )}
@@ -1543,7 +1529,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           ))}
         </div>
 
-        {/* PAC Counter  -  shows for all tracks with different messaging */}
+        {/* PAC Counter — shows for all tracks with different messaging */}
         <PacCounter
           pacCount={rep.pacCount||0}
           onChange={count => onUpdate({ ...rep, pacCount:count, lastActivity:new Date().toISOString() })}
@@ -1553,7 +1539,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           isLicensed={rep.track === "licensed" || rep.track === "rvp"}
         />
 
-        {/* Field Training Observation Counter  -  new reps only */}
+        {/* Field Training Observation Counter — new reps only */}
         {(rep.track === "fast" || rep.track === "regular") && (
           <FieldObsCounter
             count={rep.fieldObsCount||0}
@@ -1561,7 +1547,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           />
         )}
 
-        {/* Life App Counter  -  new reps only, goal of 10 during training */}
+        {/* Life App Counter — new reps only, goal of 10 during training */}
         {(rep.track === "fast" || rep.track === "regular") && (() => {
           const count = rep.lifeAppCount || 0;
           const goal = 10;
@@ -1586,11 +1572,11 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           );
         })()}
 
-        {/* Business Commitment Card  -  rep view */}
+        {/* Business Commitment Card — rep view */}
         {(rep.track === "fast" || rep.track === "regular") && (
           <div style={{ background: rep.businessCommitment ? "#8b5cf610" : "#ffffff07", border: `1px solid ${rep.businessCommitment ? "#8b5cf640" : "#ffffff12"}`, borderRadius: 14, padding: "16px 20px", marginBottom: 14 }}>
             <div style={{ fontSize: 13, fontWeight: "bold", color: "#8b5cf6", marginBottom: 10 }}>💼 Business Commitment</div>
-            <div style={{ fontSize: 11, color: "#ffffff50", marginBottom: 8 }}>Enter the dollar amount youve committed to your business  -  confirm with your trainer</div>
+            <div style={{ fontSize: 11, color: "#ffffff50", marginBottom: 8 }}>Enter the dollar amount you’ve committed to your business — confirm with your trainer</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ fontSize: 20, color: "#8b5cf6", fontWeight: "bold" }}>$</div>
               <input
@@ -1605,7 +1591,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           </div>
         )}
 
-        {/* DGO Card  -  rep view */}
+        {/* DGO Card — rep view */}
         {(rep.track === "fast" || rep.track === "regular") && (
           <div style={{ background: rep.dgoCompleted ? "#10b98110" : "#06b6d410", border: `1px solid ${rep.dgoCompleted ? "#10b98140" : "#06b6d440"}`, borderRadius:14, padding:"16px 20px", marginBottom:20 }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
@@ -1647,7 +1633,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
               {/* Header */}
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
                 <div>
-                  <div style={{ fontSize:10, color: cardColor, fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>Step 1 of 2  -  Class</div>
+                  <div style={{ fontSize:10, color: cardColor, fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>Step 1 of 2 — Class</div>
                   <div style={{ fontSize:14, fontWeight:"bold", color: cardColor }}>📚 Pre-Licensing Class</div>
                 </div>
                 <div onClick={() => { const u = { ...rep, classCompleted: !rep.classCompleted, lastActivity: new Date().toISOString() }; onUpdate(u); if (!rep.classCompleted) { spawnConfetti(window.innerWidth/2, 200); spawnEmoji(window.innerWidth/2, 180, "🎓"); } }}
@@ -1705,19 +1691,14 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
 
               {rep.classStartDate && !rep.classCompleted && (
                 <div style={{ fontSize:12, color:"#a78bfa", marginTop:12 }}>
-                  📌 {classType === "online" ? "Working through your online course" : classType === "zoom" ? "Zoom class scheduled" : "Dates entered"}  -  tap Mark Complete when you finish!
+                  📌 {classType === "online" ? "Working through your online course" : classType === "zoom" ? "Zoom class scheduled" : "Dates entered"} — tap Mark Complete when you finish!
                 </div>
               )}
             </div>
           );
         })()}
 
-        {/* Income Goal Calculator  -  licensed only */}
-        {(rep.track === "licensed" || rep.track === "rvp") && (
-          <IncomeGoalCalculator goal={rep.incomeGoal||0} onSave={g => onUpdate({ ...rep, incomeGoal:g, lastActivity:new Date().toISOString() })} />
-        )}
-
-        {/* Life App Tracker  -  standalone card for licensed/RVP reps */}
+        {/* Life App Tracker — standalone card for licensed/RVP reps */}
         {(rep.track === "licensed" || rep.track === "rvp") && (
           <div style={{ marginBottom:20 }}>
             <div style={{ fontSize:13, fontWeight:"bold", color:"#3b82f6", marginBottom:12, letterSpacing:"0.05em" }}>📋 Life Application Tracker</div>
@@ -1752,14 +1733,14 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             <>
               {isLicensedTrackView && (
                 <div style={{ marginBottom:20 }}>
-                  {/* Alert banner  -  guides both paths */}
+                  {/* Alert banner — guides both paths */}
                   <div style={{ background:"#f59e0b0f", border:"1px solid #f59e0b30", borderLeft:"4px solid #f59e0b", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
                     <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b", marginBottom:6 }}>⭐ Did you join already life licensed?</div>
                     <div style={{ fontSize:12, color:"#ffffff70", lineHeight:1.7 }}>
-                      If you skipped the new rep training because you came in already licensed  -  tap below to complete these required onboarding steps. They are specific to you and must be done first.
+                      If you skipped the new rep training because you came in already licensed — tap below to complete these required onboarding steps. They are specific to you and must be done first.
                     </div>
                     <div style={{ fontSize:12, color:"#ffffff50", marginTop:8, paddingTop:8, borderTop:"1px solid #ffffff10" }}>
-                      If you went through the full new rep training process  -  these steps are not for you. You can skip this section.
+                      If you went through the full new rep training process — these steps are not for you. You can skip this section.
                     </div>
                   </div>
                   <button onClick={() => setShowConditional(s => !s)}
@@ -1770,39 +1751,41 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
                     </div>
                     <div style={{ fontSize:16, color:"#f59e0b" }}>{showConditional ? "▲" : "▼"}</div>
                   </button>
-                  {/* DGO First  -  most time sensitive */}
+                  {showConditional && conditionalCats.map(cat => (
+                    <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
+                  ))}
                   {showConditional && (
-                    <div style={{ background:"#06b6d410", border:"2px solid #06b6d450", borderRadius:12, padding:"16px 18px", marginBottom:12 }}>
-                      <div style={{ fontSize:13, fontWeight:"bold", color:"#06b6d4", marginBottom:4 }}>🎉 Schedule Your DGO  -  Do This First!</div>
-                      <div style={{ fontSize:12, color:"#ffffff60", marginBottom:12 }}>Book your Direction of Growth Objective meeting with your trainer immediately. This is your first priority!</div>
-                      <div style={{ display:"flex", gap:12, alignItems:"center", flexWrap:"wrap" }}>
-                        <div style={{ flex:1 }}>
-                          <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>DGO Date</div>
-                          <input type="date" value={rep.licensedDgoDate||""} onChange={e => onUpdate({ ...rep, licensedDgoDate:e.target.value, lastActivity:new Date().toISOString() })}
-                            style={{ background:"transparent", border:"none", borderBottom:"1px solid #06b6d440", color: rep.licensedDgoDate?"#f0ede8":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
-                        </div>
-                        <div onClick={() => { onUpdate({ ...rep, licensedDgoComplete:!rep.licensedDgoComplete, lastActivity:new Date().toISOString() }); if (!rep.licensedDgoComplete) { spawnConfetti(window.innerWidth/2,200); } }}
-                          style={{ background: rep.licensedDgoComplete?"#10b98120":"#06b6d420", border:`1px solid ${rep.licensedDgoComplete?"#10b98150":"#06b6d450"}`, borderRadius:20, padding:"8px 18px", cursor:"pointer", fontSize:13, color: rep.licensedDgoComplete?"#10b981":"#06b6d4", fontWeight:"bold" }}>
-                          {rep.licensedDgoComplete ? "✓ DGO Completed!" : "Mark Complete"}
+                    <div style={{ display:"flex", flexDirection:"column", gap:12, marginTop:8 }}>
+                      {/* DGO Card for already-licensed */}
+                      <div style={{ background:"#06b6d410", border:"1px solid #06b6d430", borderRadius:12, padding:"14px 16px" }}>
+                        <div style={{ fontSize:12, fontWeight:"bold", color:"#06b6d4", marginBottom:10 }}>🎉 Schedule Your DGO</div>
+                        <div style={{ fontSize:12, color:"#ffffff60", marginBottom:10 }}>Book your Direction of Growth Objective meeting with your trainer.</div>
+                        <div style={{ display:"flex", gap:12, alignItems:"center", flexWrap:"wrap" }}>
+                          <div style={{ flex:1 }}>
+                            <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>DGO Date</div>
+                            <input type="date" value={rep.licensedDgoDate||""} onChange={e => onUpdate({ ...rep, licensedDgoDate:e.target.value, lastActivity:new Date().toISOString() })}
+                              style={{ background:"transparent", border:"none", borderBottom:"1px solid #06b6d440", color: rep.licensedDgoDate?"#f0ede8":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
+                          </div>
+                          <div onClick={() => { onUpdate({ ...rep, licensedDgoComplete:!rep.licensedDgoComplete, lastActivity:new Date().toISOString() }); if (!rep.licensedDgoComplete) { spawnConfetti(window.innerWidth/2,200); } }}
+                            style={{ background: rep.licensedDgoComplete?"#10b98120":"#ffffff10", border:`1px solid ${rep.licensedDgoComplete?"#10b98150":"#ffffff20"}`, borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, color: rep.licensedDgoComplete?"#10b981":"#ffffff60", fontWeight:"bold" }}>
+                            {rep.licensedDgoComplete ? "✓ Completed!" : "Mark Complete"}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                  {showConditional && conditionalCats.map(cat => (
-                    <CategorySection key={cat} title={cat}
-                      items={repChecklist.filter(i=>i.category===cat)}
-                      completedIds={rep.repCompleted}
-                      onToggle={toggleItem}
-                      isRepView={true}
-                    />
-                  ))}
-                  {showConditional && rep.repCompleted.includes("l3") && (
-                    <LicensedRefsInput refs={rep.licensedRefs||[]} onChange={refs => onUpdate({ ...rep, licensedRefs:refs, lastActivity:new Date().toISOString() })} />
-                  )}
-                  {showConditional && rep.repCompleted.includes("l4") && (
-                    <div style={{ background:"#f59e0b10", border:"1px solid #f59e0b30", borderLeft:"3px solid #f59e0b", borderRadius:10, padding:"12px 16px" }}>
-                      <div style={{ fontSize:13, color:"#f59e0b", fontWeight:"bold", marginBottom:4 }}>Ready to build your list?</div>
-                      <div style={{ fontSize:12, color:"#ffffff60" }}>Head to the Appointments tab to log your 20 MACHO contacts and score them!</div>
+                      {/* References expansion */}
+                      {rep.repCompleted.includes("l3") && (
+                        <LicensedRefsInput
+                          refs={rep.licensedRefs||[]}
+                          onChange={refs => onUpdate({ ...rep, licensedRefs:refs, lastActivity:new Date().toISOString() })}
+                        />
+                      )}
+                      {/* MACHO list expansion */}
+                      {rep.repCompleted.includes("l4") && (
+                        <LicensedMachoList
+                          contacts={rep.licensedMachoList||[]}
+                          onChange={list => onUpdate({ ...rep, licensedMachoList:list, lastActivity:new Date().toISOString() })}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
@@ -1810,8 +1793,6 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
               {repCats.filter(cat => !conditionalCats.includes(cat)).map(cat => (
                 <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
               ))}
-              {/* Messaging always at bottom of checklist */}
-              <RepMessaging rep={rep} onUpdate={onUpdate} isTrainer={false} />
             </>
           );
         })()}
@@ -1853,6 +1834,8 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
 
 const inputStyle = { background: "#ffffff0d", border: "1px solid #ffffff20", borderRadius: 8, padding: "10px 14px", color: "#f0ede8", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };
 const labelStyle = { fontSize: 11, color: "#ffffff60", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6, display: "block" };
+
+
 
 // ─── TRAINER ACCOUNTABILITY HELPERS ──────────────────────────────────────────
 function getTrainerActivityScore(trainerReps) {
@@ -1924,13 +1907,13 @@ function CheckInSection({ checkIns = [], onAddCheckIn }) {
         <div style={{ background: daysSinceLast === null ? "#f59e0b12" : "#f43f5e10", border: `1px solid ${daysSinceLast === null ? "#f59e0b35" : "#f43f5e35"}`, borderRadius: 10, padding: "10px 16px", marginBottom: 12, display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ fontSize: 18 }}>{daysSinceLast === null ? "👋" : "⏰"}</div>
           <div style={{ fontSize: 13, color: daysSinceLast === null ? "#f59e0b" : "#f43f5e", fontWeight: "bold" }}>
-            {daysSinceLast === null ? "No check-ins yet  -  log your first one below!" : `Last check-in was ${daysSinceLast} day${daysSinceLast !== 1 ? "s" : ""} ago  -  time to follow up!`}
+            {daysSinceLast === null ? "No check-ins yet — log your first one below!" : `Last check-in was ${daysSinceLast} day${daysSinceLast !== 1 ? "s" : ""} ago — time to follow up!`}
           </div>
         </div>
       )}
       {!needsCheckIn && lastCheckIn && (
         <div style={{ background: "#10b98110", border: "1px solid #10b98130", borderRadius: 10, padding: "8px 14px", marginBottom: 12, fontSize: 12, color: "#10b981" }}>
-          ✓ Checked in {daysSinceLast === 0 ? "today" : `${daysSinceLast} day${daysSinceLast !== 1 ? "s" : ""} ago`}  -  "{lastCheckIn.note}"
+          ✓ Checked in {daysSinceLast === 0 ? "today" : `${daysSinceLast} day${daysSinceLast !== 1 ? "s" : ""} ago`} — "{lastCheckIn.note}"
         </div>
       )}
 
@@ -1940,7 +1923,7 @@ function CheckInSection({ checkIns = [], onAddCheckIn }) {
         <textarea
           value={noteDraft}
           onChange={e => setNoteDraft(e.target.value)}
-          placeholder='e.g. "Checked in  -  reviewed exam simulator progress, on track" or "Reminded rep to complete FNA this week"'
+          placeholder='e.g. "Checked in — reviewed exam simulator progress, on track" or "Reminded rep to complete FNA this week"'
           style={{ background: "#ffffff0d", border: "1px solid #ffffff20", borderRadius: 8, padding: "10px 14px", color: "#f0ede8", fontSize: 13, outline: "none", width: "100%", boxSizing: "border-box", resize: "vertical", minHeight: 80, fontFamily: "inherit", marginBottom: 10 }}
         />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1963,7 +1946,7 @@ function CheckInSection({ checkIns = [], onAddCheckIn }) {
             {checkIns.map(ci => (
               <div key={ci.id} style={{ background: "#ffffff06", border: "1px solid #ffffff10", borderRadius: 8, padding: "10px 14px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <div style={{ fontSize: 11, color: "#f59e0b", fontWeight: "bold" }}>{ci.date} - {ci.time}</div>
+                  <div style={{ fontSize: 11, color: "#f59e0b", fontWeight: "bold" }}>{ci.date} · {ci.time}</div>
                   {ci.trainer && <div style={{ fontSize: 11, color: "#ffffff40" }}>{ci.trainer}</div>}
                 </div>
                 <div style={{ fontSize: 13, color: "#f0ede8", lineHeight: 1.5 }}>{ci.note}</div>
@@ -1978,6 +1961,8 @@ function CheckInSection({ checkIns = [], onAddCheckIn }) {
     </div>
   );
 }
+
+
 
 // ─── REP ACCOUNTABILITY BANNER ───────────────────────────────────────────────
 function RepAccountabilityBanner({ rep }) {
@@ -2014,9 +1999,9 @@ function RepAccountabilityBanner({ rep }) {
     <div style={{ marginBottom: 20 }}>
       {/* Daily quote */}
       <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f3460)", border: "1px solid #ffffff15", borderRadius: 14, padding: "16px 20px", marginBottom: 12, textAlign: "center" }}>
-        <div style={{ fontSize: 11, color: "#f59e0b", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8 }}>💫 Todays Motivation</div>
+        <div style={{ fontSize: 11, color: "#f59e0b", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8 }}>💫 Today’s Motivation</div>
         <div style={{ fontSize: 15, color: "#f0ede8", fontStyle: "italic", lineHeight: 1.6, marginBottom: 6 }}>"{quote.text}"</div>
-        <div style={{ fontSize: 12, color: "#ffffff50" }}> -  {quote.author}</div>
+        <div style={{ fontSize: 12, color: "#ffffff50" }}>— {quote.author}</div>
       </div>
 
       {/* Countdown */}
@@ -2037,7 +2022,7 @@ function RepAccountabilityBanner({ rep }) {
       {/* Behind alert */}
       {behindAlert && (
         <div style={{ background: "#f43f5e0f", border: "1px solid #f43f5e35", borderRadius: 12, padding: "14px 18px", marginBottom: 12 }}>
-          <div style={{ fontSize: 13, fontWeight: "bold", color: "#f43f5e", marginBottom: 6 }}>📉 Youre behind pace  -  time to catch up!</div>
+          <div style={{ fontSize: 13, fontWeight: "bold", color: "#f43f5e", marginBottom: 6 }}>📉 You’re behind pace — time to catch up!</div>
           <div style={{ fontSize: 12, color: "#ffffff60", marginBottom: 8 }}>At this point you should be about {behindAlert.expected}% done, but you're at {behindAlert.actual}%. You're {behindAlert.gap}% behind.</div>
           <div style={{ fontSize: 12, color: "#f59e0b" }}>💡 Focus on your top uncompleted tasks and contact your trainer today!</div>
         </div>
@@ -2050,7 +2035,7 @@ function RepAccountabilityBanner({ rep }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {overdueItems.map(item => (
               <div key={item.id} style={{ fontSize: 12, color: "#ffffff60", display: "flex", gap: 8, alignItems: "flex-start" }}>
-                <span style={{ color: "#f43f5e", flexShrink: 0 }}>-</span>
+                <span style={{ color: "#f43f5e", flexShrink: 0 }}>•</span>
                 <span>{item.task}</span>
               </div>
             ))}
@@ -2063,12 +2048,13 @@ function RepAccountabilityBanner({ rep }) {
       {apptSet < 15 && (rep.track === "fast" || rep.track === "regular") && (
         <div style={{ background: "#3b82f610", border: "1px solid #3b82f630", borderRadius: 12, padding: "12px 16px", marginBottom: 12 }}>
           <div style={{ fontSize: 13, color: "#3b82f6", fontWeight: "bold" }}>📅 Appointments: {apptSet}/15 set</div>
-          <div style={{ fontSize: 12, color: "#ffffff50", marginTop: 4 }}>You need 15 - 20 training appointments. {15 - apptSet} more to go!</div>
+          <div style={{ fontSize: 12, color: "#ffffff50", marginTop: 4 }}>You need 15–20 training appointments. {15 - apptSet} more to go!</div>
         </div>
       )}
     </div>
   );
 }
+
 
 // ─── ADMIN ADDER ─────────────────────────────────────────────────────────────
 function AdminAdder({ onAdd }) {
@@ -2102,6 +2088,9 @@ function AdminAdder({ onAdd }) {
     </div>
   );
 }
+
+
+
 
 // ─── REP PHOTO UPLOAD ─────────────────────────────────────────────────────────
 function RepPhotoUpload({ photo, onUpdate }) {
@@ -2143,11 +2132,11 @@ function AppointmentReminderBanner() {
       <div style={{ fontSize:15, fontWeight:"bold", color:"#f59e0b", marginBottom:10 }}>Remember Your Purpose!</div>
       <div style={{ fontSize:13, color:"#ffffff70", lineHeight:1.7, marginBottom:12 }}>
         Your training appointments are primarily for <strong style={{ color:"#f0ede8" }}>YOUR development</strong>, not to recruit or sell.
-        If a client or recruit comes out of it  -  amazing! But your <strong style={{ color:"#f0ede8" }}>#1 goal</strong> is to get in front of your trainer and sharpen your skills.
+        If a client or recruit comes out of it — amazing! But your <strong style={{ color:"#f0ede8" }}>#1 goal</strong> is to get in front of your trainer and sharpen your skills.
       </div>
       <div style={{ background:"#ffffff0a", border:"1px solid #ffffff15", borderRadius:10, padding:"10px 14px", fontSize:12, color:"#f59e0b", display:"flex", alignItems:"center", gap:8 }}>
         <span style={{ fontSize:16 }}>📜</span>
-        <span>Need help setting appointments? <strong>Tap the Scripts tab</strong>  -  it has everything you need to make the call with confidence!</span>
+        <span>Need help setting appointments? <strong>Tap the Scripts tab</strong> — it has everything you need to make the call with confidence!</span>
       </div>
     </div>
   );
@@ -2290,7 +2279,7 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
                 <div style={{ width:10, height:10, borderRadius:"50%", background:ts.trainer.color, flexShrink:0 }} />
                 <div style={{ flex:1 }}>
                   <div style={{ fontSize:14, fontWeight:"bold" }}>{ts.trainer.name}</div>
-                  <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>{ts.reps} reps - {ts.appts} appts done</div>
+                  <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>{ts.reps} reps · {ts.appts} appts done</div>
                 </div>
                 <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
                   <div style={{ textAlign:"center" }}><div style={{ fontSize:15, fontWeight:"bold", color:"#10b981" }}>${ts.premium.toLocaleString()}</div><div style={{ fontSize:9, color:"#ffffff40", textTransform:"uppercase" }}>Premium</div></div>
@@ -2302,7 +2291,7 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
         </div>
       )}
 
-      {/* Rep Production Input  -  collapsible */}
+      {/* Rep Production Input — collapsible */}
       <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, overflow:"hidden" }}>
             <div onClick={() => setProdOpen(o => !o)} style={{ padding:"14px 20px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div style={{ fontSize:12, color:"#ffffff50", letterSpacing:"0.08em", textTransform:"uppercase", fontWeight:"bold" }}>💼 Update Rep Production ({filteredReps.length} reps)</div>
@@ -2351,6 +2340,7 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
   );
 }
 
+
 // ─── LIFE APPLICATION TRACKER ─────────────────────────────────────────────────
 const APP_STATUSES = ["Submitted","Approved","Pending","Declined"];
 const STATUS_COLORS = { Submitted:"#3b82f6", Approved:"#10b981", Pending:"#f59e0b", Declined:"#f43f5e" };
@@ -2378,11 +2368,11 @@ function LifeAppChecklist({ app, onUpdate, onClose }) {
             <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
               <button onClick={() => { setBeneAnswer("yes"); setStep(2); }}
                 style={{ background: beneAnswer==="yes" ? "#10b98120" : "#ffffff08", border:`2px solid ${beneAnswer==="yes" ? "#10b981" : "#ffffff20"}`, borderRadius:10, padding:"14px 16px", cursor:"pointer", color:"#f0ede8", fontSize:14, fontWeight:"bold", display:"flex", alignItems:"center", gap:12 }}>
-                <span style={{ fontSize:20 }}>✅</span> Yes  -  collected
+                <span style={{ fontSize:20 }}>✅</span> Yes — collected
               </button>
               <button onClick={() => { setBeneAnswer("followup"); setStep(2); }}
                 style={{ background: beneAnswer==="followup" ? "#f59e0b20" : "#ffffff08", border:`2px solid ${beneAnswer==="followup" ? "#f59e0b" : "#ffffff20"}`, borderRadius:10, padding:"14px 16px", cursor:"pointer", color:"#f0ede8", fontSize:14, fontWeight:"bold", display:"flex", alignItems:"center", gap:12 }}>
-                <span style={{ fontSize:20 }}>⏳</span> Not yet  -  need to follow up
+                <span style={{ fontSize:20 }}>⏳</span> Not yet — need to follow up
               </button>
             </div>
           </>
@@ -2398,7 +2388,7 @@ function LifeAppChecklist({ app, onUpdate, onClose }) {
               {[
                 { val:"completed", icon:"✅", label:"Investment completed with client" },
                 { val:"scheduled", icon:"📅", label:"Investment appointment scheduled" },
-                { val:"followup", icon:"⏳", label:"Not yet  -  need to follow up" },
+                { val:"followup", icon:"⏳", label:"Not yet — need to follow up" },
               ].map(opt => (
                 <button key={opt.val} onClick={() => setInvestAnswer(opt.val)}
                   style={{ background: investAnswer===opt.val ? "#f59e0b20" : "#ffffff08", border:`2px solid ${investAnswer===opt.val ? "#f59e0b" : "#ffffff20"}`, borderRadius:10, padding:"14px 16px", cursor:"pointer", color:"#f0ede8", fontSize:14, fontWeight:"bold", display:"flex", alignItems:"center", gap:12 }}>
@@ -2480,7 +2470,7 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
                 <button onClick={() => { if (pendingApp.clientName?.trim()) { setPendingNewId(null); setShowChecklist(pendingNewId); } }}
                   disabled={!pendingApp.clientName?.trim()}
                   style={{ flex:2, background: pendingApp.clientName?.trim()?"#3b82f6":"#ffffff15", border:"none", color: pendingApp.clientName?.trim()?"#fff":"#ffffff30", padding:"12px", borderRadius:8, cursor: pendingApp.clientName?.trim()?"pointer":"default", fontWeight:"bold", fontSize:14 }}>
-                  Next  -  Checklist ➜
+                  Next — Checklist ➜
                 </button>
               </div>
             </div>
@@ -2498,11 +2488,11 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
           <div style={{ width:`${Math.min(100,Math.round((submitted/20)*100))}%`, height:"100%", background:"linear-gradient(90deg,#3b82f6,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
         </div>
         <div style={{ display:"flex", justifyContent:"space-between", fontSize:11, color:"#ffffff40", marginBottom: (needsBene>0||needsInvest>0) ? 8 : 0 }}>
-          <span>{submitted} apps logged - {investmentsDone} investments completed</span>
+          <span>{submitted} apps logged · {investmentsDone} investments completed</span>
           <span>Goal: 20/month</span>
         </div>
         {needsBene > 0 && <div style={{ fontSize:12, color:"#f43f5e", marginTop:4 }}>⚠️ {needsBene} client{needsBene!==1?"s":""} still need Beneficiary and Emergency Contact info</div>}
-        {needsInvest > 0 && <div style={{ fontSize:12, color:"#f59e0b", marginTop:4 }}>💰 {needsInvest} client{needsInvest!==1?"s":""} still need an investment  -  Buy Term and Invest the Difference!</div>}
+        {needsInvest > 0 && <div style={{ fontSize:12, color:"#f59e0b", marginTop:4 }}>💰 {needsInvest} client{needsInvest!==1?"s":""} still need an investment — Buy Term and Invest the Difference!</div>}
       </div>
 
       {/* App list */}
@@ -2516,7 +2506,7 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
                 <div style={{ flex:1 }}>
                   <div style={{ fontSize:14, fontWeight:"bold", color:"#f0ede8" }}>{app.clientName}</div>
                   <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>
-                    {app.appDate} - {app.premium ? "$"+Number(app.premium).toLocaleString()+" premium" : "No premium entered"}
+                    {app.appDate} · {app.premium ? "$"+Number(app.premium).toLocaleString()+" premium" : "No premium entered"}
                     {app.beneCollected === "yes" && <span style={{ color:"#10b981", marginLeft:8 }}>✓ Bene</span>}
                     {app.beneCollected !== "yes" && app.clientName && <span style={{ color:"#f43f5e", marginLeft:8 }}>⚠ Bene needed</span>}
                     {app.investStatus === "completed" && <span style={{ color:"#10b981", marginLeft:8 }}>✓ Invested</span>}
@@ -2605,7 +2595,7 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
                     {[["Phone",app.phone],["Email",app.email],["Coverage","$"+(Number(app.coverageAmount)||0).toLocaleString()],["Premium","$"+(Number(app.premium)||0).toLocaleString()+"/mo"],["Policy",app.policyNumber||"Pending"],["Date",app.appDate]].map(([label,value]) => (
                       <div key={label}>
                         <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:2 }}>{label}</div>
-                        <div style={{ fontSize:12, color:"#f0ede8" }}>{value||" - "}</div>
+                        <div style={{ fontSize:12, color:"#f0ede8" }}>{value||"—"}</div>
                       </div>
                     ))}
                   </div>
@@ -2700,7 +2690,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
     const entry = { id: Date.now().toString(), name: newClientName.trim(), date: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), movedOver: false };
     const newClients = [...investmentClients, entry];
     const newCount = pacCount + 1;
-    // Single atomic update  -  prevents race condition overwriting clients
+    // Single atomic update — prevents race condition overwriting clients
     if (onUpdateBoth) {
       onUpdateBoth(newClients, newCount);
     } else {
@@ -2771,7 +2761,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
         </div>
       </div>
 
-      {/* Progress bar  -  new reps only */}
+      {/* Progress bar — new reps only */}
       {!isLicensed && (
         <div style={{ background:"#ffffff10", borderRadius:99, height:10, overflow:"hidden", marginBottom:10 }}>
           <div style={{ width:`${p}%`, height:"100%", background: pacCount>=goal?"#10b981":"linear-gradient(90deg,#f59e0b,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
@@ -2798,7 +2788,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
         </button>
       )}
 
-      {/* Client list  -  dropdown */}
+      {/* Client list — dropdown */}
       {investmentClients.length > 0 && (
         <div>
           <button onClick={() => setShowClients(s => !s)}
@@ -2812,7 +2802,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
                 <div key={client.id} style={{ background: client.movedOver?"#10b98110":"#ffffff07", border:`1px solid ${client.movedOver?"#10b98130":"#ffffff12"}`, borderRadius:8, padding:"10px 14px", display:"flex", alignItems:"center", gap:10 }}>
                   <div style={{ flex:1 }}>
                     <div style={{ fontSize:13, fontWeight:"bold", color: client.movedOver?"#ffffff50":"#f0ede8", textDecoration: client.movedOver?"line-through":"none" }}>{client.name}</div>
-                    <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>{client.date} {client.movedOver ? "- ✓ Moved over" : ""}</div>
+                    <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>{client.date} {client.movedOver ? "· ✓ Moved over" : ""}</div>
                   </div>
                   {!readOnly && (
                     <div style={{ display:"flex", gap:6 }}>
@@ -2834,6 +2824,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
   );
 }
 
+
 // ─── MY PRODUCTION SECTION ────────────────────────────────────────────────────
 function MyProductionSection({ myProduction, onUpdate, trainerName }) {
   const [expanded, setExpanded] = useState(false);
@@ -2849,12 +2840,12 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
 
   return (
     <div style={{ background:"linear-gradient(135deg,#10b98110,#3b82f610)", border:"1px solid #10b98130", borderRadius:14, marginBottom:20 }}>
-      {/* Header  -  always visible */}
+      {/* Header — always visible */}
       <div onClick={() => setExpanded(!expanded)} style={{ padding:"16px 20px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
         <div>
           <div style={{ fontSize:14, fontWeight:"bold", color:"#10b981" }}>📊 My Production</div>
           <div style={{ fontSize:11, color:"#ffffff50", marginTop:3 }}>
-            {submitted} life app{submitted!==1?"s":""} - {pacCount} investments - {thisWeek.contacts||0} contacts this week
+            {submitted} life app{submitted!==1?"s":""} · {pacCount} investments · {thisWeek.contacts||0} contacts this week
           </div>
         </div>
         <div style={{ fontSize:18, color:"#10b981" }}>{expanded ? "▲" : "▼"}</div>
@@ -2907,47 +2898,49 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
   );
 }
 
+
 // ─── APP TOUR ─────────────────────────────────────────────────────────────────
 const REP_TOUR_STEPS = [
-  { emoji:"👋", title:"Welcome to Your Training App!", body:"This app guides you through your new rep training. Complete your checklist, log appointments, and track your progress!" },
-  { emoji:"🔐", title:"Your PIN is Your Key", body:"You created a 4-digit PIN at login. You need it every time you log in. Keep it private!" },
-  { emoji:"✅", title:"My Checklist", body:"Work top to bottom. Check off each item as you complete it. Your trainer can see everything!" },
-  { emoji:"📅", title:"Appointments Tab", body:"Log every training appointment here with name, phone, date, and MACHO score. Goal: 15-20 appointments!" },
-  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate contacts M-A-C-H-O  -  Married, Age 25-55, Children, Homeowner, Occupation. 3+ stars = great candidate!" },
-  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references. Your trainer will use them to help set training appointments." },
-  { emoji:"📜", title:"Scripts Tab", body:"Your appointment setting scripts live here. Practice before every call  -  understand the message and make it your own!" },
-  { emoji:"👁", title:"Field Training Observations", body:"Tap + every time you observe your trainer complete a life app. Goal: 20 observations before licensing!" },
-  { emoji:"📋", title:"Life App Counter", body:"Tap + every time you are present for a completed life application during training. Goal: 10!" },
-  { emoji:"💰", title:"Future Investment Clients", body:"Tap + and enter a name every time a client gets an investment. These will be moved to you when you pass your investment exam!" },
-  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner shows what meetings are today. Check it every login. Canceled meetings show up here too!" },
-  { emoji:"🎯", title:"You Are All Set!", body:"Complete your checklist, set 15-20 appointments, attend every meeting, and check in with your trainer daily!" },
+  { emoji:"👋", title:"Welcome to Your Training App!", body:"This app guides you through every step of your new rep training. Complete your checklist, log appointments, and track your progress all in one place!" },
+  { emoji:"🔐", title:"Your PIN is Your Key", body:"You created a 4-digit PIN when you logged in. You will need it every time you log in. Keep it private — no one else can access your checklist!" },
+  { emoji:"✅", title:"My Checklist", body:"Work through your checklist top to bottom. Check off each item as you complete it and watch your progress bar grow. Your trainer can see everything you check off!" },
+  { emoji:"📅", title:"Appointments Tab", body:"Log every training appointment here. Enter the contact name, phone, date, and notes. Your goal is 15-20 training appointments!" },
+  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate each contact using M-A-C-H-O — Married, Age 25-55, Children under 17, Homeowner, Occupation. 3 or more stars means they are a great appointment candidate!" },
+  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references with name, phone, and relationship. Your trainer will reach out to help you set training appointments with them." },
+  { emoji:"📜", title:"Scripts Tab", body:"Your appointment setting scripts are here. Practice them before every call. You do not have to say them word for word — understand the message and make it your own!" },
+  { emoji:"👁", title:"Field Training Observations", body:"Every time you observe your trainer complete a life app, tap + on the FTO counter. Goal is 20 observations before licensing. Pay close attention to the entire process!" },
+  { emoji:"📋", title:"Life App Counter", body:"Tap + every time you are present for a completed life application during training. Goal is 10 during training!" },
+  { emoji:"💰", title:"Future Investment Clients", body:"Tap + and enter a name every time a client gets an investment while you are training. These will be moved over to you when you pass your investment exam — this is your future AUM!" },
+  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner at the top shows what meetings are scheduled today. Check it every time you log in. If a meeting is canceled your trainer marks it and you will see it right away!" },
+  { emoji:"🎯", title:"You Are All Set!", body:"Complete your checklist, set 15-20 appointments, attend every meeting, and check in with your trainer daily. Let us go build something great!" },
 ];
 
 const LICENSED_TOUR_STEPS = [
-  { emoji:"👋", title:"Welcome  -  You Are Life Licensed!", body:"Congratulations! This checklist guides you through everything you need to do now that you have your life license!" },
-  { emoji:"⭐", title:"Already Licensed When You Joined?", body:"If you joined already licensed and skipped new rep training  -  tap the gold alert at the top first. Those steps are required for you!" },
-  { emoji:"📜", title:"Start Securities License Now!", body:"Start your securities license immediately after life licensing. SIE first, then Series 6, 63, and 26 for RVP!" },
-  { emoji:"🏅", title:"Milestones", body:"Track your first policy, first recruit, and key milestones at the top of your checklist. Check them off when you hit them!" },
-  { emoji:"📋", title:"Life Application Tracker", body:"Log every life app here. You will be asked about Emergency Contacts and whether you scheduled an investment. Every life app should come with an investment!" },
-  { emoji:"💰", title:"Investment Tracker", body:"Log every future investment client by name. Your trainer knows exactly who to move over when you pass your investment exam!" },
-  { emoji:"📊", title:"Weekly Scorecard", body:"Track weekly activity  -  contacts, appointments, life apps, and investments. Keeps you accountable to your goals!" },
-  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner shows what is scheduled today. Check it every login so you never miss a meeting!" },
-  { emoji:"👑", title:"RVP Path", body:"Check the RVP Path box on your checklist to unlock your full RVP promotion checklist!" },
-  { emoji:"🎯", title:"You Are All Set!", body:"Write business, build your team, log your activity, and work with your trainer daily. Let us go!" },
+  { emoji:"👋", title:"Welcome — You Are Life Licensed!", body:"Congratulations on getting licensed! This checklist guides you through everything you need to do now that you have your life license. Let us get you started!" },
+  { emoji:"⭐", title:"Already Licensed When You Joined?", body:"If you joined already life licensed and skipped new rep training — tap the gold alert at the top of your checklist first. Those onboarding steps are required for you and must be done before anything else." },
+  { emoji:"📜", title:"Start Your Securities License Now!", body:"As soon as you have your life license, start your securities license. You will see it near the top of your checklist. Begin with the SIE, then Series 6, 63, and 26 if you are going RVP!" },
+  { emoji:"🏅", title:"Milestones", body:"Track your first policy, first recruit, and other key milestones at the top of your checklist. These are celebrations — check them off when you hit them!" },
+  { emoji:"📋", title:"Life Application Tracker", body:"Log every life app you write here. After entering a client name you will be asked about Beneficiary and Emergency Contacts, and whether you scheduled an investment. Every life app should come with an investment!" },
+  { emoji:"💰", title:"Investment Tracker", body:"Log every future investment client here. Enter their name so your trainer knows exactly who to move over to you when you pass your investment exam. This is your AUM in progress!" },
+  { emoji:"📊", title:"Weekly Scorecard", body:"Track your weekly activity — contacts made, appointments set and completed, life apps submitted, and investments done. This keeps you accountable to your own goals!" },
+  { emoji:"🗓", title:"Daily Meeting Banner", body:"A banner at the top of your app shows what is scheduled today. Check it every time you log in so you never miss a team meeting. Canceled meetings show up here too!" },
+  { emoji:"👑", title:"RVP Path", body:"When you are ready to pursue RVP promotion, check the RVP Path box on your checklist to unlock your full RVP checklist with all the steps to get promoted!" },
+  { emoji:"🎯", title:"You Are All Set!", body:"Write business, build your team, and stay consistent. Log your activity, attend every meeting, and work with your trainer daily. Let us go build something great!" },
 ];
 
 const TRAINER_TOUR_STEPS = [
-  { emoji:"👋", title:"Welcome to Your Training Dashboard!", body:"This app helps you manage and track all your reps through their onboarding journey!" },
-  { emoji:"👥", title:"Rep Dashboard", body:"See all your reps with progress bars, appointment counts, and stall alerts. Click any rep to open their full profile." },
-  { emoji:"📋", title:"Rep Profile Tabs", body:"Each rep has tabs for Checklist, Appointments, References, Life Apps, Investments, Scorecard, Messages, RVP, and Schedule." },
-  { emoji:"📊", title:"Rep-Entered Details", body:"When a rep enters their DGO date, class info, exam date, or references it feeds directly into their profile!" },
-  { emoji:"💰", title:"Future Investment Clients", body:"When a rep logs a future investment client you see their name right in the rep profile to move over later." },
-  { emoji:"👁", title:"Field Training Observations", body:"Update the FTO counter directly from the rep profile. Both you and the rep can tap + after each observation." },
-  { emoji:"✅", title:"Check-Ins", body:"Log check-ins with notes on each rep. Get alerts when a rep has not been contacted in 3 or more days!" },
-  { emoji:"📊", title:"My Production", body:"Track your own life apps, weekly scorecard, and investments in My Production at the top of your dashboard." },
-  { emoji:"🗓", title:"Cancel Meetings", body:"Go to the Schedule tab on any rep and tap Cancel Today. Reps immediately see a CANCELED banner!" },
-  { emoji:"⚙️", title:"Manage Trainers", body:"Add trainers, set PINs, and add booking links. Each trainer gets their own booking link for their reps." },
-  { emoji:"🎯", title:"You Are All Set!", body:"Check in daily, monitor your reps, log your own production, and build a winning team!" },
+  { emoji:"👋", title:"Welcome to Your Training Dashboard!", body:"This app helps you manage and track all your reps through their onboarding journey. Here is a quick overview!" },
+  { emoji:"👥", title:"Rep Dashboard", body:"See all your reps with progress bars, appointment counts, check-in status, and stall alerts. Click any rep card to open their full profile." },
+  { emoji:"📋", title:"Rep Profile Tabs", body:"Each rep profile has tabs for Trainer Checklist, Rep Checklist, Appointments, References, Life Apps, Investments, Scorecard, RVP Path, and Schedule. Everything in one place!" },
+  { emoji:"📊", title:"Rep-Entered Details Panel", body:"When a rep enters their business commitment, DGO date, class info, exam date, or references it feeds directly into their profile. You can see it all without asking them!" },
+  { emoji:"💰", title:"Future Investment Clients", body:"When a rep logs a future investment client you see their name right in the rep profile. These are the clients you will move over to the rep when they pass their investment exam." },
+  { emoji:"👁", title:"Field Training Observations", body:"You can update the Field Training Observation counter directly from the rep profile. Both you and the rep can tap + after each life app observation during training." },
+  { emoji:"⭐", title:"Already Licensed Reps", body:"When a rep joins already life licensed, they see a gold alert at the top of their checklist guiding them to complete the onboarding steps specific to them. If they went through new rep training those steps are hidden — no confusion!" },
+  { emoji:"✅", title:"Check-Ins", body:"Log check-ins with notes on each rep profile. You will get alerts when a rep has not been contacted in 3 or more days so nobody falls through the cracks." },
+  { emoji:"📊", title:"My Production", body:"Your own life apps, weekly scorecard, and investment tracking lives in the My Production section at the top of your dashboard. Track your own business here!" },
+  { emoji:"🗓", title:"Cancel Meetings", body:"Go to the Schedule tab on any rep profile and tap Cancel Today next to any meeting. Reps will immediately see a CANCELED banner on their app that day." },
+  { emoji:"⚙️", title:"Manage Trainers", body:"Add trainers, set their PINs, and add their booking links in Manage Trainers. Each trainer gets their own booking link that shows up for their reps." },
+  { emoji:"🎯", title:"You Are All Set!", body:"Check in daily, monitor your reps progress, log your own production, and build a winning team. Your team is counting on you!" },
 ];
 
 function AppTour({ steps, onClose, storageKey }) {
@@ -2993,6 +2986,7 @@ function TourButton({ onClick }) {
   );
 }
 
+
 // ─── FIELD TRAINING OBSERVATION COUNTER ──────────────────────────────────────
 function FieldObsCounter({ count = 0, onChange }) {
   const goal = 20;
@@ -3007,11 +3001,11 @@ function FieldObsCounter({ count = 0, onChange }) {
         <div style={{ width:`${p}%`, height:"100%", background:count>=goal?"#10b981":"linear-gradient(90deg,#8b5cf6,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
       </div>
       <div style={{ fontSize:12, color:"#ffffff50", marginBottom:12 }}>
-        Every observation prepares you for when you are licensed  -  pay close attention to the process! Goal: 20 before licensing.
+        Every observation prepares you for when you are licensed — pay close attention to the process! Goal: 20 before licensing.
       </div>
       {count >= goal && (
         <div style={{ background:"#10b98120", border:"1px solid #10b98140", borderRadius:10, padding:"10px 14px", fontSize:13, color:"#10b981", fontWeight:"bold", textAlign:"center", marginBottom:12 }}>
-          20 observations complete  -  you are ready for licensing! 🎉
+          20 observations complete — you are ready for licensing! 🎉
         </div>
       )}
       {onChange && (
@@ -3026,6 +3020,7 @@ function FieldObsCounter({ count = 0, onChange }) {
     </div>
   );
 }
+
 
 // ─── LICENSED REFS INPUT ──────────────────────────────────────────────────────
 function LicensedRefsInput({ refs = [], onChange }) {
@@ -3067,167 +3062,34 @@ function LicensedRefsInput({ refs = [], onChange }) {
   );
 }
 
-// ─── REP MESSAGING ──────────────────────────────────────────────────────────
-function RepMessaging({ rep, onUpdate, isTrainer = false }) {
-  const [text, setText] = useState("");
-  const messages = rep.repMessages || [];
-
-  const send = () => {
-    if (!text.trim()) return;
-    const msg = { id:Date.now().toString(), text:text.trim(), sender:isTrainer?"trainer":"rep", timestamp:new Date().toISOString(), resolved:false };
-    onUpdate({ ...rep, repMessages:[...messages, msg], unreadByTrainer:!isTrainer, unreadByRep:isTrainer, lastActivity:new Date().toISOString() });
-    setText("");
+// ─── LICENSED MACHO LIST ──────────────────────────────────────────────────────
+function LicensedMachoList({ contacts = [], onChange }) {
+  const slots = Array.from({ length: 20 }, (_, i) => contacts[i] || { name:"", phone:"" });
+  const update = (idx, field, val) => {
+    const updated = slots.map((c, i) => i !== idx ? c : { ...c, [field]: val });
+    onChange(updated.filter(c => c.name || c.phone));
   };
-
-  const resolve = (id) => onUpdate({ ...rep, repMessages:messages.map(m=>m.id!==id?m:{...m,resolved:true}), lastActivity:new Date().toISOString() });
-
-  React.useEffect(() => {
-    if (isTrainer && rep.unreadByTrainer) onUpdate({ ...rep, unreadByTrainer:false });
-    if (!isTrainer && rep.unreadByRep) onUpdate({ ...rep, unreadByRep:false, lastActivity:new Date().toISOString() });
-  }, []);
-
-  const active = messages.filter(m=>!m.resolved);
-  const resolved = messages.filter(m=>m.resolved);
-  const unread = isTrainer ? rep.unreadByTrainer : rep.unreadByRep;
-
+  const filled = slots.filter(c => c.name).length;
   return (
-    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, padding:"16px 18px", marginBottom:16 }}>
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
-        <div style={{ fontSize:13, fontWeight:"bold", color:"#3b82f6" }}>
-          💬 {isTrainer?`Messages from ${rep.name}`:"Message My Trainer"}
-          {unread && <span style={{ background:"#f43f5e", color:"#fff", borderRadius:"50%", fontSize:10, padding:"1px 6px", marginLeft:8, fontWeight:"bold" }}>NEW</span>}
-        </div>
+    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:10, padding:"14px 16px", marginTop:8 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
+        <div style={{ fontSize:11, color:"#3b82f6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em" }}>📝 Enter Your 20 MACHO Contacts</div>
+        <div style={{ fontSize:12, color: filled>=20?"#10b981":"#ffffff50", fontWeight:"bold" }}>{filled}/20</div>
       </div>
-      {active.length===0 && <div style={{ fontSize:12, color:"#ffffff30", fontStyle:"italic", marginBottom:14 }}>No active messages</div>}
-      <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:14 }}>
-        {active.map(msg => (
-          <div key={msg.id} style={{ background:msg.sender==="rep"?"#3b82f610":"#10b98110", border:`1px solid ${msg.sender==="rep"?"#3b82f630":"#10b98130"}`, borderRadius:10, padding:"10px 14px" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
-              <div style={{ fontSize:10, color:msg.sender==="rep"?"#3b82f6":"#10b981", fontWeight:"bold", textTransform:"uppercase" }}>{msg.sender==="rep"?rep.name:"Trainer"}</div>
-              <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-                <div style={{ fontSize:10, color:"#ffffff30" }}>{new Date(msg.timestamp).toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</div>
-                <button onClick={()=>resolve(msg.id)} style={{ background:"#ffffff10", border:"1px solid #ffffff20", color:"#ffffff50", borderRadius:20, padding:"2px 10px", fontSize:10, cursor:"pointer" }}>✓ Resolve</button>
-              </div>
-            </div>
-            <div style={{ fontSize:13, color:"#f0ede8", lineHeight:1.6 }}>{msg.text}</div>
+      <div style={{ background:"#ffffff10", borderRadius:99, height:6, overflow:"hidden", marginBottom:14 }}>
+        <div style={{ width:`${Math.min(100,Math.round((filled/20)*100))}%`, height:"100%", background: filled>=20?"#10b981":"#3b82f6", borderRadius:99, transition:"width 0.4s" }} />
+      </div>
+      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+        {slots.map((contact, idx) => (
+          <div key={idx} style={{ display:"grid", gridTemplateColumns:"24px 1fr 1fr", gap:8, alignItems:"center" }}>
+            <div style={{ fontSize:11, color:"#ffffff30", textAlign:"center", fontWeight:"bold" }}>{idx+1}</div>
+            <input value={contact.name||""} onChange={e => update(idx,"name",e.target.value)} placeholder="Full name"
+              style={{ background:"#ffffff08", border:"1px solid #ffffff12", borderRadius:6, color:"#f0ede8", fontSize:12, outline:"none", padding:"6px 10px", fontFamily:"inherit" }} />
+            <input value={contact.phone||""} onChange={e => update(idx,"phone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12}
+              style={{ background:"#ffffff08", border:"1px solid #ffffff12", borderRadius:6, color:"#f0ede8", fontSize:12, outline:"none", padding:"6px 10px", fontFamily:"inherit" }} />
           </div>
         ))}
       </div>
-      {resolved.length>0 && (
-        <details style={{ marginBottom:14 }}>
-          <summary style={{ fontSize:11, color:"#ffffff30", cursor:"pointer", marginBottom:8 }}>✓ {resolved.length} resolved message{resolved.length!==1?"s":""}</summary>
-          <div style={{ display:"flex", flexDirection:"column", gap:8, marginTop:8 }}>
-            {resolved.map(msg => (
-              <div key={msg.id} style={{ background:"#ffffff05", border:"1px solid #ffffff08", borderRadius:8, padding:"8px 12px", opacity:0.6 }}>
-                <div style={{ fontSize:10, color:"#ffffff30", marginBottom:3 }}>{msg.sender==="rep"?rep.name:"Trainer"} - {new Date(msg.timestamp).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</div>
-                <div style={{ fontSize:12, color:"#ffffff50" }}>{msg.text}</div>
-              </div>
-            ))}
-          </div>
-        </details>
-      )}
-      <div style={{ display:"flex", gap:8 }}>
-        <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder={isTrainer?"Reply to rep...":"Send a message to your trainer..."} style={{ flex:1, background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:13, outline:"none", fontFamily:"inherit" }} />
-        <button onClick={send} disabled={!text.trim()} style={{ background:text.trim()?"#3b82f6":"#ffffff15", border:"none", color:text.trim()?"#fff":"#ffffff30", borderRadius:8, padding:"10px 18px", cursor:text.trim()?"pointer":"default", fontWeight:"bold", fontSize:13 }}>Send</button>
-      </div>
-    </div>
-  );
-}
-
-// ─── CHECK-IN STREAK ────────────────────────────────────────────────────────
-function CheckInStreak({ checkIns = [] }) {
-  if (checkIns.length === 0) return (
-    <div style={{ background:"#f43f5e10", border:"1px solid #f43f5e30", borderRadius:12, padding:"12px 16px", marginBottom:16, display:"flex", alignItems:"center", gap:12 }}>
-      <div style={{ fontSize:22 }}>👋</div>
-      <div style={{ fontSize:13, color:"#f43f5e" }}>No check-ins yet  -  reach out to your trainer today!</div>
-    </div>
-  );
-  const sorted = [...checkIns].sort((a,b) => new Date(b.date)-new Date(a.date));
-  const daysSince = Math.floor((new Date()-new Date(sorted[0].date))/86400000);
-  let streak = 0;
-  const today = new Date(); today.setHours(0,0,0,0);
-  for (let i=0; i<sorted.length; i++) {
-    const d = new Date(sorted[i].date); d.setHours(0,0,0,0);
-    if (Math.floor((today-d)/86400000) <= i+1) streak++;
-    else break;
-  }
-  const color = daysSince===0?"#10b981":daysSince<=2?"#f59e0b":"#f43f5e";
-  const emoji = streak>=7?"🔥🔥🔥":streak>=3?"🔥🔥":"🔥";
-  return (
-    <div style={{ background:`${color}10`, border:`1px solid ${color}30`, borderRadius:12, padding:"12px 16px", marginBottom:16, display:"flex", alignItems:"center", gap:14 }}>
-      <div style={{ fontSize:28 }}>{streak>0?emoji:"💤"}</div>
-      <div style={{ flex:1 }}>
-        <div style={{ fontSize:14, fontWeight:"bold", color }}>{streak} day check-in streak!</div>
-        <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>{daysSince===0?"Checked in today  -  great work!":daysSince===1?"Last checked in yesterday  -  keep it up!":`Last checked in ${daysSince} days ago  -  reach out to your trainer today!`}</div>
-      </div>
-      {streak>=7 && <div style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:20, padding:"4px 12px", fontSize:11, color:"#f59e0b", fontWeight:"bold" }}>7 day streak!</div>}
-    </div>
-  );
-}
-
-// ─── TEAM LEADERBOARD ───────────────────────────────────────────────────────
-function TeamLeaderboard({ currentRep, allReps }) {
-  const [expanded, setExpanded] = useState(false);
-  const teamReps = [currentRep, ...allReps.filter(r => r.trainerId===currentRep.trainerId && r.id!==currentRep.id)];
-  const ranked = teamReps.map(r => ({ id:r.id, name:r.id===currentRep.id?"You":r.name.split(" ")[0], isMe:r.id===currentRep.id, appts:(r.appointments||[]).filter(a=>a.name).length, fto:r.fieldObsCount||0, lifeApps:r.lifeAppCount||0, score:(r.appointments||[]).filter(a=>a.name).length+(r.fieldObsCount||0)+(r.lifeAppCount||0) })).sort((a,b)=>b.score-a.score);
-  const myRank = ranked.findIndex(r=>r.isMe)+1;
-  const medals = ["🥇","🥈","🥉"];
-  return (
-    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, marginBottom:16, overflow:"hidden" }}>
-      <div onClick={()=>setExpanded(s=>!s)} style={{ padding:"14px 18px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-        <div>
-          <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b" }}>🏆 Team Leaderboard</div>
-          <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>You are ranked #{myRank} on your team</div>
-        </div>
-        <div style={{ fontSize:16, color:"#ffffff40" }}>{expanded?"▲":"▼"}</div>
-      </div>
-      {expanded && (
-        <div style={{ padding:"0 18px 16px", display:"flex", flexDirection:"column", gap:8 }}>
-          {ranked.map((r,idx) => (
-            <div key={r.id} style={{ background:r.isMe?"#f59e0b10":"#ffffff05", border:`1px solid ${r.isMe?"#f59e0b30":"#ffffff10"}`, borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:12 }}>
-              <div style={{ fontSize:18, width:28, textAlign:"center" }}>{medals[idx]||`#${idx+1}`}</div>
-              <div style={{ flex:1 }}>
-                <div style={{ fontSize:13, fontWeight:"bold", color:r.isMe?"#f59e0b":"#f0ede8" }}>{r.name}{r.isMe?" (You)":""}</div>
-                <div style={{ fontSize:10, color:"#ffffff40", marginTop:2 }}>{r.appts} appts - {r.fto} FTOs - {r.lifeApps} life apps</div>
-              </div>
-              <div style={{ fontSize:16, fontWeight:"bold", color:r.isMe?"#f59e0b":"#ffffff50" }}>{r.score}</div>
-            </div>
-          ))}
-          <div style={{ fontSize:10, color:"#ffffff30", textAlign:"center", marginTop:6 }}>Score = appointments + FTO observations + life apps</div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── INCOME GOAL CALCULATOR ─────────────────────────────────────────────────
-function IncomeGoalCalculator({ goal=0, onSave }) {
-  const [input, setInput] = useState(goal?String(goal):"");
-  const g = Number(input)||0;
-  const appsNeeded = Math.ceil(g/500);
-  const apptsNeeded = Math.ceil(appsNeeded*3);
-  const apptsPerWeek = Math.ceil(apptsNeeded/4);
-  const contactsPerWeek = apptsPerWeek*3;
-  return (
-    <div style={{ background:"#10b98110", border:"1px solid #10b98130", borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
-      <div style={{ fontSize:14, fontWeight:"bold", color:"#10b981", marginBottom:4 }}>🎯 Income Goal Calculator</div>
-      <div style={{ fontSize:12, color:"#ffffff50", marginBottom:14 }}>Enter your monthly income goal and see exactly how much activity you need to hit it.</div>
-      <div style={{ display:"flex", gap:10, alignItems:"center", marginBottom:16 }}>
-        <div style={{ fontSize:20, color:"#10b981" }}>$</div>
-        <input type="number" value={input} onChange={e=>setInput(e.target.value)} placeholder="Monthly income goal" style={{ flex:1, background:"#ffffff0d", border:"1px solid #10b98140", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:16, outline:"none", fontFamily:"inherit" }} />
-        <button onClick={()=>onSave(g)} style={{ background:"#10b981", border:"none", color:"#0f0f11", borderRadius:8, padding:"10px 16px", cursor:"pointer", fontWeight:"bold", fontSize:13 }}>Save</button>
-      </div>
-      {g>0 && (
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-          {[{label:"Life Apps / Month",value:appsNeeded,color:"#3b82f6",emoji:"📋"},{label:"Appts / Month",value:apptsNeeded,color:"#8b5cf6",emoji:"📅"},{label:"Appts / Week",value:apptsPerWeek,color:"#f59e0b",emoji:"🗓"},{label:"Contacts / Week",value:contactsPerWeek,color:"#10b981",emoji:"📞"}].map(s => (
-            <div key={s.label} style={{ background:"#ffffff07", border:`1px solid ${s.color}25`, borderRadius:10, padding:"12px 14px", textAlign:"center" }}>
-              <div style={{ fontSize:24, fontWeight:"bold", color:s.color }}>{s.value}</div>
-              <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.06em", marginTop:4 }}>{s.emoji} {s.label}</div>
-            </div>
-          ))}
-        </div>
-      )}
-      {g>0 && <div style={{ fontSize:10, color:"#ffffff30", marginTop:10, textAlign:"center" }}>Based on avg $500 premium per policy and 1 app per 3 appointments.</div>}
     </div>
   );
 }
@@ -3354,7 +3216,7 @@ export default function App() {
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0, licensedRefs: [], licensedDgoDate: "", licensedDgoComplete: false, repMessages: [], unreadByTrainer: false, unreadByRep: false, incomeGoal: 0 }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0, licensedRefs: [], licensedMachoList: [], licensedDgoDate: "", licensedDgoComplete: false }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
@@ -3464,7 +3326,7 @@ export default function App() {
           </div>
           <div style={{ marginLeft: "auto", background: "#f59e0b20", border: "1px solid #f59e0b40", borderRadius: 20, padding: "4px 14px", fontSize: 12, color: "#f59e0b" }}>👁 Read-only preview</div>
         </div>
-        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(previewTrainer, previewAdminData)} schedule={schedule} cancellations={cancellations} allReps={reps} trainers={trainers} />
+        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(previewTrainer, previewAdminData)} schedule={schedule} cancellations={cancellations} />
       </div>
     );
   }
@@ -3478,7 +3340,7 @@ export default function App() {
     const repTrainerData = trainers.find(t => t.id === repData.trainerId);
     const repAdminData = admins.find(a => a.id === repTrainerData?.adminId);
     const repTrainerLink = getApptLink(repTrainerData, repAdminData);
-    return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} trainerLink={repTrainerLink} schedule={schedule} cancellations={cancellations} allReps={reps} trainers={trainers} />;
+    return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} trainerLink={repTrainerLink} schedule={schedule} cancellations={cancellations} />;
   }
 
   // ── DETAIL VIEW ──────────────────────────────────────────────────────────────
@@ -3503,7 +3365,6 @@ export default function App() {
       { key:"rep", label: track.shortLabel },
       { key:"appointments", label:`Appts (${apptSet})` },
       { key:"refs", label:`Refs (${(rep.references||[]).filter(r=>r.name).length})` },
-      { key:"messages", label:`💬 Messages${rep.unreadByTrainer?" 🔴":""}` },
       { key:"lifeapps", label:`📋 Life Apps (${(rep.lifeApps||[]).filter(a=>a.clientName).length})` },
       { key:"investments", label:`💰 Investments (${(rep.investmentClients||[]).length})` },
       { key:"scorecard", label:"📊 Scorecard" },
@@ -3523,7 +3384,7 @@ export default function App() {
                 {graduated && <div style={{ background:"#10b98120", border:"1px solid #10b98150", color:"#10b981", borderRadius:20, padding:"2px 12px", fontSize:12, fontWeight:"bold" }}>🎉 Graduated!</div>}
                 {!graduated && stalled && <div style={{ background:"#f43f5e20", border:"1px solid #f43f5e50", color:"#f43f5e", borderRadius:20, padding:"2px 10px", fontSize:11, fontWeight:"bold" }}>⚠ Stalled</div>}
               </div>
-              <div style={{ fontSize:11, color:"#ffffff50" }}>{repTrainer?.name}{rep.phone && ` - ${rep.phone}`}</div>
+              <div style={{ fontSize:11, color:"#ffffff50" }}>{repTrainer?.name}{rep.phone && ` · ${rep.phone}`}</div>
             </div>
             <div style={{ marginLeft:"auto", display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
               {saveIndicator && <div style={{ fontSize:11, color:"#10b981" }}>✓ Saved</div>}
@@ -3563,7 +3424,7 @@ export default function App() {
               <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Start Date</div>
               <div style={{ fontSize:13, fontWeight:"bold", color:"#f0ede8" }}>{rep.startDate||rep.date}</div>
             </div>
-            {/* Target Graduation  -  only for new reps, not licensed */}
+            {/* Target Graduation — only for new reps, not licensed */}
             {(rep.track !== "licensed" && rep.track !== "rvp") && (
               <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:140 }}>
                 <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Target Graduation</div>
@@ -3572,7 +3433,7 @@ export default function App() {
                 {!rep.gradDate && <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>Tap to set date</div>}
               </div>
             )}
-            {/* RVP Goal Date  -  for licensed/RVP only */}
+            {/* RVP Goal Date — for licensed/RVP only */}
             {(rep.track === "licensed" || rep.track === "rvp") && (
               <div style={{ background:"#f59e0b07", border:"1px solid #f59e0b20", borderRadius:10, padding:"10px 16px", flex:1, minWidth:140 }}>
                 <div style={{ fontSize:10, color:"#f59e0b80", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>👑 RVP Goal Date</div>
@@ -3591,7 +3452,7 @@ export default function App() {
             {/* Appointments */}
             <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:110 }}>
               <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Appointments</div>
-              <div style={{ fontSize:13, fontWeight:"bold", color: apptSet>=15?"#10b981":"#f59e0b" }}>{apptSet} set - {apptDone} done</div>
+              <div style={{ fontSize:13, fontWeight:"bold", color: apptSet>=15?"#10b981":"#f59e0b" }}>{apptSet} set · {apptDone} done</div>
             </div>
           </div>
 
@@ -3605,7 +3466,7 @@ export default function App() {
             {stalled && <div style={{ fontSize:12, color:"#f43f5e", background:"#f43f5e15", border:"1px solid #f43f5e30", borderRadius:8, padding:"6px 14px" }}>⚠ No contact logged in 7+ days</div>}
           </div>
 
-          {/* Rep Data Feed  -  live info from rep's entries */}
+          {/* Rep Data Feed — live info from rep's entries */}
           <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
             <div style={{ fontSize:11, color:"#f59e0b", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:14 }}>📋 Rep-Entered Details</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, flexWrap:"wrap" }}>
@@ -3661,7 +3522,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Field Training Observation Counter  -  trainer can update */}
+            {/* Field Training Observation Counter — trainer can update */}
             {(rep.track === "fast" || rep.track === "regular") && (
               <div style={{ marginTop:12, paddingTop:12, borderTop:"1px solid #ffffff10" }}>
                 <div style={{ fontSize:10, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 }}>
@@ -3684,7 +3545,7 @@ export default function App() {
               {rep.licensedDgoDate && (
                 <div style={{ marginBottom:10 }}>
                   <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:4 }}>🎉 DGO Date</div>
-                  <div style={{ fontSize:13, fontWeight:"bold", color: rep.licensedDgoComplete?"#10b981":"#f59e0b" }}>{rep.licensedDgoDate} {rep.licensedDgoComplete ? "✓ Completed" : " -  Scheduled"}</div>
+                  <div style={{ fontSize:13, fontWeight:"bold", color: rep.licensedDgoComplete?"#10b981":"#f59e0b" }}>{rep.licensedDgoDate} {rep.licensedDgoComplete ? "✓ Completed" : "— Scheduled"}</div>
                 </div>
               )}
 
@@ -3694,7 +3555,7 @@ export default function App() {
                   <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:6 }}>👥 References ({(rep.licensedRefs||[]).filter(r=>r.name).length}/5)</div>
                   {(rep.licensedRefs||[]).filter(r=>r.name).map((ref,i) => (
                     <div key={i} style={{ fontSize:12, color:"#f0ede8", marginBottom:3 }}>
-                      {i+1}. <strong>{ref.name}</strong> {ref.phone && `- ${ref.phone}`} {ref.relationship && `- ${ref.relationship}`}
+                      {i+1}. <strong>{ref.name}</strong> {ref.phone && `· ${ref.phone}`} {ref.relationship && `· ${ref.relationship}`}
                     </div>
                   ))}
                 </div>
@@ -3706,7 +3567,7 @@ export default function App() {
                   <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:6 }}>📝 Training List ({(rep.licensedMachoList||[]).filter(c=>c.name).length}/20)</div>
                   <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"4px 12px" }}>
                     {(rep.licensedMachoList||[]).filter(c=>c.name).map((c,i) => (
-                      <div key={i} style={{ fontSize:11, color:"#f0ede8" }}>{i+1}. {c.name} {c.phone && `- ${c.phone}`}</div>
+                      <div key={i} style={{ fontSize:11, color:"#f0ede8" }}>{i+1}. {c.name} {c.phone && `· ${c.phone}`}</div>
                     ))}
                   </div>
                 </div>
@@ -3714,10 +3575,10 @@ export default function App() {
             </div>
           )}
 
-          {/* Investment Clients  -  standalone prominent panel */}
+          {/* Investment Clients — standalone prominent panel */}
           <div style={{ background:"#f59e0b08", border:"1px solid #f59e0b30", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
             <div style={{ fontSize:11, color:"#f59e0b", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:12 }}>
-              💰 Future Investment Clients ({(rep.investmentClients||[]).length})  -  to move when investment licensed
+              💰 Future Investment Clients ({(rep.investmentClients||[]).length}) — to move when investment licensed
             </div>
             {(rep.investmentClients||[]).length === 0
               ? <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>No future investment clients logged yet</div>
@@ -3738,7 +3599,7 @@ export default function App() {
             }
           </div>
 
-          {/* References Feed  -  from rep's entries */}
+          {/* References Feed — from rep's entries */}
           {(rep.references||[]).filter(r => r.name).length > 0 && (
             <div style={{ background:"#ffffff07", border:"1px solid #8b5cf630", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
               <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:14 }}>👥 Rep's Character References ({(rep.references||[]).filter(r=>r.name).length}/5)</div>
@@ -3751,11 +3612,11 @@ export default function App() {
                     </div>
                     <div>
                       <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:3 }}>Phone</div>
-                      <div style={{ fontSize:13, color:"#f0ede8" }}>{ref.phone || " - "}</div>
+                      <div style={{ fontSize:13, color:"#f0ede8" }}>{ref.phone || "—"}</div>
                     </div>
                     <div>
                       <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:3 }}>Relationship</div>
-                      <div style={{ fontSize:12, color:"#8b5cf6", fontWeight:"bold" }}>{ref.relationship || " - "}</div>
+                      <div style={{ fontSize:12, color:"#8b5cf6", fontWeight:"bold" }}>{ref.relationship || "—"}</div>
                     </div>
                   </div>
                 ))}
@@ -3765,22 +3626,22 @@ export default function App() {
           {(rep.references||[]).filter(r => r.name).length === 0 && (
             <div style={{ background:"#ffffff05", border:"1px solid #8b5cf620", borderRadius:12, padding:"14px 18px", marginBottom:14 }}>
               <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:6 }}>👥 Character References</div>
-              <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Rep hasnt entered references yet</div>
+              <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Rep hasn’t entered references yet</div>
             </div>
           )}
 
-          {/* Appointments Feed  -  from rep's entries including MACHO scores */}
+          {/* Appointments Feed — from rep's entries including MACHO scores */}
           <div style={{ background:"#ffffff07", border:"1px solid #f43f5e30", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
               <div style={{ fontSize:11, color:"#f43f5e", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase" }}>
                 📅 Rep's Training Appointments ({(rep.appointments||[]).filter(a=>a.name).length}/20)
               </div>
               <div style={{ fontSize:12, color:"#ffffff40" }}>
-                {(rep.appointments||[]).filter(a=>a.completed&&a.name).length} completed - {(rep.appointments||[]).filter(a=>a.name&&(a.macho||[]).length>=3).length} qualified (3+ ⭐)
+                {(rep.appointments||[]).filter(a=>a.completed&&a.name).length} completed · {(rep.appointments||[]).filter(a=>a.name&&(a.macho||[]).length>=3).length} qualified (3+ ⭐)
               </div>
             </div>
             {(rep.appointments||[]).filter(a=>a.name).length === 0 ? (
-              <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Rep hasnt logged any appointments yet</div>
+              <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Rep hasn’t logged any appointments yet</div>
             ) : (
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {(rep.appointments||[]).filter(a=>a.name).map((appt, idx) => {
@@ -3813,7 +3674,7 @@ export default function App() {
                             const active = (appt.macho||[]).includes(k);
                             const labels = {M:"Married",A:"Age 25-55",C:"Children",H:"Homeowner",O:"Occupation"};
                             return active ? (
-                              <div key={k} style={{ fontSize:10, background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:20, padding:"2px 8px", color:"#f59e0b", fontWeight:"bold" }}>⭐ {k}  -  {labels[k]}</div>
+                              <div key={k} style={{ fontSize:10, background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:20, padding:"2px 8px", color:"#f59e0b", fontWeight:"bold" }}>⭐ {k} — {labels[k]}</div>
                             ) : null;
                           })}
                         </div>
@@ -3885,11 +3746,11 @@ export default function App() {
             onAddCheckIn={(note) => addCheckIn(rep.id, note, activeTrainer?.name || "Trainer")}
           />
 
-          {/* Class Card  -  trainer view */}
+          {/* Class Card — trainer view */}
           {(rep.track === "fast" || rep.track === "regular") && (
             <div style={{ background: rep.classCompleted ? "#10b98110" : "#a78bfa10", border: `1px solid ${rep.classCompleted ? "#10b98140" : "#a78bfa40"}`, borderRadius:12, padding:"14px 16px", marginBottom:16 }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
-                <div style={{ fontSize:13, fontWeight:"bold", color: rep.classCompleted ? "#10b981" : "#a78bfa" }}>📚 Pre-Licensing Class {rep.classType === "zoom" ? "- 📹 Zoom" : rep.classType === "online" ? "- 💻 Online" : "- 🏫 In-Person"}</div>
+                <div style={{ fontSize:13, fontWeight:"bold", color: rep.classCompleted ? "#10b981" : "#a78bfa" }}>📚 Pre-Licensing Class {rep.classType === "zoom" ? "· 📹 Zoom" : rep.classType === "online" ? "· 💻 Online" : "· 🏫 In-Person"}</div>
                 <div style={{ fontSize:12, color: rep.classCompleted ? "#10b981" : "#ffffff50", fontWeight: rep.classCompleted ? "bold" : "normal" }}>
                   {rep.classCompleted ? "✓ Complete" : "In Progress"}
                 </div>
@@ -3934,9 +3795,6 @@ export default function App() {
           )}
           {activeTab==="schedule" && (
             <TeamScheduleView schedule={schedule} isAdmin={isAdmin} onUpdate={(updated) => setSchedule(updated)} cancellations={cancellations} onCancel={(key, val) => setCancellations(prev => ({ ...prev, [key]: val }))} />
-          )}
-          {activeTab==="messages" && (
-            <RepMessaging rep={rep} onUpdate={(updated) => updateRep(rep.id, r => ({ ...r, ...updated }))} isTrainer={true} />
           )}
           {activeTab==="lifeapps" && (
             <LifeAppTracker
@@ -3990,7 +3848,7 @@ export default function App() {
             <div>
               <div style={{ fontSize:11, letterSpacing:"0.2em", color:"#f59e0b", textTransform:"uppercase", marginBottom:4 }}>Primerica Field Training</div>
               <div style={{ fontSize:20, fontWeight:"bold" }}>Rep Onboarding Tracker</div>
-              <div style={{ fontSize:12, color:"#ffffff50", marginTop:2 }}>Goal: 3x$3,000 - $750 Bonus - DM Promotion</div>
+              <div style={{ fontSize:12, color:"#ffffff50", marginTop:2 }}>Goal: 3×$3,000 · $750 Bonus · DM Promotion</div>
             </div>
             <div style={{ display:"flex", gap:10, alignItems:"center", flexWrap:"wrap" }}>
               {saveIndicator && <div style={{ fontSize:11, color:"#10b981" }}>✓ Saved</div>}
@@ -4010,7 +3868,7 @@ export default function App() {
           <div style={{ background:"#16213e", border:"1px solid #ffffff18", borderRadius:16, padding:28, width:"100%", maxWidth:540, maxHeight:"90vh", overflowY:"auto" }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
               <div style={{ fontSize:16, fontWeight:"bold" }}>Manage Admins & Trainers</div>
-              <button onClick={() => setShowTrainerMgr(false)} style={{ background:"none", border:"none", color:"#ffffff60", fontSize:20, cursor:"pointer" }}>x</button>
+              <button onClick={() => setShowTrainerMgr(false)} style={{ background:"none", border:"none", color:"#ffffff60", fontSize:20, cursor:"pointer" }}>×</button>
             </div>
 
             {/* ADMINS SECTION */}
@@ -4071,7 +3929,7 @@ export default function App() {
               ))}
             </div>
 
-            {/* Add new admin  -  super admin only */}
+            {/* Add new admin — super admin only */}
             {isSuperAdmin && <AdminAdder onAdd={addAdmin} />}
 
             <div style={{ borderTop:"1px solid #ffffff15", margin:"20px 0" }} />
@@ -4127,23 +3985,11 @@ export default function App() {
       <div style={{ maxWidth:860, margin:"0 auto", padding:"20px 16px" }}>
 
         {showTrainerTour && <AppTour steps={TRAINER_TOUR_STEPS} onClose={() => setShowTrainerTour(false)} storageKey={trainerTourKey} />}
-      {/* Unread messages banner */}
-      {(() => {
-        const unreadCount = visibleReps.filter(r => r.unreadByTrainer).length;
-        if (unreadCount === 0) return null;
-        return (
-          <div style={{ background:"#f43f5e15", border:"1px solid #f43f5e40", borderRadius:12, padding:"12px 18px", marginBottom:16, display:"flex", alignItems:"center", gap:12 }}>
-            <div style={{ fontSize:20 }}>💬</div>
-            <div style={{ fontSize:13, color:"#f43f5e", fontWeight:"bold" }}>{unreadCount} rep{unreadCount!==1?"s have":" has"} sent you a new message  -  check their Messages tab!</div>
-          </div>
-        );
-      })()}
-
       {/* New Month Banner */}
         {showNewMonthBanner && isAdmin && (
           <div style={{ background:"linear-gradient(135deg,#10b98120,#f59e0b15)", border:"1px solid #10b98140", borderRadius:14, padding:"20px 24px", marginBottom:20, textAlign:"center" }}>
             <div style={{ fontSize:28, marginBottom:8 }}>🎉</div>
-            <div style={{ fontSize:18, fontWeight:"bold", color:"#10b981", marginBottom:6 }}>New Month  -  Fresh Start!</div>
+            <div style={{ fontSize:18, fontWeight:"bold", color:"#10b981", marginBottom:6 }}>New Month — Fresh Start!</div>
             <div style={{ fontSize:13, color:"#ffffff60", marginBottom:16 }}>Save last months numbers then reset the counters for a new month.</div>
             <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
               <button onClick={doSnapshot} style={{ background:"#10b981", border:"none", color:"#0f0f11", padding:"10px 24px", borderRadius:8, cursor:"pointer", fontWeight:"bold", fontSize:14 }}>Save and Reset for New Month</button>
@@ -4166,7 +4012,7 @@ export default function App() {
           />
         )}
 
-        {/* My Production  -  for trainers and admins writing their own business */}
+        {/* My Production — for trainers and admins writing their own business */}
         <MyProductionSection
           myProduction={myProduction}
           onUpdate={setMyProduction}
@@ -4226,8 +4072,8 @@ export default function App() {
                       <div style={{ fontSize: 14, fontWeight: "bold" }}>{trainer.name}</div>
                       <div style={{ fontSize: 11, color: "#ffffff40", marginTop: 2 }}>
                         {tReps.length} rep{tReps.length !== 1 ? "s" : ""}
-                        {streak > 0 && <span style={{ color: "#f59e0b" }}> - 🔥 {streak}-day streak</span>}
-                        {overdue.length > 0 && <span style={{ color: "#f43f5e" }}> - ⚠ {overdue.length} overdue check-in{overdue.length !== 1 ? "s" : ""}</span>}
+                        {streak > 0 && <span style={{ color: "#f59e0b" }}> · 🔥 {streak}-day streak</span>}
+                        {overdue.length > 0 && <span style={{ color: "#f43f5e" }}> · ⚠ {overdue.length} overdue check-in{overdue.length !== 1 ? "s" : ""}</span>}
                       </div>
                     </div>
                     <div style={{ textAlign: "center" }}>
@@ -4274,7 +4120,7 @@ export default function App() {
                     {overdue.map(r => {
                       const lastCI = (r.checkIns||[])[0];
                       const days = lastCI ? Math.floor((new Date()-new Date(lastCI.date))/86400000) : null;
-                      return <div key={r.id} style={{ fontSize: 12, color: "#ffffff60" }}>- {r.name}  -  {days === null ? "never checked in" : `last check-in ${days} days ago`}</div>;
+                      return <div key={r.id} style={{ fontSize: 12, color: "#ffffff60" }}>• {r.name} — {days === null ? "never checked in" : `last check-in ${days} days ago`}</div>;
                     })}
                   </div>
                 </div>
@@ -4295,13 +4141,13 @@ export default function App() {
           <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"#ffffff10", border:"1px solid #ffffff20", color:"#f0ede8", borderRadius:8, padding:"7px 10px", fontSize:12, cursor:"pointer", outline:"none" }}>
             <option value="date" style={{ background:"#1a1a2e" }}>Recent Activity</option>
             <option value="progress" style={{ background:"#1a1a2e" }}>Progress</option>
-            <option value="name" style={{ background:"#1a1a2e" }}>Name A - Z</option>
+            <option value="name" style={{ background:"#1a1a2e" }}>Name A–Z</option>
             <option value="stalled" style={{ background:"#1a1a2e" }}>Stalled First</option>
           </select>
         </div>
 
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
-          <div style={{ fontSize:13, color:"#ffffff60", letterSpacing:"0.1em", textTransform:"uppercase" }}>{isAdmin?"All Reps":`${activeTrainer?.name}'s Reps`}{searchQuery&&` - "${searchQuery}"`}</div>
+          <div style={{ fontSize:13, color:"#ffffff60", letterSpacing:"0.1em", textTransform:"uppercase" }}>{isAdmin?"All Reps":`${activeTrainer?.name}'s Reps`}{searchQuery&&` · "${searchQuery}"`}</div>
           <button onClick={() => setShowAddRep(true)} style={{ background:"#f59e0b", border:"none", color:"#0f0f11", padding:"8px 18px", borderRadius:8, cursor:"pointer", fontWeight:"bold", fontSize:13 }}>+ Add New Rep</button>
         </div>
 
@@ -4372,13 +4218,12 @@ export default function App() {
                       {!graduated&&stalled && <div style={{ background:"#f43f5e20", color:"#f43f5e", border:"1px solid #f43f5e40", borderRadius:20, padding:"1px 8px", fontSize:10, fontWeight:"bold" }}>⚠ STALLED</div>}
                     </div>
                     <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>
-                      {isAdmin&&repTrainer&&<span style={{ color:repTrainer.color }}>{repTrainer.name} - </span>}
+                      {isAdmin&&repTrainer&&<span style={{ color:repTrainer.color }}>{repTrainer.name} · </span>}
                       Started {rep.date}
-                      <span style={{ color:apptSet>=15?"#10b981":"#f59e0b" }}> - {apptSet} appts, {apptDone} done</span>
-                      {rep.dgoDate&&<span style={{ color:rep.dgoCompleted?"#10b981":"#06b6d4" }}> - DGO {rep.dgoCompleted?"✓":"📅"} {rep.dgoDate}</span>}
-                      {(() => { const ci = (rep.checkIns||[])[0]; if (!ci) return <span style={{color:"#f43f5e"}}> - ⚠ No check-ins</span>; const d = Math.floor((new Date()-new Date(ci.date))/86400000); return <span style={{color:d>=3?"#f43f5e":"#10b981"}}> - Checked in {d===0?"today":`${d}d ago`}</span>; })()}
-                      {rep.notes&&<span style={{ color:"#ffffff30" }}> - 📝</span>}
-                      {rep.unreadByTrainer&&<span style={{ color:"#f43f5e", fontWeight:"bold" }}> - 💬 New message</span>}
+                      <span style={{ color:apptSet>=15?"#10b981":"#f59e0b" }}> · {apptSet} appts, {apptDone} done</span>
+                      {rep.dgoDate&&<span style={{ color:rep.dgoCompleted?"#10b981":"#06b6d4" }}> · DGO {rep.dgoCompleted?"✓":"📅"} {rep.dgoDate}</span>}
+                      {(() => { const ci = (rep.checkIns||[])[0]; if (!ci) return <span style={{color:"#f43f5e"}}> · ⚠ No check-ins</span>; const d = Math.floor((new Date()-new Date(ci.date))/86400000); return <span style={{color:d>=3?"#f43f5e":"#10b981"}}> · Checked in {d===0?"today":`${d}d ago`}</span>; })()}
+                      {rep.notes&&<span style={{ color:"#ffffff30" }}> · 📝</span>}
                     </div>
                   </div>
                   <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
@@ -4399,9 +4244,9 @@ export default function App() {
                   ))}
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
