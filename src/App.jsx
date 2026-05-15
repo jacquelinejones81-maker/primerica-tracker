@@ -2425,17 +2425,30 @@ export default function App() {
         <div style={{ maxWidth:860, margin:"0 auto", padding:"20px 16px" }}>
           {/* Dates + last contact */}
           <div style={{ display:"flex", gap:10, marginBottom:14, flexWrap:"wrap" }}>
-            {[
-              { label:"Start Date", value: rep.startDate||rep.date },
-              { label:"Target Graduation", value: rep.gradDate||"Not set" },
-              daysLeft!==null ? { label:"Days Remaining", value: daysLeft>0?`${daysLeft} days`:daysLeft===0?"Today!":`${Math.abs(daysLeft)}d overdue`, color: daysLeft<0?"#f43f5e":daysLeft<=3?"#f59e0b":"#10b981" } : null,
-              { label:"Appointments", value:`${apptSet} set · ${apptDone} done`, color: apptSet>=15?"#10b981":"#f59e0b" },
-            ].filter(Boolean).map(item => (
-              <div key={item.label} style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:110 }}>
-                <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>{item.label}</div>
-                <div style={{ fontSize:13, fontWeight:"bold", color:item.color||"#f0ede8" }}>{item.value}</div>
+            {/* Start Date */}
+            <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:110 }}>
+              <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Start Date</div>
+              <div style={{ fontSize:13, fontWeight:"bold", color:"#f0ede8" }}>{rep.startDate||rep.date}</div>
+            </div>
+            {/* Target Graduation — editable */}
+            <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:140 }}>
+              <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Target Graduation</div>
+              <input type="date" value={rep.gradDate||""} onChange={e => updateRep(rep.id, r => ({ ...r, gradDate: e.target.value }))}
+                style={{ background:"transparent", border:"none", color: rep.gradDate?"#f0ede8":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
+              {!rep.gradDate && <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>Tap to set date</div>}
+            </div>
+            {/* Days remaining */}
+            {daysLeft !== null && (
+              <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:110 }}>
+                <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Days Remaining</div>
+                <div style={{ fontSize:13, fontWeight:"bold", color: daysLeft<0?"#f43f5e":daysLeft<=3?"#f59e0b":"#10b981" }}>{daysLeft>0?`${daysLeft} days`:daysLeft===0?"Today!":`${Math.abs(daysLeft)}d overdue`}</div>
               </div>
-            ))}
+            )}
+            {/* Appointments */}
+            <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:110 }}>
+              <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Appointments</div>
+              <div style={{ fontSize:13, fontWeight:"bold", color: apptSet>=15?"#10b981":"#f59e0b" }}>{apptSet} set · {apptDone} done</div>
+            </div>
           </div>
 
           {/* Last contact date */}
