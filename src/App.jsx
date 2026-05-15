@@ -221,6 +221,7 @@ function getApptLink(trainer, admin) {
 }
 const STORAGE_KEY = "primerica_reps_v6";
 const MONTHLY_KEY = "primerica_monthly_v1";
+const CANCEL_KEY = "primerica_cancellations_v1";
 
 function getMonthKey() {
   const now = new Date();
@@ -469,7 +470,14 @@ function AppointmentTracker({ appointments = [], onChange }) {
     onChange(updated);
   };
 
-  const rows = Array.from({ length: total }, (_, i) => appointments[i] || { id: `appt-${i}`, name: "", phone: "", email: "", date: "", status: "set", apptNote: "" });
+  const filledAppts2 = appointments.filter(a => a.name).sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return new Date(a.date) - new Date(b.date);
+  });
+  const emptySlots2 = Array.from({ length: Math.max(0, total - filledAppts2.length) }, (_, i) => ({ id: `appt-empty2-${i}`, name: "", phone: "", email: "", date: "", status: "set", apptNote: "" }));
+  const rows = [...filledAppts2, ...emptySlots2];
 
   return (
     <div style={{ marginBottom: 24 }}>
@@ -698,9 +706,17 @@ function MachoQualifier({ contact, onUpdate }) {
 // ─── REP APPOINTMENT TRACKER ─────────────────────────────────────────────────
 function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFAULT_APPT_LINK }) {
   const total = 20;
-  const rows = Array.from({ length: total }, (_, i) =>
-    appointments[i] || { id: `appt-${i}`, name: "", phone: "", email: "", date: "", status: "set", apptNote: "", completed: false }
-  );
+  // Sort filled appointments by date (earliest first), empty slots go to the end
+  const filledAppts = appointments.filter(a => a.name).sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return new Date(a.date) - new Date(b.date);
+  });
+  const emptySlots = Array.from({ length: Math.max(0, total - filledAppts.length) }, (_, i) => ({
+    id: `appt-empty-${i}`, name: "", phone: "", email: "", date: "", status: "set", apptNote: "", completed: false
+  }));
+  const rows = [...filledAppts, ...emptySlots];
 
   const filled = rows.filter(a => a.name);
   const setCount = filled.length;
@@ -977,7 +993,7 @@ const TYPE_COLORS = { study: "#8b5cf6", training: "#3b82f6", event: "#f59e0b", m
 const TYPE_LABELS = { study: "📖 Study", training: "💪 Training", event: "🎉 Event", meeting: "📋 Meeting" };
 const DAYS_ORDER = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
-function TeamScheduleView({ schedule, isAdmin, onUpdate }) {
+function TeamScheduleView({ schedule, isAdmin, onUpdate, cancellations = {}, onCancel }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(schedule);
   const [newItem, setNewItem] = useState({ day:"Monday", time:"", title:"", type:"training", required:true });
@@ -1025,6 +1041,17 @@ function TeamScheduleView({ schedule, isAdmin, onUpdate }) {
                 </div>
               </div>
               {editing && <button onClick={() => removeItem(item.id)} style={{ background:"none", border:"1px solid #f43f5e30", color:"#f43f5e70", padding:"4px 10px", borderRadius:6, cursor:"pointer", fontSize:12 }}>✕</button>}
+              {!editing && isAdmin && onCancel && (() => {
+                const todayStr = new Date().toISOString().split("T")[0];
+                const cancelKey = item.id + "_" + todayStr;
+                const isCanceled = cancellations[cancelKey];
+                return (
+                  <button onClick={() => onCancel(cancelKey, !isCanceled)}
+                    style={{ background:isCanceled?"#f43f5e20":"#ffffff08", border:`1px solid ${isCanceled?"#f43f5e50":"#ffffff20"}`, borderRadius:20, padding:"4px 12px", fontSize:11, color:isCanceled?"#f43f5e":"#ffffff50", cursor:"pointer", fontWeight:isCanceled?"bold":"normal", whiteSpace:"nowrap" }}>
+                    {isCanceled ? "Canceled Today" : "Cancel Today"}
+                  </button>
+                );
+              })()}
             </div>
           );
         })}
@@ -1073,7 +1100,7 @@ const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","
 const TYPE_EMOJIS = { study:"📖", training:"💪", event:"🎉", meeting:"🎖️" };
 const TYPE_BG = { study:"#8b5cf6", training:"#3b82f6", event:"#f59e0b", meeting:"#10b981" };
 
-function DailyBanner({ schedule, appointments = [] }) {
+function DailyBanner({ schedule, appointments = [], cancellations = {} }) {
   const today = DAY_NAMES[new Date().getDay()];
   const todayStr = new Date().toISOString().split("T")[0];
 
@@ -1092,8 +1119,9 @@ function DailyBanner({ schedule, appointments = [] }) {
     <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:16 }}>
       {/* Meeting banners */}
       {todayMeetings.map(meeting => {
-        const color = TYPE_BG[meeting.type] || "#f59e0b";
-        const emoji = TYPE_EMOJIS[meeting.type] || "📅";
+        const isCanceled = cancellations[meeting.id + "_" + todayStr];
+        const color = isCanceled ? "#f43f5e" : (TYPE_BG[meeting.type] || "#f59e0b");
+        const emoji = isCanceled ? "❌" : (TYPE_EMOJIS[meeting.type] || "📅");
         return (
           <div key={meeting.id} style={{
             background: `linear-gradient(135deg, ${color}20, ${color}10)`,
@@ -1104,17 +1132,17 @@ function DailyBanner({ schedule, appointments = [] }) {
             display: "flex",
             alignItems: "center",
             gap: 14,
-            animation: "pulse 2s ease-in-out infinite"
+            animation: isCanceled ? "none" : "pulse 2s ease-in-out infinite",
+            opacity: isCanceled ? 0.8 : 1,
           }}>
             <div style={{ fontSize: 28, flexShrink: 0 }}>{emoji}</div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 12, color: `${color}`, fontWeight: "bold", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3 }}>
-                Tonight’s Meeting
+              <div style={{ fontSize: 12, color: color, fontWeight: "bold", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3 }}>
+                {isCanceled ? "CANCELED FOR TODAY" : "Tonight Meeting"}
               </div>
-              <div style={{ fontSize: 15, fontWeight: "bold", color: "#f0ede8" }}>{meeting.title}</div>
+              <div style={{ fontSize: 15, fontWeight: "bold", color: isCanceled ? "#f43f5e80" : "#f0ede8", textDecoration: isCanceled ? "line-through" : "none" }}>{meeting.title}</div>
               <div style={{ fontSize: 12, color: "#ffffff70", marginTop: 3 }}>🕐 {meeting.time}</div>
             </div>
-
           </div>
         );
       })}
@@ -1393,7 +1421,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           </div>
         )}
         <RepPhotoUpload photo={rep.photo||null} onUpdate={(photo) => onUpdate({ ...rep, photo, lastActivity:new Date().toISOString() })} />
-        <DailyBanner schedule={schedule} appointments={rep.appointments||[]} />
+        <DailyBanner schedule={schedule} appointments={rep.appointments||[]} cancellations={cancellations} />
         {!graduated && <RepAccountabilityBanner rep={rep} />}
         {graduated && (
           <div style={{ background:"linear-gradient(135deg,#10b98120,#f59e0b15)", border:"1px solid #10b98130", borderRadius:14, padding:"20px 24px", textAlign:"center", marginBottom:20 }}>
@@ -1571,7 +1599,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           <div><AppointmentReminderBanner /><RepAppointmentTracker appointments={rep.appointments||[]} onChange={appts => onUpdate({ ...rep, appointments:appts, lastActivity:new Date().toISOString() })} trainerLink={trainerLink} /></div>
         )}
         {activeTab==="schedule" && (
-          <TeamScheduleView schedule={schedule} isAdmin={false} onUpdate={() => {}} />
+          <TeamScheduleView schedule={schedule} isAdmin={false} onUpdate={() => {}} cancellations={cancellations} />
         )}
         {activeTab==="refs" && (
           <ReferencesSection
@@ -2134,6 +2162,7 @@ export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [monthlyData, setMonthlyData] = useState(() => load(MONTHLY_KEY, {}));
   const [showNewMonthBanner, setShowNewMonthBanner] = useState(false);
+  const [cancellations, setCancellations] = useState(() => load(CANCEL_KEY, {}));
   const activeAdmin = admins.find(a => a.id === session?.id);
   const activeTrainer = trainers.find(t => t.id === activeTrainerId) || trainers[0];
   const isSuperAdmin = session?.role === "superadmin";
@@ -2145,6 +2174,7 @@ export default function App() {
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(ADMINS_KEY, admins); }, [admins]);
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(SCHEDULE_KEY, schedule); }, [schedule]);
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(MONTHLY_KEY, monthlyData); }, [monthlyData]);
+  useEffect(() => { if (!dataLoaded) return; saveToFirebase(CANCEL_KEY, cancellations); }, [cancellations]);
   useEffect(() => { save(ACTIVE_TRAINER_KEY, activeTrainerId); }, [activeTrainerId]);
 
   // ── FIREBASE REAL-TIME LISTENERS ──────────────────────────────────────────
@@ -2176,6 +2206,7 @@ export default function App() {
       markLoaded();
     });
     fbLoad(MONTHLY_KEY, {}).then(data => { if (data) setMonthlyData(data); });
+    fbLoad(CANCEL_KEY, {}).then(data => { if (data) setCancellations(data); });
 
     // Listen for real-time updates from other devices
     unsubs.push(fbListen(STORAGE_KEY, data => { if (Array.isArray(data)) setReps(data); }));
@@ -2183,6 +2214,7 @@ export default function App() {
     unsubs.push(fbListen(ADMINS_KEY, data => { if (Array.isArray(data) && data.length > 0) setAdmins(data); }));
     unsubs.push(fbListen(SCHEDULE_KEY, data => { if (Array.isArray(data) && data.length > 0) setSchedule(data); }));
     unsubs.push(fbListen(MONTHLY_KEY, data => { if (data) setMonthlyData(data); }));
+    unsubs.push(fbListen(CANCEL_KEY, data => { if (data) setCancellations(data); }));
 
     return () => unsubs.forEach(u => u());
   }, []);
@@ -2668,7 +2700,7 @@ export default function App() {
             />
           )}
           {activeTab==="schedule" && (
-            <TeamScheduleView schedule={schedule} isAdmin={isAdmin} onUpdate={(updated) => setSchedule(updated)} />
+            <TeamScheduleView schedule={schedule} isAdmin={isAdmin} onUpdate={(updated) => setSchedule(updated)} cancellations={cancellations} onCancel={(key, val) => setCancellations(prev => ({ ...prev, [key]: val }))} />
           )}
           {activeTab==="rvp" && (
             <RvpChecklist
