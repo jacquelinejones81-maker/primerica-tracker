@@ -444,7 +444,7 @@ function CheckItem({ item, done, onToggle, isRepView = false }) {
   );
 }
 
-function CategorySection({ title, items, completedIds, onToggle, isRepView = false }) {
+function CategorySection({ title, items, completedIds, onToggle, isRepView = false, inlineContent = {} }) {
   const color = CAT_COLORS[title] || "#ffffff";
   const emoji = CAT_EMOJIS[title] || "📌";
   const done = items.filter(i => completedIds.includes(i.id)).length;
@@ -456,7 +456,16 @@ function CategorySection({ title, items, completedIds, onToggle, isRepView = fal
         <div style={{ fontSize: 12, color: allDone ? "#10b981" : "#ffffff40", fontWeight: allDone ? "bold" : "normal" }}>{done}/{items.length} {allDone && isRepView ? "🎉" : ""}</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {items.map(item => <CheckItem key={item.id} item={item} done={completedIds.includes(item.id)} onToggle={() => onToggle(item.id)} isRepView={isRepView} />)}
+        {items.map(item => (
+          <React.Fragment key={item.id}>
+            <CheckItem item={item} done={completedIds.includes(item.id)} onToggle={() => onToggle(item.id)} isRepView={isRepView} />
+            {inlineContent[item.id] && completedIds.includes(item.id) && (
+              <div style={{ marginTop: -4, marginBottom: 4 }}>
+                {inlineContent[item.id]}
+              </div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );
@@ -1165,6 +1174,9 @@ const TYPE_BG = { study:"#8b5cf6", training:"#3b82f6", event:"#f59e0b", meeting:
 function DailyBanner({ schedule, appointments = [], cancellations = {} }) {
   const today = DAY_NAMES[new Date().getDay()];
   const todayStr = new Date().toISOString().split("T")[0];
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowStr = tomorrow.toISOString().split("T")[0];
+  const upcomingAppts = appointments.filter(a => a.name && !a.completed && (a.date === todayStr || a.date === tomorrowStr));
 
   // Today's scheduled meetings
   const todayMeetings = schedule.filter(s => s.day === today);
@@ -1208,6 +1220,20 @@ function DailyBanner({ schedule, appointments = [], cancellations = {} }) {
           </div>
         );
       })}
+
+      {/* Upcoming appointment reminders */}
+      {upcomingAppts.map(appt => (
+        <div key={appt.id||appt.name} style={{ background:"linear-gradient(135deg,#10b98120,#3b82f610)", border:"1px solid #10b98140", borderLeft:"4px solid #10b981", borderRadius:12, padding:"12px 16px", display:"flex", alignItems:"center", gap:12 }}>
+          <div style={{ fontSize:24 }}>📅</div>
+          <div>
+            <div style={{ fontSize:12, color:"#10b981", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>
+              {appt.date === todayStr ? "Training Appointment TODAY" : "Training Appointment TOMORROW"}
+            </div>
+            <div style={{ fontSize:14, fontWeight:"bold", color:"#f0ede8" }}>{appt.name}</div>
+            {appt.apptNote && <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>{appt.apptNote}</div>}
+          </div>
+        </div>
+      ))}
 
       {/* Appointment reminders */}
       {todayAppts.map((appt, i) => {
@@ -1438,7 +1464,7 @@ function ScriptsSection() {
 
 
 // ─── REP VIEW ─────────────────────────────────────────────────────────────────
-function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK, cancellations = {} }) {
+function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK, cancellations = {}, allReps = [], trainers = [] }) {
   const isLicensedRep = rep.track === "licensed" || rep.track === "rvp";
   const tourSteps = isLicensedRep ? LICENSED_TOUR_STEPS : REP_TOUR_STEPS;
   const tourKey = "primerica_tour_rep_" + rep.id + "_" + rep.track;
@@ -1490,6 +1516,8 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           </div>
         )}
         <RepPhotoUpload photo={rep.photo||null} onUpdate={(photo) => onUpdate({ ...rep, photo, lastActivity:new Date().toISOString() })} />
+        <CheckInStreak checkIns={rep.checkIns||[]} />
+        <TeamLeaderboard currentRep={rep} allReps={allReps} trainers={trainers} />
         <DailyBanner schedule={schedule} appointments={rep.appointments||[]} cancellations={cancellations} />
         {!graduated && <RepAccountabilityBanner rep={rep} />}
         {graduated && (
@@ -1698,6 +1726,11 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           );
         })()}
 
+        {/* Income Goal Calculator — licensed only */}
+        {(rep.track === "licensed" || rep.track === "rvp") && (
+          <IncomeGoalCalculator goal={rep.incomeGoal||0} onSave={g => onUpdate({ ...rep, incomeGoal:g, lastActivity:new Date().toISOString() })} />
+        )}
+
         {/* Life App Tracker — standalone card for licensed/RVP reps */}
         {(rep.track === "licensed" || rep.track === "rvp") && (
           <div style={{ marginBottom:20 }}>
@@ -1751,41 +1784,39 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
                     </div>
                     <div style={{ fontSize:16, color:"#f59e0b" }}>{showConditional ? "▲" : "▼"}</div>
                   </button>
+                  {/* DGO First — most time sensitive */}
+                  {showConditional && (
+                    <div style={{ background:"#06b6d410", border:"2px solid #06b6d450", borderRadius:12, padding:"16px 18px", marginBottom:12 }}>
+                      <div style={{ fontSize:13, fontWeight:"bold", color:"#06b6d4", marginBottom:4 }}>🎉 Schedule Your DGO — Do This First!</div>
+                      <div style={{ fontSize:12, color:"#ffffff60", marginBottom:12 }}>Book your Direction of Growth Objective meeting with your trainer immediately. This is your first priority!</div>
+                      <div style={{ display:"flex", gap:12, alignItems:"center", flexWrap:"wrap" }}>
+                        <div style={{ flex:1 }}>
+                          <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>DGO Date</div>
+                          <input type="date" value={rep.licensedDgoDate||""} onChange={e => onUpdate({ ...rep, licensedDgoDate:e.target.value, lastActivity:new Date().toISOString() })}
+                            style={{ background:"transparent", border:"none", borderBottom:"1px solid #06b6d440", color: rep.licensedDgoDate?"#f0ede8":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
+                        </div>
+                        <div onClick={() => { onUpdate({ ...rep, licensedDgoComplete:!rep.licensedDgoComplete, lastActivity:new Date().toISOString() }); if (!rep.licensedDgoComplete) { spawnConfetti(window.innerWidth/2,200); } }}
+                          style={{ background: rep.licensedDgoComplete?"#10b98120":"#06b6d420", border:`1px solid ${rep.licensedDgoComplete?"#10b98150":"#06b6d450"}`, borderRadius:20, padding:"8px 18px", cursor:"pointer", fontSize:13, color: rep.licensedDgoComplete?"#10b981":"#06b6d4", fontWeight:"bold" }}>
+                          {rep.licensedDgoComplete ? "✓ DGO Completed!" : "Mark Complete"}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   {showConditional && conditionalCats.map(cat => (
-                    <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
+                    <CategorySection key={cat} title={cat}
+                      items={repChecklist.filter(i=>i.category===cat)}
+                      completedIds={rep.repCompleted}
+                      onToggle={toggleItem}
+                      isRepView={true}
+                      inlineContent={{
+                        "l3": <LicensedRefsInput refs={rep.licensedRefs||[]} onChange={refs => onUpdate({ ...rep, licensedRefs:refs, lastActivity:new Date().toISOString() })} />,
+                        "l4": <LicensedMachoList contacts={rep.licensedMachoList||[]} onChange={list => onUpdate({ ...rep, licensedMachoList:list, lastActivity:new Date().toISOString() })} />,
+                      }}
+                    />
                   ))}
                   {showConditional && (
                     <div style={{ display:"flex", flexDirection:"column", gap:12, marginTop:8 }}>
-                      {/* DGO Card for already-licensed */}
-                      <div style={{ background:"#06b6d410", border:"1px solid #06b6d430", borderRadius:12, padding:"14px 16px" }}>
-                        <div style={{ fontSize:12, fontWeight:"bold", color:"#06b6d4", marginBottom:10 }}>🎉 Schedule Your DGO</div>
-                        <div style={{ fontSize:12, color:"#ffffff60", marginBottom:10 }}>Book your Direction of Growth Objective meeting with your trainer.</div>
-                        <div style={{ display:"flex", gap:12, alignItems:"center", flexWrap:"wrap" }}>
-                          <div style={{ flex:1 }}>
-                            <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>DGO Date</div>
-                            <input type="date" value={rep.licensedDgoDate||""} onChange={e => onUpdate({ ...rep, licensedDgoDate:e.target.value, lastActivity:new Date().toISOString() })}
-                              style={{ background:"transparent", border:"none", borderBottom:"1px solid #06b6d440", color: rep.licensedDgoDate?"#f0ede8":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
-                          </div>
-                          <div onClick={() => { onUpdate({ ...rep, licensedDgoComplete:!rep.licensedDgoComplete, lastActivity:new Date().toISOString() }); if (!rep.licensedDgoComplete) { spawnConfetti(window.innerWidth/2,200); } }}
-                            style={{ background: rep.licensedDgoComplete?"#10b98120":"#ffffff10", border:`1px solid ${rep.licensedDgoComplete?"#10b98150":"#ffffff20"}`, borderRadius:20, padding:"6px 16px", cursor:"pointer", fontSize:12, color: rep.licensedDgoComplete?"#10b981":"#ffffff60", fontWeight:"bold" }}>
-                            {rep.licensedDgoComplete ? "✓ Completed!" : "Mark Complete"}
-                          </div>
-                        </div>
-                      </div>
-                      {/* References expansion */}
-                      {rep.repCompleted.includes("l3") && (
-                        <LicensedRefsInput
-                          refs={rep.licensedRefs||[]}
-                          onChange={refs => onUpdate({ ...rep, licensedRefs:refs, lastActivity:new Date().toISOString() })}
-                        />
-                      )}
-                      {/* MACHO list expansion */}
-                      {rep.repCompleted.includes("l4") && (
-                        <LicensedMachoList
-                          contacts={rep.licensedMachoList||[]}
-                          onChange={list => onUpdate({ ...rep, licensedMachoList:list, lastActivity:new Date().toISOString() })}
-                        />
-                      )}
+
                     </div>
                   )}
                 </div>
@@ -1793,6 +1824,8 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
               {repCats.filter(cat => !conditionalCats.includes(cat)).map(cat => (
                 <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
               ))}
+              {/* Messaging always at bottom of checklist */}
+              <RepMessaging rep={rep} onUpdate={onUpdate} isTrainer={false} />
             </>
           );
         })()}
@@ -3062,34 +3095,326 @@ function LicensedRefsInput({ refs = [], onChange }) {
   );
 }
 
-// ─── LICENSED MACHO LIST ──────────────────────────────────────────────────────
+
+// ─── LICENSED MACHO TRAINING LIST ────────────────────────────────────────────
 function LicensedMachoList({ contacts = [], onChange }) {
-  const slots = Array.from({ length: 20 }, (_, i) => contacts[i] || { name:"", phone:"" });
-  const update = (idx, field, val) => {
-    const updated = slots.map((c, i) => i !== idx ? c : { ...c, [field]: val });
+  const goal = 20;
+  const filled = contacts.filter(c => c.name).length;
+  const qualified = contacts.filter(c => (c.macho||[]).length >= 3).length;
+
+  const updateContact = (idx, field, value) => {
+    const updated = Array.from({ length: goal }, (_, i) => contacts[i] || { id:`mc-${i}`, name:"", phone:"", email:"", date:"", notes:"", macho:[] });
+    updated[idx] = { ...updated[idx], [field]: value };
     onChange(updated.filter(c => c.name || c.phone));
   };
-  const filled = slots.filter(c => c.name).length;
+
+  const toggleMacho = (idx, letter) => {
+    const slots = Array.from({ length: goal }, (_, i) => contacts[i] || { id:`mc-${i}`, name:"", phone:"", email:"", date:"", notes:"", macho:[] });
+    const current = slots[idx].macho || [];
+    const updated = current.includes(letter) ? current.filter(l => l !== letter) : [...current, letter];
+    const newSlots = slots.map((c, i) => i !== idx ? c : { ...c, macho: updated });
+    onChange(newSlots.filter(c => c.name || c.phone));
+  };
+
+  const slots = Array.from({ length: goal }, (_, i) => contacts[i] || { id:`mc-${i}`, name:"", phone:"", email:"", date:"", notes:"", macho:[] });
+  const MACHO_LETTERS = ["M","A","C","H","O"];
+  const MACHO_LABELS = { M:"Married", A:"Age 25-55", C:"Children", H:"Homeowner", O:"Occupation" };
+
   return (
-    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:10, padding:"14px 16px", marginTop:8 }}>
+    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:12, padding:"16px", marginTop:8 }}>
+      {/* Header */}
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
-        <div style={{ fontSize:11, color:"#3b82f6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em" }}>📝 Enter Your 20 MACHO Contacts</div>
-        <div style={{ fontSize:12, color: filled>=20?"#10b981":"#ffffff50", fontWeight:"bold" }}>{filled}/20</div>
+        <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b" }}>⭐ MY MACHO TRAINING LIST</div>
+        <div style={{ fontSize:12, color:"#ffffff50" }}>{filled} logged · {qualified} qualified · goal: {goal}</div>
       </div>
-      <div style={{ background:"#ffffff10", borderRadius:99, height:6, overflow:"hidden", marginBottom:14 }}>
-        <div style={{ width:`${Math.min(100,Math.round((filled/20)*100))}%`, height:"100%", background: filled>=20?"#10b981":"#3b82f6", borderRadius:99, transition:"width 0.4s" }} />
-      </div>
-      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-        {slots.map((contact, idx) => (
-          <div key={idx} style={{ display:"grid", gridTemplateColumns:"24px 1fr 1fr", gap:8, alignItems:"center" }}>
-            <div style={{ fontSize:11, color:"#ffffff30", textAlign:"center", fontWeight:"bold" }}>{idx+1}</div>
-            <input value={contact.name||""} onChange={e => update(idx,"name",e.target.value)} placeholder="Full name"
-              style={{ background:"#ffffff08", border:"1px solid #ffffff12", borderRadius:6, color:"#f0ede8", fontSize:12, outline:"none", padding:"6px 10px", fontFamily:"inherit" }} />
-            <input value={contact.phone||""} onChange={e => update(idx,"phone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12}
-              style={{ background:"#ffffff08", border:"1px solid #ffffff12", borderRadius:6, color:"#f0ede8", fontSize:12, outline:"none", padding:"6px 10px", fontFamily:"inherit" }} />
+
+      {/* Progress bars */}
+      <div style={{ marginBottom:14 }}>
+        {[{label:"LOGGED", val:filled, color:"#3b82f6"},{label:"QUALIFIED (3+ stars)", val:qualified, color:"#10b981"}].map(b => (
+          <div key={b.label} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:6 }}>
+            <div style={{ fontSize:9, color:"#ffffff35", width:110, textTransform:"uppercase", letterSpacing:"0.06em" }}>{b.label}</div>
+            <div style={{ flex:1, background:"#ffffff10", borderRadius:99, height:6, overflow:"hidden" }}>
+              <div style={{ width:`${Math.min(100,Math.round((b.val/goal)*100))}%`, height:"100%", background:b.color, borderRadius:99, transition:"width 0.4s" }} />
+            </div>
+            <div style={{ fontSize:11, color:"#ffffff40", width:30 }}>{b.val}/{goal}</div>
           </div>
         ))}
       </div>
+
+      {/* MACHO Guide */}
+      <div style={{ background:"#f59e0b10", border:"1px solid #f59e0b30", borderRadius:10, padding:"10px 14px", marginBottom:14 }}>
+        <div style={{ fontSize:12, fontWeight:"bold", color:"#f59e0b", marginBottom:8 }}>⭐ MACHO Qualification Guide — aim for 3 or more stars</div>
+        <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:6 }}>
+          {MACHO_LETTERS.map(l => (
+            <div key={l} style={{ background:"#ffffff10", borderRadius:20, padding:"4px 12px", fontSize:12, fontWeight:"bold", color:"#f0ede8" }}>
+              <strong style={{ color:"#f59e0b" }}>{l}</strong> — {MACHO_LABELS[l]}
+            </div>
+          ))}
+        </div>
+        <div style={{ fontSize:11, color:"#ffffff50" }}>Tap the M-A-C-H-O letters on each contact to score them. 3+ stars = qualified. Set appointments with your best people!</div>
+      </div>
+
+      {/* Contact slots */}
+      <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
+        {slots.map((contact, idx) => {
+          const machoScore = contact.macho || [];
+          const isQualified = machoScore.length >= 3;
+          return (
+            <div key={idx} style={{ borderBottom:"1px solid #ffffff10", paddingBottom:16 }}>
+              <div style={{ fontSize:11, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:10, fontWeight:"bold" }}>Contact #{idx+1}</div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px 16px", marginBottom:10 }}>
+                <div>
+                  <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>NAME</div>
+                  <input value={contact.name||""} onChange={e => updateContact(idx,"name",e.target.value)} placeholder="Contact name"
+                    style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
+                </div>
+                <div>
+                  <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>PHONE</div>
+                  <input value={contact.phone||""} onChange={e => updateContact(idx,"phone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12}
+                    style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
+                </div>
+                <div>
+                  <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>EMAIL</div>
+                  <input value={contact.email||""} onChange={e => updateContact(idx,"email",e.target.value)} placeholder="Email address"
+                    style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
+                </div>
+                <div>
+                  <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>DATE</div>
+                  <input type="date" value={contact.date||""} onChange={e => updateContact(idx,"date",e.target.value)}
+                    style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color: contact.date?"#f0ede8":"#ffffff30", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit", colorScheme:"dark" }} />
+                </div>
+              </div>
+              <div style={{ marginBottom:10 }}>
+                <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>NOTES / FOLLOW-UP</div>
+                <input value={contact.notes||""} onChange={e => updateContact(idx,"notes",e.target.value)} placeholder="What was discussed? Next steps?"
+                  style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
+              </div>
+              {/* MACHO scoring */}
+              <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
+                {MACHO_LETTERS.map(l => (
+                  <div key={l} onClick={() => contact.name && toggleMacho(idx, l)}
+                    style={{ width:32, height:32, borderRadius:"50%", border:`2px solid ${machoScore.includes(l)?"#f59e0b":"#ffffff20"}`, background: machoScore.includes(l)?"#f59e0b":"transparent", color: machoScore.includes(l)?"#0f0f11":"#ffffff40", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:"bold", fontSize:13, cursor: contact.name?"pointer":"default", transition:"all 0.15s" }}>
+                    {l}
+                  </div>
+                ))}
+                <div style={{ fontSize:12, color: isQualified?"#10b981":"#ffffff40", marginLeft:4, fontWeight: isQualified?"bold":"normal" }}>
+                  {machoScore.length > 0 ? `${machoScore.length}/5 stars${isQualified?" ✓ Qualified!":""}` : "Tap to score"}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+
+// ─── REP MESSAGING ────────────────────────────────────────────────────────────
+function RepMessaging({ rep, onUpdate, isTrainer = false }) {
+  const [text, setText] = useState("");
+  const messages = rep.repMessages || [];
+  const unread = isTrainer ? rep.unreadByTrainer : rep.unreadByRep;
+
+  const send = () => {
+    if (!text.trim()) return;
+    const msg = { id: Date.now().toString(), text: text.trim(), sender: isTrainer ? "trainer" : "rep", timestamp: new Date().toISOString(), resolved: false };
+    const updated = [...messages, msg];
+    onUpdate({ ...rep, repMessages: updated, unreadByTrainer: !isTrainer, unreadByRep: isTrainer, lastActivity: new Date().toISOString() });
+    setText("");
+  };
+
+  const resolve = (id) => {
+    const updated = messages.map(m => m.id !== id ? m : { ...m, resolved: true });
+    onUpdate({ ...rep, repMessages: updated, lastActivity: new Date().toISOString() });
+  };
+
+  const markRead = () => {
+    if (isTrainer && rep.unreadByTrainer) onUpdate({ ...rep, unreadByTrainer: false });
+    if (!isTrainer && rep.unreadByRep) onUpdate({ ...rep, unreadByRep: false, lastActivity: new Date().toISOString() });
+  };
+
+  React.useEffect(() => { markRead(); }, []);
+
+  const active = messages.filter(m => !m.resolved);
+  const resolved = messages.filter(m => m.resolved);
+
+  return (
+    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, padding:"16px 18px", marginBottom:16 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
+        <div style={{ fontSize:13, fontWeight:"bold", color:"#3b82f6" }}>
+          💬 {isTrainer ? `Messages from ${rep.name}` : "Message My Trainer"}
+          {unread && <span style={{ background:"#f43f5e", color:"#fff", borderRadius:"50%", fontSize:10, padding:"1px 6px", marginLeft:8, fontWeight:"bold" }}>NEW</span>}
+        </div>
+      </div>
+
+      {/* Active messages */}
+      {active.length === 0 && <div style={{ fontSize:12, color:"#ffffff30", fontStyle:"italic", marginBottom:14 }}>No active messages</div>}
+      <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:14 }}>
+        {active.map(msg => (
+          <div key={msg.id} style={{ background: msg.sender==="rep"?"#3b82f610":"#10b98110", border:`1px solid ${msg.sender==="rep"?"#3b82f630":"#10b98130"}`, borderRadius:10, padding:"10px 14px" }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
+              <div style={{ fontSize:10, color: msg.sender==="rep"?"#3b82f6":"#10b981", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em" }}>
+                {msg.sender === "rep" ? rep.name : "Trainer"}
+              </div>
+              <div style={{ display:"flex", gap:8, alignItems:"center" }}>
+                <div style={{ fontSize:10, color:"#ffffff30" }}>{new Date(msg.timestamp).toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</div>
+                <button onClick={() => resolve(msg.id)} style={{ background:"#ffffff10", border:"1px solid #ffffff20", color:"#ffffff50", borderRadius:20, padding:"2px 10px", fontSize:10, cursor:"pointer" }}>✓ Resolve</button>
+              </div>
+            </div>
+            <div style={{ fontSize:13, color:"#f0ede8", lineHeight:1.6 }}>{msg.text}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Resolved messages — collapsed */}
+      {resolved.length > 0 && (
+        <details style={{ marginBottom:14 }}>
+          <summary style={{ fontSize:11, color:"#ffffff30", cursor:"pointer", marginBottom:8 }}>✓ {resolved.length} resolved message{resolved.length!==1?"s":""}</summary>
+          <div style={{ display:"flex", flexDirection:"column", gap:8, marginTop:8 }}>
+            {resolved.map(msg => (
+              <div key={msg.id} style={{ background:"#ffffff05", border:"1px solid #ffffff08", borderRadius:8, padding:"8px 12px", opacity:0.6 }}>
+                <div style={{ fontSize:10, color:"#ffffff30", marginBottom:3 }}>{msg.sender==="rep"?rep.name:"Trainer"} · {new Date(msg.timestamp).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</div>
+                <div style={{ fontSize:12, color:"#ffffff50" }}>{msg.text}</div>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
+
+      {/* Compose */}
+      <div style={{ display:"flex", gap:8 }}>
+        <input value={text} onChange={e => setText(e.target.value)} onKeyDown={e => e.key==="Enter" && send()}
+          placeholder={isTrainer ? "Reply to rep..." : "Send a message to your trainer..."}
+          style={{ flex:1, background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:13, outline:"none", fontFamily:"inherit" }} />
+        <button onClick={send} disabled={!text.trim()}
+          style={{ background: text.trim()?"#3b82f6":"#ffffff15", border:"none", color: text.trim()?"#fff":"#ffffff30", borderRadius:8, padding:"10px 18px", cursor: text.trim()?"pointer":"default", fontWeight:"bold", fontSize:13 }}>
+          Send
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+// ─── CHECK-IN STREAK ──────────────────────────────────────────────────────────
+function CheckInStreak({ checkIns = [] }) {
+  if (checkIns.length === 0) return (
+    <div style={{ background:"#f43f5e10", border:"1px solid #f43f5e30", borderRadius:12, padding:"12px 16px", marginBottom:16, display:"flex", alignItems:"center", gap:12 }}>
+      <div style={{ fontSize:22 }}>👋</div>
+      <div style={{ fontSize:13, color:"#f43f5e" }}>No check-ins yet — reach out to your trainer today!</div>
+    </div>
+  );
+  const sorted = [...checkIns].sort((a,b) => new Date(b.date)-new Date(a.date));
+  const lastDate = new Date(sorted[0].date);
+  const daysSince = Math.floor((new Date()-lastDate)/86400000);
+  let streak = 0;
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (let i=0; i<sorted.length; i++) {
+    const d = new Date(sorted[i].date); d.setHours(0,0,0,0);
+    const diff = Math.floor((today-d)/86400000);
+    if (diff <= i+1) streak++;
+    else break;
+  }
+  const color = daysSince === 0 ? "#10b981" : daysSince <= 2 ? "#f59e0b" : "#f43f5e";
+  const emoji = streak >= 7 ? "🔥🔥🔥" : streak >= 3 ? "🔥🔥" : streak >= 1 ? "🔥" : "💤";
+  return (
+    <div style={{ background:`${color}10`, border:`1px solid ${color}30`, borderRadius:12, padding:"12px 16px", marginBottom:16, display:"flex", alignItems:"center", gap:14 }}>
+      <div style={{ fontSize:28 }}>{emoji}</div>
+      <div style={{ flex:1 }}>
+        <div style={{ fontSize:14, fontWeight:"bold", color }}>{streak} day check-in streak!</div>
+        <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>
+          {daysSince === 0 ? "Checked in today — great work!" : daysSince === 1 ? "Last checked in yesterday — keep it up!" : `Last checked in ${daysSince} days ago — reach out to your trainer today!`}
+        </div>
+      </div>
+      {streak >= 7 && <div style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:20, padding:"4px 12px", fontSize:11, color:"#f59e0b", fontWeight:"bold" }}>7 day streak!</div>}
+    </div>
+  );
+}
+
+
+// ─── TEAM LEADERBOARD ─────────────────────────────────────────────────────────
+function TeamLeaderboard({ currentRep, allReps, trainers }) {
+  const [expanded, setExpanded] = useState(false);
+  const trainerReps = allReps.filter(r => r.trainerId === currentRep.trainerId && r.id !== currentRep.id);
+  const teamReps = [currentRep, ...trainerReps];
+  const ranked = [...teamReps].map(r => ({
+    id: r.id,
+    name: r.id === currentRep.id ? "You" : r.name.split(" ")[0],
+    isMe: r.id === currentRep.id,
+    appts: (r.appointments||[]).filter(a=>a.name).length,
+    fto: r.fieldObsCount||0,
+    lifeApps: r.lifeAppCount||0,
+    score: (r.appointments||[]).filter(a=>a.name).length + (r.fieldObsCount||0) + (r.lifeAppCount||0),
+  })).sort((a,b) => b.score - a.score);
+  const myRank = ranked.findIndex(r => r.isMe) + 1;
+  const medals = ["🥇","🥈","🥉"];
+
+  return (
+    <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, marginBottom:16, overflow:"hidden" }}>
+      <div onClick={() => setExpanded(s=>!s)} style={{ padding:"14px 18px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <div>
+          <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b" }}>🏆 Team Leaderboard</div>
+          <div style={{ fontSize:11, color:"#ffffff50", marginTop:2 }}>You are ranked #{myRank} on your team</div>
+        </div>
+        <div style={{ fontSize:16, color:"#ffffff40" }}>{expanded?"▲":"▼"}</div>
+      </div>
+      {expanded && (
+        <div style={{ padding:"0 18px 16px" }}>
+          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+            {ranked.map((r,idx) => (
+              <div key={r.id} style={{ background: r.isMe?"#f59e0b10":"#ffffff05", border:`1px solid ${r.isMe?"#f59e0b30":"#ffffff10"}`, borderRadius:10, padding:"10px 14px", display:"flex", alignItems:"center", gap:12 }}>
+                <div style={{ fontSize:18, width:28, textAlign:"center" }}>{medals[idx]||`#${idx+1}`}</div>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:13, fontWeight:"bold", color: r.isMe?"#f59e0b":"#f0ede8" }}>{r.name}{r.isMe?" (You)":""}</div>
+                  <div style={{ fontSize:10, color:"#ffffff40", marginTop:2 }}>{r.appts} appts · {r.fto} FTOs · {r.lifeApps} life apps</div>
+                </div>
+                <div style={{ fontSize:16, fontWeight:"bold", color: r.isMe?"#f59e0b":"#ffffff50" }}>{r.score}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize:10, color:"#ffffff30", textAlign:"center", marginTop:10 }}>Score = appointments + FTO observations + life apps</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ─── INCOME GOAL CALCULATOR ───────────────────────────────────────────────────
+function IncomeGoalCalculator({ goal = 0, onSave }) {
+  const [input, setInput] = useState(goal ? String(goal) : "");
+  const g = Number(input) || 0;
+  const appsPerMonth = Math.ceil(g / 500);
+  const apptsPerMonth = Math.ceil(appsPerMonth * 3);
+  const apptsPerWeek = Math.ceil(apptsPerMonth / 4);
+  const contactsPerWeek = apptsPerWeek * 3;
+  return (
+    <div style={{ background:"#10b98110", border:"1px solid #10b98130", borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+      <div style={{ fontSize:14, fontWeight:"bold", color:"#10b981", marginBottom:4 }}>🎯 Income Goal Calculator</div>
+      <div style={{ fontSize:12, color:"#ffffff50", marginBottom:14 }}>Enter your monthly income goal and see exactly how much activity you need to hit it.</div>
+      <div style={{ display:"flex", gap:10, alignItems:"center", marginBottom:16 }}>
+        <div style={{ fontSize:20, color:"#10b981" }}>$</div>
+        <input type="number" value={input} onChange={e => setInput(e.target.value)} placeholder="Monthly income goal"
+          style={{ flex:1, background:"#ffffff0d", border:"1px solid #10b98140", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:16, outline:"none", fontFamily:"inherit" }} />
+        <button onClick={() => onSave(g)} style={{ background:"#10b981", border:"none", color:"#0f0f11", borderRadius:8, padding:"10px 16px", cursor:"pointer", fontWeight:"bold", fontSize:13 }}>Save</button>
+      </div>
+      {g > 0 && (
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+          {[
+            { label:"Life Apps per Month", value:appsPerMonth, color:"#3b82f6", emoji:"📋" },
+            { label:"Appointments per Month", value:apptsPerMonth, color:"#8b5cf6", emoji:"📅" },
+            { label:"Appointments per Week", value:apptsPerWeek, color:"#f59e0b", emoji:"🗓" },
+            { label:"Contacts per Week", value:contactsPerWeek, color:"#10b981", emoji:"📞" },
+          ].map(s => (
+            <div key={s.label} style={{ background:"#ffffff07", border:`1px solid ${s.color}25`, borderRadius:10, padding:"12px 14px", textAlign:"center" }}>
+              <div style={{ fontSize:24, fontWeight:"bold", color:s.color }}>{s.value}</div>
+              <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.06em", marginTop:4 }}>{s.emoji} {s.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      {g > 0 && <div style={{ fontSize:10, color:"#ffffff30", marginTop:10, textAlign:"center" }}>Based on avg $500 premium per policy and 1 app per 3 appointments. Update as you learn your own numbers!</div>}
     </div>
   );
 }
@@ -3216,7 +3541,7 @@ export default function App() {
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0, licensedRefs: [], licensedMachoList: [], licensedDgoDate: "", licensedDgoComplete: false }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0, licensedRefs: [], licensedMachoList: [], licensedDgoDate: "", licensedDgoComplete: false, repMessages: [], unreadByTrainer: false, unreadByRep: false, incomeGoal: 0 }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
@@ -3326,7 +3651,7 @@ export default function App() {
           </div>
           <div style={{ marginLeft: "auto", background: "#f59e0b20", border: "1px solid #f59e0b40", borderRadius: 20, padding: "4px 14px", fontSize: 12, color: "#f59e0b" }}>👁 Read-only preview</div>
         </div>
-        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(previewTrainer, previewAdminData)} schedule={schedule} cancellations={cancellations} />
+        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(previewTrainer, previewAdminData)} schedule={schedule} cancellations={cancellations} allReps={reps} trainers={trainers} />
       </div>
     );
   }
@@ -3340,7 +3665,7 @@ export default function App() {
     const repTrainerData = trainers.find(t => t.id === repData.trainerId);
     const repAdminData = admins.find(a => a.id === repTrainerData?.adminId);
     const repTrainerLink = getApptLink(repTrainerData, repAdminData);
-    return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} trainerLink={repTrainerLink} schedule={schedule} cancellations={cancellations} />;
+    return <RepView rep={repData} onUpdate={updateRepDirect} onLogout={handleLogout} trainerLink={repTrainerLink} schedule={schedule} cancellations={cancellations} allReps={reps} trainers={trainers} />;
   }
 
   // ── DETAIL VIEW ──────────────────────────────────────────────────────────────
@@ -3365,6 +3690,7 @@ export default function App() {
       { key:"rep", label: track.shortLabel },
       { key:"appointments", label:`Appts (${apptSet})` },
       { key:"refs", label:`Refs (${(rep.references||[]).filter(r=>r.name).length})` },
+      { key:"messages", label:`💬 Messages${rep.unreadByTrainer?" 🔴":""}` },
       { key:"lifeapps", label:`📋 Life Apps (${(rep.lifeApps||[]).filter(a=>a.clientName).length})` },
       { key:"investments", label:`💰 Investments (${(rep.investmentClients||[]).length})` },
       { key:"scorecard", label:"📊 Scorecard" },
@@ -3796,6 +4122,9 @@ export default function App() {
           {activeTab==="schedule" && (
             <TeamScheduleView schedule={schedule} isAdmin={isAdmin} onUpdate={(updated) => setSchedule(updated)} cancellations={cancellations} onCancel={(key, val) => setCancellations(prev => ({ ...prev, [key]: val }))} />
           )}
+          {activeTab==="messages" && (
+            <RepMessaging rep={rep} onUpdate={(updated) => updateRep(rep.id, r => ({ ...r, ...updated }))} isTrainer={true} />
+          )}
           {activeTab==="lifeapps" && (
             <LifeAppTracker
               apps={rep.lifeApps||[]}
@@ -3985,6 +4314,18 @@ export default function App() {
       <div style={{ maxWidth:860, margin:"0 auto", padding:"20px 16px" }}>
 
         {showTrainerTour && <AppTour steps={TRAINER_TOUR_STEPS} onClose={() => setShowTrainerTour(false)} storageKey={trainerTourKey} />}
+      {/* Unread messages banner */}
+      {(() => {
+        const unreadCount = visibleReps.filter(r => r.unreadByTrainer).length;
+        if (unreadCount === 0) return null;
+        return (
+          <div style={{ background:"#f43f5e15", border:"1px solid #f43f5e40", borderRadius:12, padding:"12px 18px", marginBottom:16, display:"flex", alignItems:"center", gap:12 }}>
+            <div style={{ fontSize:20 }}>💬</div>
+            <div style={{ fontSize:13, color:"#f43f5e", fontWeight:"bold" }}>{unreadCount} rep{unreadCount!==1?"s have":" has"} sent you a new message — check their Messages tab!</div>
+          </div>
+        );
+      })()}
+
       {/* New Month Banner */}
         {showNewMonthBanner && isAdmin && (
           <div style={{ background:"linear-gradient(135deg,#10b98120,#f59e0b15)", border:"1px solid #10b98140", borderRadius:14, padding:"20px 24px", marginBottom:20, textAlign:"center" }}>
@@ -4224,6 +4565,7 @@ export default function App() {
                       {rep.dgoDate&&<span style={{ color:rep.dgoCompleted?"#10b981":"#06b6d4" }}> · DGO {rep.dgoCompleted?"✓":"📅"} {rep.dgoDate}</span>}
                       {(() => { const ci = (rep.checkIns||[])[0]; if (!ci) return <span style={{color:"#f43f5e"}}> · ⚠ No check-ins</span>; const d = Math.floor((new Date()-new Date(ci.date))/86400000); return <span style={{color:d>=3?"#f43f5e":"#10b981"}}> · Checked in {d===0?"today":`${d}d ago`}</span>; })()}
                       {rep.notes&&<span style={{ color:"#ffffff30" }}> · 📝</span>}
+                      {rep.unreadByTrainer&&<span style={{ color:"#f43f5e", fontWeight:"bold" }}> · 💬 New message</span>}
                     </div>
                   </div>
                   <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
@@ -4244,9 +4586,9 @@ export default function App() {
                   ))}
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
