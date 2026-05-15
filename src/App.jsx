@@ -3098,112 +3098,145 @@ function LicensedRefsInput({ refs = [], onChange }) {
 
 // ─── LICENSED MACHO TRAINING LIST ────────────────────────────────────────────
 function LicensedMachoList({ contacts = [], onChange }) {
-  const goal = 20;
-  const filled = contacts.filter(c => c.name).length;
-  const qualified = contacts.filter(c => (c.macho||[]).length >= 3).length;
+  const total = 20;
+
+  const filledContacts = contacts.filter(a => a.name).sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return new Date(a.date) - new Date(b.date);
+  });
+  const emptySlots = Array.from({ length: Math.max(0, total - filledContacts.length) }, (_, i) => ({
+    id: `mc-empty-${i}`, name: "", phone: "", email: "", date: "", apptNote: "", macho: []
+  }));
+  const rows = [...filledContacts, ...emptySlots];
+
+  const filled = rows.filter(a => a.name);
+  const setCount = filled.length;
+  const qualifiedCount = filled.filter(a => (a.macho||[]).length >= 3).length;
 
   const updateContact = (idx, field, value) => {
-    const updated = Array.from({ length: goal }, (_, i) => contacts[i] || { id:`mc-${i}`, name:"", phone:"", email:"", date:"", notes:"", macho:[] });
+    const updated = [...contacts];
+    if (!updated[idx]) updated[idx] = { id: `mc-${idx}`, name: "", phone: "", email: "", date: "", apptNote: "", macho: [] };
     updated[idx] = { ...updated[idx], [field]: value };
-    onChange(updated.filter(c => c.name || c.phone));
+    onChange(updated);
   };
-
-  const toggleMacho = (idx, letter) => {
-    const slots = Array.from({ length: goal }, (_, i) => contacts[i] || { id:`mc-${i}`, name:"", phone:"", email:"", date:"", notes:"", macho:[] });
-    const current = slots[idx].macho || [];
-    const updated = current.includes(letter) ? current.filter(l => l !== letter) : [...current, letter];
-    const newSlots = slots.map((c, i) => i !== idx ? c : { ...c, macho: updated });
-    onChange(newSlots.filter(c => c.name || c.phone));
-  };
-
-  const slots = Array.from({ length: goal }, (_, i) => contacts[i] || { id:`mc-${i}`, name:"", phone:"", email:"", date:"", notes:"", macho:[] });
-  const MACHO_LETTERS = ["M","A","C","H","O"];
-  const MACHO_LABELS = { M:"Married", A:"Age 25-55", C:"Children", H:"Homeowner", O:"Occupation" };
 
   return (
     <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:12, padding:"16px", marginTop:8 }}>
       {/* Header */}
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
-        <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b" }}>⭐ MY MACHO TRAINING LIST</div>
-        <div style={{ fontSize:12, color:"#ffffff50" }}>{filled} logged · {qualified} qualified · goal: {goal}</div>
-      </div>
-
-      {/* Progress bars */}
-      <div style={{ marginBottom:14 }}>
-        {[{label:"LOGGED", val:filled, color:"#3b82f6"},{label:"QUALIFIED (3+ stars)", val:qualified, color:"#10b981"}].map(b => (
-          <div key={b.label} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:6 }}>
-            <div style={{ fontSize:9, color:"#ffffff35", width:110, textTransform:"uppercase", letterSpacing:"0.06em" }}>{b.label}</div>
-            <div style={{ flex:1, background:"#ffffff10", borderRadius:99, height:6, overflow:"hidden" }}>
-              <div style={{ width:`${Math.min(100,Math.round((b.val/goal)*100))}%`, height:"100%", background:b.color, borderRadius:99, transition:"width 0.4s" }} />
-            </div>
-            <div style={{ fontSize:11, color:"#ffffff40", width:30 }}>{b.val}/{goal}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* MACHO Guide */}
-      <div style={{ background:"#f59e0b10", border:"1px solid #f59e0b30", borderRadius:10, padding:"10px 14px", marginBottom:14 }}>
-        <div style={{ fontSize:12, fontWeight:"bold", color:"#f59e0b", marginBottom:8 }}>⭐ MACHO Qualification Guide — aim for 3 or more stars</div>
-        <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:6 }}>
-          {MACHO_LETTERS.map(l => (
-            <div key={l} style={{ background:"#ffffff10", borderRadius:20, padding:"4px 12px", fontSize:12, fontWeight:"bold", color:"#f0ede8" }}>
-              <strong style={{ color:"#f59e0b" }}>{l}</strong> — {MACHO_LABELS[l]}
+      <div style={{ paddingBottom:8, borderBottom:"1px solid #f59e0b30", marginBottom:14 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+          <div style={{ fontSize:11, letterSpacing:"0.15em", textTransform:"uppercase", color:"#f59e0b", fontWeight:"bold" }}>⭐ My MACHO Training List</div>
+          <div style={{ fontSize:12, color:"#ffffff40" }}>{setCount} logged · {qualifiedCount} qualified · goal: 20</div>
+        </div>
+        <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
+          {[{label:"LOGGED", val:Math.round(setCount/total*100), color:"#3b82f6", count:setCount},
+            {label:"QUALIFIED (3+)", val:Math.round(qualifiedCount/total*100), color:"#10b981", count:qualifiedCount}].map(b => (
+            <div key={b.label} style={{ display:"flex", alignItems:"center", gap:10 }}>
+              <div style={{ fontSize:10, color:"#ffffff35", width:90, textTransform:"uppercase" }}>{b.label}</div>
+              <div style={{ flex:1, background:"#ffffff10", borderRadius:99, height:6, overflow:"hidden" }}>
+                <div style={{ width:`${b.val}%`, height:"100%", background:`linear-gradient(90deg,${b.color},#f59e0b)`, borderRadius:99, transition:"width 0.4s" }} />
+              </div>
+              <div style={{ fontSize:11, color:"#ffffff40", width:40, textAlign:"right" }}>{b.count}/20</div>
             </div>
           ))}
         </div>
-        <div style={{ fontSize:11, color:"#ffffff50" }}>Tap the M-A-C-H-O letters on each contact to score them. 3+ stars = qualified. Set appointments with your best people!</div>
       </div>
 
-      {/* Contact slots */}
-      <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
-        {slots.map((contact, idx) => {
-          const machoScore = contact.macho || [];
-          const isQualified = machoScore.length >= 3;
+      {/* MACHO Legend */}
+      <div style={{ background:"#f59e0b0a", border:"1px solid #f59e0b25", borderRadius:10, padding:"12px 14px", marginBottom:12 }}>
+        <div style={{ fontSize:12, fontWeight:"bold", color:"#f59e0b", marginBottom:8 }}>⭐ MACHO Qualification Guide — aim for 3–5 stars</div>
+        <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+          {[["M","Married"],["A","Age 25–55"],["C","Children"],["H","Homeowner"],["O","Occupation"]].map(([k,v]) => (
+            <div key={k} style={{ background:"#ffffff08", borderRadius:8, padding:"5px 10px", fontSize:11, color:"#ffffff60" }}>
+              <span style={{ color:"#f59e0b", fontWeight:"bold" }}>{k}</span> — {v}
+            </div>
+          ))}
+        </div>
+        <div style={{ fontSize:11, color:"#ffffff40", marginTop:8 }}>Tap the M·A·C·H·O letters on each contact to score them. 3+ stars = qualified. Set appointments with your best people!</div>
+      </div>
+
+      {/* Contact cards */}
+      <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+        {rows.map((contact, idx) => {
+          const isFilled = !!contact.name;
+          const isQualified = (contact.macho||[]).length >= 3;
+          const fieldStyle = {
+            background:"transparent", border:"none",
+            borderBottom:`1px solid #ffffff15`,
+            color: isFilled ? "#f0ede8" : "#ffffff35",
+            fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit",
+          };
           return (
-            <div key={idx} style={{ borderBottom:"1px solid #ffffff10", paddingBottom:16 }}>
-              <div style={{ fontSize:11, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:10, fontWeight:"bold" }}>Contact #{idx+1}</div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px 16px", marginBottom:10 }}>
-                <div>
-                  <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>NAME</div>
-                  <input value={contact.name||""} onChange={e => updateContact(idx,"name",e.target.value)} placeholder="Contact name"
-                    style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
-                </div>
-                <div>
-                  <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>PHONE</div>
-                  <input value={contact.phone||""} onChange={e => updateContact(idx,"phone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12}
-                    style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
-                </div>
-                <div>
-                  <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>EMAIL</div>
-                  <input value={contact.email||""} onChange={e => updateContact(idx,"email",e.target.value)} placeholder="Email address"
-                    style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
-                </div>
-                <div>
-                  <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>DATE</div>
-                  <input type="date" value={contact.date||""} onChange={e => updateContact(idx,"date",e.target.value)}
-                    style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color: contact.date?"#f0ede8":"#ffffff30", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit", colorScheme:"dark" }} />
-                </div>
-              </div>
-              <div style={{ marginBottom:10 }}>
-                <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>NOTES / FOLLOW-UP</div>
-                <input value={contact.notes||""} onChange={e => updateContact(idx,"notes",e.target.value)} placeholder="What was discussed? Next steps?"
-                  style={{ background:"transparent", border:"none", borderBottom:"1px solid #ffffff20", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }} />
-              </div>
-              {/* MACHO scoring */}
-              <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
-                {MACHO_LETTERS.map(l => (
-                  <div key={l} onClick={() => contact.name && toggleMacho(idx, l)}
-                    style={{ width:32, height:32, borderRadius:"50%", border:`2px solid ${machoScore.includes(l)?"#f59e0b":"#ffffff20"}`, background: machoScore.includes(l)?"#f59e0b":"transparent", color: machoScore.includes(l)?"#0f0f11":"#ffffff40", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:"bold", fontSize:13, cursor: contact.name?"pointer":"default", transition:"all 0.15s" }}>
-                    {l}
+            <div key={idx} style={{
+              background: isQualified ? "#10b98108" : isFilled ? "#ffffff08" : "#ffffff03",
+              border:`1px solid ${isQualified ? "#10b98130" : isFilled ? "#ffffff15" : "#ffffff08"}`,
+              borderRadius:12, padding:"14px 16px", transition:"all 0.2s"
+            }}>
+              <div style={{ fontSize:11, color: isFilled?"#ffffff50":"#ffffff20", fontWeight:"bold", letterSpacing:"0.1em", marginBottom:12 }}>CONTACT #{idx+1}</div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px", marginBottom:10 }}>
+                {[["name","Name","Contact name"],["phone","Phone","111-111-1111"],["email","Email","Email address"],["date","Date",null]].map(([field,label,placeholder]) => (
+                  <div key={field}>
+                    <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>{label}</div>
+                    <input
+                      type={field==="date"?"date":field==="email"?"email":"text"}
+                      value={contact[field]||""}
+                      onChange={e => updateContact(idx, field, field==="phone"?formatPhone(e.target.value):e.target.value)}
+                      placeholder={field==="phone"?"111-111-1111":(placeholder||"")}
+                      maxLength={field==="phone"?12:undefined}
+                      style={{ ...fieldStyle, colorScheme: field==="date"?"dark":undefined }}
+                    />
                   </div>
                 ))}
-                <div style={{ fontSize:12, color: isQualified?"#10b981":"#ffffff40", marginLeft:4, fontWeight: isQualified?"bold":"normal" }}>
-                  {machoScore.length > 0 ? `${machoScore.length}/5 stars${isQualified?" ✓ Qualified!":""}` : "Tap to score"}
-                </div>
               </div>
+              <div style={{ marginBottom:10 }}>
+                <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>Notes / Follow-up</div>
+                <input value={contact.apptNote||""} onChange={e => updateContact(idx,"apptNote",e.target.value)} placeholder="What was discussed? Next steps?" style={{ ...fieldStyle, fontSize:12 }} />
+              </div>
+              {/* MACHO Qualifier — exact same as new rep */}
+              {isFilled && (
+                <MachoQualifier
+                  contact={contact}
+                  onUpdate={(updated) => {
+                    const arr = [...contacts];
+                    arr[idx] = updated;
+                    onChange(arr);
+                  }}
+                />
+              )}
+              {isFilled && (contact.macho||[]).length > 0 && (
+                <div style={{ marginTop:8, padding:"8px 10px", background: isQualified?"#10b98110":"#f59e0b0a", border:`1px solid ${isQualified?"#10b98130":"#f59e0b25"}`, borderRadius:8 }}>
+                  <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:6 }}>MACHO Score</div>
+                  <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+                    {["M","A","C","H","O"].map(k => {
+                      const active = (contact.macho||[]).includes(k);
+                      const labels = {M:"Married",A:"Age 25-55",C:"Children",H:"Homeowner",O:"Occupation"};
+                      return (
+                        <div key={k} style={{ fontSize:11, background: active?"#f59e0b20":"#ffffff08", border:`1px solid ${active?"#f59e0b50":"#ffffff10"}`, borderRadius:20, padding:"3px 10px", color: active?"#f59e0b":"#ffffff25", fontWeight: active?"bold":"normal" }}>
+                          {active?"⭐":"☆"} {k} {active?`— ${labels[k]}`:""}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div style={{ fontSize:12, color: isQualified?"#10b981":"#f59e0b", fontWeight:"bold", marginTop:6 }}>
+                    {(contact.macho||[]).length} ⭐ — {isQualified ? "✓ Qualified!" : `${3-(contact.macho||[]).length} more stars needed`}
+                    {(contact.macho||[]).length === 5 && " 🔥 Top priority!"}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
+      </div>
+
+      {/* Goal badges */}
+      <div style={{ display:"flex", gap:8, marginTop:14, flexWrap:"wrap" }}>
+        {[["1–5 logged",5],["6–10 logged",10],["11–15 logged",15],["🎯 Goal: 20!",20]].map(([label,threshold]) => (
+          <div key={label} style={{ background: setCount>=threshold?"#10b98118":"#ffffff08", border:`1px solid ${setCount>=threshold?"#10b98140":"#ffffff15"}`, borderRadius:20, padding:"4px 12px", fontSize:11, color: setCount>=threshold?"#10b981":"#ffffff40", fontWeight: setCount>=threshold?"bold":"normal" }}>
+            {setCount>=threshold?"✓ ":""}{label}
+          </div>
+        ))}
       </div>
     </div>
   );
