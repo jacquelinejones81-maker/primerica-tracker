@@ -1684,6 +1684,17 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           );
         })()}
 
+        {/* Life App Tracker — standalone card for licensed/RVP reps */}
+        {(rep.track === "licensed" || rep.track === "rvp") && (
+          <div style={{ marginBottom:20 }}>
+            <div style={{ fontSize:13, fontWeight:"bold", color:"#3b82f6", marginBottom:12, letterSpacing:"0.05em" }}>📋 Life Application Tracker</div>
+            <LifeAppTracker
+              apps={rep.lifeApps||[]}
+              onChange={apps => onUpdate({ ...rep, lifeApps:apps, lastActivity:new Date().toISOString() })}
+            />
+          </div>
+        )}
+
         {/* Tabs */}
         <div style={{ display:"flex", gap:4, background:"#ffffff08", borderRadius:10, padding:4, marginBottom:22, overflowX:"auto", WebkitOverflowScrolling:"touch" }}>
           {[
@@ -1691,7 +1702,6 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             {key:"appointments",label:`📅 Appts (${apptSet})`},
             {key:"refs",label:"👥 Refs"},
             {key:"scripts",label:"📜 Scripts"},
-            ...(rep.track==="licensed"||rep.track==="rvp" ? [{key:"lifeapps",label:"📋 Life Apps"}] : []),
             ...(rep.track==="licensed"||rep.track==="rvp" ? [{key:"scorecard",label:"📊 Scorecard"}] : []),
             {key:"rvp",label:"👑 RVP"},
             {key:"schedule",label:"🗓 Schedule"},
@@ -1718,12 +1728,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           />
         )}
         {activeTab==="scripts" && <ScriptsSection />}
-        {activeTab==="lifeapps" && (
-          <LifeAppTracker
-            apps={rep.lifeApps||[]}
-            onChange={apps => onUpdate({ ...rep, lifeApps:apps, lastActivity:new Date().toISOString() })}
-          />
-        )}
+
         {activeTab==="scorecard" && (
           <WeeklyScorecard
             activity={rep.weeklyActivity||{}}
@@ -2420,7 +2425,7 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
           const statusColor = STATUS_COLORS[app.status] || "#ffffff50";
           return (
             <div key={app.id} style={{ background:"#ffffff07", border:`1px solid ${statusColor}30`, borderRadius:12, overflow:"hidden" }}>
-              <div style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 14px", cursor:"pointer" }} onClick={() => { setExpandedIdx(isExpanded ? null : idx); if (!readOnly && app.clientName) setShowChecklist(app.id); }}>
+              <div style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 14px", cursor:"pointer" }} onClick={() => { setExpandedIdx(isExpanded ? null : idx); if (!readOnly && app.clientName && app.beneCollected === null && app.investStatus === null) setShowChecklist(app.id); }}>
                 <div style={{ flex:1 }}>
                   <div style={{ fontSize:14, fontWeight:"bold", color:"#f0ede8" }}>{app.clientName}</div>
                   <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>
@@ -2466,25 +2471,53 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
 
                   {/* Beneficiary and Emergency Contact Section */}
                   <div style={{ background:"#8b5cf610", border:"1px solid #8b5cf630", borderRadius:10, padding:"14px 16px", marginBottom:10 }}>
-                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:12 }}>👤 Beneficiary Information</div>
-                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px", marginBottom:12 }}>
-                      {[["beneName","Beneficiary Name","Full name"],["beneRelationship","Relationship","e.g. Spouse, Child"],["benePhone","Beneficiary Phone","Phone number"],["beneEmail","Beneficiary Email","Email address"]].map(([field,label,placeholder]) => (
-                        <div key={field}>
-                          <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>{label}</div>
-                          <input value={app[field]||""} onChange={e => updateApp(app.id, field, field==="benePhone"?formatPhone(e.target.value):e.target.value)} placeholder={placeholder}
-                            style={fieldStyle} />
-                        </div>
-                      ))}
+                    {/* Beneficiary */}
+                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:10 }}>👤 Beneficiary Information</div>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px", marginBottom:14 }}>
+                      <div>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Full Name</div>
+                        <input value={app.beneName||""} onChange={e => updateApp(app.id,"beneName",e.target.value)} placeholder="Beneficiary full name" style={fieldStyle} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Relationship to Insured</div>
+                        <select value={app.beneRelationship||""} onChange={e => updateApp(app.id,"beneRelationship",e.target.value)}
+                          style={{ background:"#ffffff0d", border:"none", borderBottom:"1px solid #ffffff15", color: app.beneRelationship?"#f0ede8":"#ffffff40", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }}>
+                          <option value="" style={{ background:"#1a1a2e" }}>Select relationship</option>
+                          {["Spouse","Child","Parent","Sibling","Grandchild","Grandparent","Friend","Other"].map(r => <option key={r} value={r} style={{ background:"#1a1a2e" }}>{r}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Phone</div>
+                        <input value={app.benePhone||""} onChange={e => updateApp(app.id,"benePhone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12} style={fieldStyle} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Email</div>
+                        <input value={app.beneEmail||""} onChange={e => updateApp(app.id,"beneEmail",e.target.value)} placeholder="Email address" style={fieldStyle} />
+                      </div>
                     </div>
-                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:12, marginTop:4, paddingTop:10, borderTop:"1px solid #8b5cf620" }}>🚨 Emergency Contact</div>
+                    {/* Emergency Contact */}
+                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:10, paddingTop:10, borderTop:"1px solid #8b5cf620" }}>🚨 Emergency Contact</div>
                     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px" }}>
-                      {[["emergName","Emergency Contact Name","Full name"],["emergRelationship","Relationship","e.g. Spouse, Parent"],["emergPhone","Phone Number","Phone number"],["emergEmail","Email Address","Email address"]].map(([field,label,placeholder]) => (
-                        <div key={field}>
-                          <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>{label}</div>
-                          <input value={app[field]||""} onChange={e => updateApp(app.id, field, field==="emergPhone"?formatPhone(e.target.value):e.target.value)} placeholder={placeholder}
-                            style={fieldStyle} />
-                        </div>
-                      ))}
+                      <div>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Full Name</div>
+                        <input value={app.emergName||""} onChange={e => updateApp(app.id,"emergName",e.target.value)} placeholder="Emergency contact full name" style={fieldStyle} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Relationship to Insured</div>
+                        <select value={app.emergRelationship||""} onChange={e => updateApp(app.id,"emergRelationship",e.target.value)}
+                          style={{ background:"#ffffff0d", border:"none", borderBottom:"1px solid #ffffff15", color: app.emergRelationship?"#f0ede8":"#ffffff40", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }}>
+                          <option value="" style={{ background:"#1a1a2e" }}>Select relationship</option>
+                          {["Spouse","Child","Parent","Sibling","Grandchild","Grandparent","Friend","Other"].map(r => <option key={r} value={r} style={{ background:"#1a1a2e" }}>{r}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Phone</div>
+                        <input value={app.emergPhone||""} onChange={e => updateApp(app.id,"emergPhone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12} style={fieldStyle} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Email</div>
+                        <input value={app.emergEmail||""} onChange={e => updateApp(app.id,"emergEmail",e.target.value)} placeholder="Email address" style={fieldStyle} />
+                      </div>
                     </div>
                   </div>
 
