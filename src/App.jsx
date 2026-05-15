@@ -442,7 +442,7 @@ function CheckItem({ item, done, onToggle, isRepView = false }) {
   );
 }
 
-function CategorySection({ title, items, completedIds, onToggle, isRepView = false, inlineContent = {} }) {
+function CategorySection({ title, items, completedIds, onToggle, isRepView = false, inlineContent = {}, inlineIds = [], onInlineRender = null }) {
   const color = CAT_COLORS[title] || "#ffffff";
   const emoji = CAT_EMOJIS[title] || "📌";
   const done = items.filter(i => completedIds.includes(i.id)).length;
@@ -457,9 +457,9 @@ function CategorySection({ title, items, completedIds, onToggle, isRepView = fal
         {items.map(item => (
           <React.Fragment key={item.id}>
             <CheckItem item={item} done={completedIds.includes(item.id)} onToggle={() => onToggle(item.id)} isRepView={isRepView} />
-            {inlineContent[item.id] && completedIds.includes(item.id) && (
-              <div style={{ marginTop: -4, marginBottom: 4 }}>
-                {inlineContent[item.id]}
+            {(inlineContent[item.id] || (inlineIds.includes(item.id) && onInlineRender)) && completedIds.includes(item.id) && (
+              <div style={{ marginTop:-4, marginBottom:4 }}>
+                {inlineContent[item.id] || onInlineRender(item.id)}
               </div>
             )}
           </React.Fragment>
@@ -1798,9 +1798,11 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
                       completedIds={rep.repCompleted}
                       onToggle={toggleItem}
                       isRepView={true}
-                      inlineContent={{
-                        "l3": <LicensedRefsInput refs={rep.licensedRefs||[]} onChange={refs => onUpdate({ ...rep, licensedRefs:refs, lastActivity:new Date().toISOString() })} />,
-                        "l4": <div style={{ background:"#f59e0b10", border:"1px solid #f59e0b30", borderLeft:"3px solid #f59e0b", borderRadius:10, padding:"12px 16px", marginTop:4 }}><div style={{ fontSize:13, color:"#f59e0b", fontWeight:"bold", marginBottom:4 }}>⭐ Ready to build your list?</div><div style={{ fontSize:12, color:"#ffffff60" }}>Head to the <strong style={{ color:"#f0ede8" }}>📅 Appointments tab</strong> to log your 20 MACHO contacts and score them — everything is already set up there!</div></div>,
+                      inlineIds={["l3","l4"]}
+                      onInlineRender={id => {
+                        if (id==="l3") return <LicensedRefsInput refs={rep.licensedRefs||[]} onChange={refs => onUpdate({ ...rep, licensedRefs:refs, lastActivity:new Date().toISOString() })} />;
+                        if (id==="l4") return <div style={{ background:"#f59e0b10", border:"1px solid #f59e0b30", borderLeft:"3px solid #f59e0b", borderRadius:10, padding:"12px 16px", marginTop:4 }}><div style={{ fontSize:13, color:"#f59e0b", fontWeight:"bold", marginBottom:4 }}>Ready to build your list?</div><div style={{ fontSize:12, color:"#ffffff60" }}>Head to the Appointments tab to log your 20 MACHO contacts and score them!</div></div>;
+                        return null;
                       }}
                     />
                   ))}
