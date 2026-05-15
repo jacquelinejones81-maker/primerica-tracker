@@ -1468,6 +1468,8 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
         <PacCounter
           pacCount={rep.pacCount||0}
           onChange={count => onUpdate({ ...rep, pacCount:count, lastActivity:new Date().toISOString() })}
+          onUpdateClients={clients => onUpdate({ ...rep, investmentClients:clients, lastActivity:new Date().toISOString() })}
+          investmentClients={rep.investmentClients||[]}
           isLicensed={rep.track === "licensed" || rep.track === "rvp"}
         />
 
@@ -1596,7 +1598,16 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
 
         {/* Tabs */}
         <div style={{ display:"flex", gap:4, background:"#ffffff08", borderRadius:10, padding:4, marginBottom:22, overflowX:"auto", WebkitOverflowScrolling:"touch" }}>
-          {[{key:"checklist",label:"✅ Checklist"},{key:"appointments",label:`📅 Appts (${apptSet})`},{key:"refs",label:"👥 Refs"},{key:"scripts",label:"📜 Scripts"},{key:"lifeapps",label:"📋 Life Apps"},{key:"scorecard",label:"📊 Scorecard"},{key:"rvp",label:"👑 RVP"},{key:"schedule",label:"🗓 Schedule"}].map(tab => (
+          {[
+            {key:"checklist",label:"✅ Checklist"},
+            {key:"appointments",label:`📅 Appts (${apptSet})`},
+            {key:"refs",label:"👥 Refs"},
+            {key:"scripts",label:"📜 Scripts"},
+            ...(rep.track==="licensed"||rep.track==="rvp" ? [{key:"lifeapps",label:"📋 Life Apps"}] : []),
+            {key:"scorecard",label:"📊 Scorecard"},
+            {key:"rvp",label:"👑 RVP"},
+            {key:"schedule",label:"🗓 Schedule"},
+          ].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{ flexShrink:0, padding:"8px 12px", borderRadius:8, border:"none", cursor:"pointer", fontSize:12, fontWeight:"bold", transition:"all 0.15s", background:activeTab===tab.key?"#ffffff15":"transparent", color:activeTab===tab.key?"#f0ede8":"#ffffff50", whiteSpace:"nowrap" }}>
               {tab.label}
             </button>
@@ -2232,13 +2243,14 @@ function LifeAppChecklist({ app, onUpdate, onClose }) {
 function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
   const [showChecklist, setShowChecklist] = useState(null);
   const [expandedIdx, setExpandedIdx] = useState(null);
+  const [pendingNewId, setPendingNewId] = useState(null);
 
   const addApp = () => {
     const newApp = { id: Date.now().toString(), clientName:"", phone:"", email:"", coverageAmount:"", premium:"", appDate: new Date().toISOString().split("T")[0], status:"Submitted", policyNumber:"", notes:"", beneCollected: null, investStatus: null };
     const updated = [...apps, newApp];
     onChange(updated);
     setExpandedIdx(updated.length - 1);
-    // Don't show checklist until name is entered
+    setPendingNewId(newApp.id);
   };
 
   const updateApp = (id, field, value) => {
@@ -2266,6 +2278,35 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
           onClose={() => setShowChecklist(null)}
         />
       )}
+      {pendingNewId && (() => {
+        const pendingApp = apps.find(a => a.id === pendingNewId);
+        if (!pendingApp) { setPendingNewId(null); return null; }
+        return (
+          <div style={{ position:"fixed", inset:0, background:"#000000cc", zIndex:999, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+            <div style={{ background:"#16213e", border:"1px solid #ffffff20", borderRadius:16, padding:28, width:"100%", maxWidth:420 }}>
+              <div style={{ fontSize:22, marginBottom:12, textAlign:"center" }}>📋</div>
+              <div style={{ fontSize:16, fontWeight:"bold", color:"#f0ede8", marginBottom:8, textAlign:"center" }}>New Life Application</div>
+              <div style={{ fontSize:13, color:"#ffffff60", marginBottom:20, textAlign:"center" }}>Enter your client name to get started</div>
+              <input
+                autoFocus
+                value={pendingApp.clientName||""}
+                onChange={e => { const updated = apps.map(a => a.id !== pendingNewId ? a : { ...a, clientName: e.target.value }); onChange(updated); }}
+                placeholder="Client full name"
+                style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"12px 14px", color:"#f0ede8", fontSize:15, outline:"none", width:"100%", boxSizing:"border-box", marginBottom:16, fontFamily:"inherit" }}
+              />
+              <div style={{ display:"flex", gap:10 }}>
+                <button onClick={() => { onChange(apps.filter(a => a.id !== pendingNewId)); setPendingNewId(null); }}
+                  style={{ flex:1, background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"12px", borderRadius:8, cursor:"pointer", fontSize:13 }}>Cancel</button>
+                <button onClick={() => { if (pendingApp.clientName?.trim()) { setPendingNewId(null); setShowChecklist(pendingNewId); } }}
+                  disabled={!pendingApp.clientName?.trim()}
+                  style={{ flex:2, background: pendingApp.clientName?.trim()?"#3b82f6":"#ffffff15", border:"none", color: pendingApp.clientName?.trim()?"#fff":"#ffffff30", padding:"12px", borderRadius:8, cursor: pendingApp.clientName?.trim()?"pointer":"default", fontWeight:"bold", fontSize:14 }}>
+                  Next — Checklist ➜
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Counter display */}
       <div style={{ background:"#3b82f610", border:"1px solid #3b82f630", borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
@@ -2434,37 +2475,135 @@ function WeeklyScorecard({ activity = {}, onChange, readOnly = false, autoLifeAp
 }
 
 // ─── PAC COUNTER ──────────────────────────────────────────────────────────────
-function PacCounter({ pacCount = 0, onChange, isLicensed = false }) {
+function PacCounter({ pacCount = 0, onChange, onUpdateClients, investmentClients = [], isLicensed = false, readOnly = false }) {
   const goal = 10;
-  const pct = Math.min(100, Math.round((pacCount/goal)*100));
+  const p = Math.min(100, Math.round((pacCount/goal)*100));
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showClients, setShowClients] = useState(false);
+  const [newClientName, setNewClientName] = useState("");
+
+  const handleAdd = () => {
+    if (!newClientName.trim()) return;
+    const entry = { id: Date.now().toString(), name: newClientName.trim(), date: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), movedOver: false };
+    if (onUpdateClients) onUpdateClients([...investmentClients, entry]);
+    if (onChange) {
+      onChange(pacCount + 1);
+      if ((pacCount + 1) === goal && !isLicensed) {
+        spawnConfetti(window.innerWidth/2, 200);
+        spawnEmoji(window.innerWidth/2, 180, "💰");
+      }
+    }
+    setNewClientName("");
+    setShowAddModal(false);
+  };
+
+  const handleRemove = (id) => {
+    if (onUpdateClients) onUpdateClients(investmentClients.filter(c => c.id !== id));
+    if (onChange) onChange(Math.max(0, pacCount - 1));
+  };
+
+  const toggleMoved = (id) => {
+    if (onUpdateClients) onUpdateClients(investmentClients.map(c => c.id !== id ? c : { ...c, movedOver: !c.movedOver }));
+  };
+
   return (
-    <div style={{ background: pacCount >= goal ? "#10b98110" : "#f59e0b10", border:`1px solid ${pacCount>=goal?"#10b98140":"#f59e0b40"}`, borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+    <div style={{ background: (!isLicensed && pacCount >= goal) ? "#10b98110" : "#f59e0b10", border:`1px solid ${(!isLicensed&&pacCount>=goal)?"#10b98140":"#f59e0b40"}`, borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+      {/* Add client modal */}
+      {showAddModal && (
+        <div style={{ position:"fixed", inset:0, background:"#000000cc", zIndex:999, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+          <div style={{ background:"#16213e", border:"1px solid #f59e0b40", borderRadius:16, padding:28, width:"100%", maxWidth:400 }}>
+            <div style={{ fontSize:20, textAlign:"center", marginBottom:12 }}>💰</div>
+            <div style={{ fontSize:16, fontWeight:"bold", color:"#f59e0b", marginBottom:6, textAlign:"center" }}>Log Investment Client</div>
+            <div style={{ fontSize:13, color:"#ffffff60", marginBottom:20, textAlign:"center", lineHeight:1.6 }}>
+              Enter the client name for this investment. This helps track who will need to be moved over when you get your investment license.
+            </div>
+            <input
+              autoFocus
+              value={newClientName}
+              onChange={e => setNewClientName(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleAdd()}
+              placeholder="Client full name"
+              style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"12px 14px", color:"#f0ede8", fontSize:15, outline:"none", width:"100%", boxSizing:"border-box", marginBottom:16, fontFamily:"inherit" }}
+            />
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={() => { setShowAddModal(false); setNewClientName(""); }}
+                style={{ flex:1, background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"12px", borderRadius:8, cursor:"pointer", fontSize:13 }}>Cancel</button>
+              <button onClick={handleAdd} disabled={!newClientName.trim()}
+                style={{ flex:2, background: newClientName.trim()?"#f59e0b":"#ffffff15", border:"none", color: newClientName.trim()?"#0f0f11":"#ffffff30", padding:"12px", borderRadius:8, cursor: newClientName.trim()?"pointer":"default", fontWeight:"bold", fontSize:14 }}>
+                Log Investment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header */}
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
-        <div style={{ fontSize:14, fontWeight:"bold", color: pacCount>=goal?"#10b981":"#f59e0b" }}>{isLicensed ? "💰 Investment Counter (AUM Building)" : "💰 PAC Investments (AUM Building)"}</div>
-        <div style={{ fontSize:22, fontWeight:"bold", color: pacCount>=goal?"#10b981":"#f59e0b" }}>{pacCount}/{goal}</div>
+        <div style={{ fontSize:14, fontWeight:"bold", color: (!isLicensed&&pacCount>=goal)?"#10b981":"#f59e0b" }}>
+          {isLicensed ? "💰 Investment Tracker (AUM Building)" : "💰 PAC Investments (AUM Building)"}
+        </div>
+        <div style={{ fontSize:22, fontWeight:"bold", color: (!isLicensed&&pacCount>=goal)?"#10b981":"#f59e0b" }}>
+          {isLicensed ? pacCount : `${pacCount}/${goal}`}
+        </div>
       </div>
-      <div style={{ background:"#ffffff10", borderRadius:99, height:10, overflow:"hidden", marginBottom:10 }}>
-        <div style={{ width:`${pct}%`, height:"100%", background: pacCount>=goal?"#10b981":"linear-gradient(90deg,#f59e0b,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
-      </div>
+
+      {/* Progress bar — new reps only */}
+      {!isLicensed && (
+        <div style={{ background:"#ffffff10", borderRadius:99, height:10, overflow:"hidden", marginBottom:10 }}>
+          <div style={{ width:`${p}%`, height:"100%", background: pacCount>=goal?"#10b981":"linear-gradient(90deg,#f59e0b,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
+        </div>
+      )}
+
       <div style={{ fontSize:12, color:"#ffffff50", marginBottom:12 }}>
-        {isLicensed ? "Track every investment you are responsible for. Every investment builds your clients AUM and grows your book of business!" : "Every investment you are responsible for builds your clients AUM and your long-term book of business. Goal: 10 during training!"}
+        {isLicensed
+          ? "Track every client investment you are responsible for. These will need to be moved over when you get your investment license!"
+          : "Every investment you are responsible for builds your clients AUM. Goal: 10 during training!"}
       </div>
-      {pacCount >= goal && !isLicensed && (
+
+      {!isLicensed && pacCount >= goal && (
         <div style={{ background:"#10b98120", border:"1px solid #10b98140", borderRadius:10, padding:"10px 14px", fontSize:13, color:"#10b981", fontWeight:"bold", marginBottom:12, textAlign:"center" }}>
           Goal reached! You are building real AUM for your clients!
         </div>
       )}
-      {pacCount >= goal && isLicensed && (
-        <div style={{ background:"#10b98120", border:"1px solid #10b98140", borderRadius:10, padding:"10px 14px", fontSize:13, color:"#10b981", fontWeight:"bold", marginBottom:12, textAlign:"center" }}>
-          {pacCount} investments and growing — keep building that AUM!
-        </div>
+
+      {/* Add button */}
+      {!readOnly && onChange && (
+        <button onClick={() => setShowAddModal(true)}
+          style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", color:"#f59e0b", borderRadius:8, padding:"10px 16px", cursor:"pointer", fontWeight:"bold", fontSize:13, width:"100%", marginBottom: investmentClients.length > 0 ? 12 : 0 }}>
+          + Log New Investment Client
+        </button>
       )}
-      {!onChange ? null : (
-        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-          <button onClick={() => onChange(Math.max(0, pacCount-1))} style={{ background:"#ffffff10", border:"none", color:"#f0ede8", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20 }}>-</button>
-          <div style={{ flex:1, textAlign:"center", fontSize:13, color:"#ffffff50" }}>Tap + each time you are responsible for a new investment. Tap - to correct an error.</div>
-          <button onClick={() => { onChange(pacCount+1); if ((pacCount+1) === goal) { spawnConfetti(window.innerWidth/2,200); spawnEmoji(window.innerWidth/2,180,"💰"); } }}
-            style={{ background:"#f59e0b30", border:"1px solid #f59e0b50", color:"#f59e0b", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20, fontWeight:"bold" }}>+</button>
+
+      {/* Client list — dropdown */}
+      {investmentClients.length > 0 && (
+        <div>
+          <button onClick={() => setShowClients(s => !s)}
+            style={{ background:"none", border:"1px solid #ffffff20", color:"#ffffff60", borderRadius:8, padding:"8px 14px", cursor:"pointer", fontSize:12, width:"100%", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+            <span>{showClients ? "Hide" : "Show"} Investment Clients ({investmentClients.length})</span>
+            <span>{showClients ? "▲" : "▼"}</span>
+          </button>
+          {showClients && (
+            <div style={{ marginTop:8, display:"flex", flexDirection:"column", gap:6 }}>
+              {investmentClients.map(client => (
+                <div key={client.id} style={{ background: client.movedOver?"#10b98110":"#ffffff07", border:`1px solid ${client.movedOver?"#10b98130":"#ffffff12"}`, borderRadius:8, padding:"10px 14px", display:"flex", alignItems:"center", gap:10 }}>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontSize:13, fontWeight:"bold", color: client.movedOver?"#ffffff50":"#f0ede8", textDecoration: client.movedOver?"line-through":"none" }}>{client.name}</div>
+                    <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>{client.date} {client.movedOver ? "· ✓ Moved over" : ""}</div>
+                  </div>
+                  {!readOnly && (
+                    <div style={{ display:"flex", gap:6 }}>
+                      <button onClick={() => toggleMoved(client.id)}
+                        style={{ fontSize:10, background: client.movedOver?"#10b98120":"#ffffff10", border:`1px solid ${client.movedOver?"#10b98140":"#ffffff20"}`, color: client.movedOver?"#10b981":"#ffffff50", borderRadius:20, padding:"3px 10px", cursor:"pointer" }}>
+                        {client.movedOver ? "✓ Moved" : "Mark Moved"}
+                      </button>
+                      <button onClick={() => handleRemove(client.id)}
+                        style={{ fontSize:10, background:"#f43f5e15", border:"1px solid #f43f5e30", color:"#f43f5e", borderRadius:20, padding:"3px 8px", cursor:"pointer" }}>✕</button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -2533,6 +2672,8 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
             <PacCounter
               pacCount={pacCount}
               onChange={count => onUpdate({ ...myProduction, pacCount:count })}
+              onUpdateClients={clients => onUpdate({ ...myProduction, investmentClients:clients })}
+              investmentClients={myProduction.investmentClients||[]}
               isLicensed={true}
             />
           )}
@@ -2734,7 +2875,7 @@ export default function App() {
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {} }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [] }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
@@ -3008,6 +3149,32 @@ export default function App() {
                   : <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>Not scheduled yet</div>
                 }
               </div>
+            </div>
+
+            {/* Investment Clients Feed */}
+            <div style={{ marginTop:12, paddingTop:12, borderTop:"1px solid #ffffff10" }}>
+              <div style={{ fontSize:10, color:"#f59e0b", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 }}>
+                💰 Investment Clients ({(rep.investmentClients||[]).length}) — to be moved when investment licensed
+              </div>
+              {(rep.investmentClients||[]).length === 0
+                ? <div style={{ fontSize:12, color:"#ffffff30", fontStyle:"italic" }}>No investment clients logged yet</div>
+                : (
+                  <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                    {(rep.investmentClients||[]).map(client => (
+                      <div key={client.id} style={{ background: client.movedOver?"#10b98110":"#ffffff06", border:`1px solid ${client.movedOver?"#10b98130":"#ffffff10"}`, borderRadius:8, padding:"8px 12px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                        <div>
+                          <div style={{ fontSize:13, color: client.movedOver?"#ffffff50":"#f0ede8", textDecoration: client.movedOver?"line-through":"none", fontWeight:"bold" }}>{client.name}</div>
+                          <div style={{ fontSize:10, color:"#ffffff30" }}>{client.date}</div>
+                        </div>
+                        <div onClick={() => updateRep(rep.id, r => ({ ...r, investmentClients: (r.investmentClients||[]).map(c => c.id!==client.id?c:{...c,movedOver:!c.movedOver}) }))}
+                          style={{ fontSize:11, background: client.movedOver?"#10b98120":"#ffffff10", border:`1px solid ${client.movedOver?"#10b98140":"#ffffff20"}`, color: client.movedOver?"#10b981":"#ffffff50", borderRadius:20, padding:"3px 10px", cursor:"pointer" }}>
+                          {client.movedOver ? "✓ Moved" : "Mark Moved"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              }
             </div>
           </div>
 
