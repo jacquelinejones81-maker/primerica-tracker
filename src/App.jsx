@@ -577,8 +577,37 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
     setError("Incorrect PIN. Try again.");
   };
 
+  const [repPinEntry, setRepPinEntry] = useState("");
+  const [repPinStep, setRepPinStep] = useState("select"); // select | create | enter
+  const [repPinConfirm, setRepPinConfirm] = useState("");
+  const [repPinError, setRepPinError] = useState("");
+
+  const handleRepSelect = (rep) => {
+    setSelectedRepLogin(rep);
+    setError("");
+    setRepPinError("");
+    setRepPinEntry("");
+    setRepPinConfirm("");
+    if (rep.repPin) {
+      setRepPinStep("enter");
+    } else {
+      setRepPinStep("create");
+    }
+  };
+
   const handleRepLogin = () => {
     if (!selectedRepLogin) { setError("Please select your name first."); return; }
+    if (repPinStep === "create") {
+      if (repPinEntry.length < 4) { setRepPinError("PIN must be 4 digits"); return; }
+      if (repPinEntry !== repPinConfirm) { setRepPinError("PINs do not match — try again"); return; }
+      onLogin("rep", selectedRepLogin.id, repPinEntry);
+      return;
+    }
+    if (repPinStep === "enter") {
+      if (repPinEntry !== selectedRepLogin.repPin) { setRepPinError("Incorrect PIN — try again"); setRepPinEntry(""); return; }
+      onLogin("rep", selectedRepLogin.id);
+      return;
+    }
     onLogin("rep", selectedRepLogin.id);
   };
 
@@ -624,7 +653,7 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
 
       {mode === "rep" && (
         <div style={{ width:"100%", maxWidth:400 }}>
-          <button onClick={() => { setMode("select"); setRepSearch(""); setSelectedRepLogin(null); setError(""); }} style={{ background:"none", border:"none", color:"#ffffff60", cursor:"pointer", fontSize:13, marginBottom:20, padding:0 }}>← Back</button>
+          <button onClick={() => { setMode("select"); setRepSearch(""); setSelectedRepLogin(null); setError(""); setRepPinStep("select"); setRepPinEntry(""); setRepPinConfirm(""); }} style={{ background:"none", border:"none", color:"#ffffff60", cursor:"pointer", fontSize:13, marginBottom:20, padding:0 }}>← Back</button>
           <div style={{ background:"#ffffff08", border:"1px solid #ffffff15", borderRadius:14, padding:24 }}>
             <div style={{ fontSize:16, fontWeight:"bold", marginBottom:4 }}>Rep Login</div>
             <div style={{ fontSize:12, color:"#ffffff50", marginBottom:16 }}>Find your name to view your checklist</div>
@@ -636,7 +665,7 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
                 const track = TRACK_INFO[r.track];
                 const sel = selectedRepLogin?.id === r.id;
                 return (
-                  <div key={r.id} onClick={() => { setSelectedRepLogin(r); setError(""); }} style={{ background:sel?`${track.color}18`:"#ffffff06", border:`1px solid ${sel?track.color+"50":"#ffffff10"}`, borderRadius:10, padding:"12px 14px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                  <div key={r.id} onClick={() => handleRepSelect(r)} style={{ background:sel?`${track.color}18`:"#ffffff06", border:`1px solid ${sel?track.color+"50":"#ffffff10"}`, borderRadius:10, padding:"12px 14px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
                     <div>
                       <div style={{ display:"flex", alignItems:"center", gap:10 }}>{r.photo && <img src={r.photo} alt="" style={{ width:36, height:36, borderRadius:"50%", objectFit:"cover", border:`2px solid ${sel?track.color:"#ffffff30"}` }} />}<div><div style={{ fontSize:14, fontWeight:"bold", color:sel?track.color:"#f0ede8" }}>{r.name}</div><div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>{track.label}</div></div></div>
                     </div>
@@ -646,8 +675,33 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
               })}
             </div>
             {error && <div style={{ fontSize:12, color:"#f43f5e", marginBottom:10, textAlign:"center" }}>{error}</div>}
-            <button onClick={handleRepLogin} style={{ background: selectedRepLogin?"#10b981":"#ffffff20", border:"none", color: selectedRepLogin?"#0f0f11":"#ffffff40", padding:"12px", borderRadius:8, cursor: selectedRepLogin?"pointer":"default", fontWeight:"bold", fontSize:14, width:"100%", transition:"all 0.2s" }}>
-              {selectedRepLogin ? `Continue as ${selectedRepLogin.name}` : "Select your name above"}
+
+            {/* PIN entry — shows after selecting name */}
+            {selectedRepLogin && repPinStep === "create" && (
+              <div style={{ background:"#10b98110", border:"1px solid #10b98130", borderRadius:10, padding:"14px", marginBottom:12 }}>
+                <div style={{ fontSize:13, fontWeight:"bold", color:"#10b981", marginBottom:4 }}>Create Your 4-Digit PIN</div>
+                <div style={{ fontSize:11, color:"#ffffff50", marginBottom:10 }}>You will use this PIN every time you log in. Keep it private!</div>
+                <input type="password" inputMode="numeric" maxLength={4} value={repPinEntry} onChange={e => { setRepPinEntry(e.target.value.replace(/\D/g,"")); setRepPinError(""); }}
+                  placeholder="Choose 4-digit PIN" style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:18, outline:"none", width:"100%", boxSizing:"border-box", letterSpacing:"0.3em", textAlign:"center", marginBottom:8, fontFamily:"inherit" }} />
+                <input type="password" inputMode="numeric" maxLength={4} value={repPinConfirm} onChange={e => { setRepPinConfirm(e.target.value.replace(/\D/g,"")); setRepPinError(""); }}
+                  placeholder="Confirm PIN" style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:18, outline:"none", width:"100%", boxSizing:"border-box", letterSpacing:"0.3em", textAlign:"center", fontFamily:"inherit" }} />
+                {repPinError && <div style={{ fontSize:12, color:"#f43f5e", marginTop:6, textAlign:"center" }}>{repPinError}</div>}
+              </div>
+            )}
+            {selectedRepLogin && repPinStep === "enter" && (
+              <div style={{ background:"#3b82f610", border:"1px solid #3b82f630", borderRadius:10, padding:"14px", marginBottom:12 }}>
+                <div style={{ fontSize:13, fontWeight:"bold", color:"#3b82f6", marginBottom:4 }}>Enter Your PIN</div>
+                <input type="password" inputMode="numeric" maxLength={4} value={repPinEntry} onChange={e => { setRepPinEntry(e.target.value.replace(/\D/g,"")); setRepPinError(""); }}
+                  onKeyDown={e => e.key==="Enter" && handleRepLogin()}
+                  placeholder="4-digit PIN" autoFocus style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 14px", color:"#f0ede8", fontSize:22, outline:"none", width:"100%", boxSizing:"border-box", letterSpacing:"0.4em", textAlign:"center", fontFamily:"inherit" }} />
+                {repPinError && <div style={{ fontSize:12, color:"#f43f5e", marginTop:6, textAlign:"center" }}>{repPinError}</div>}
+              </div>
+            )}
+
+            <button onClick={handleRepLogin}
+              disabled={!selectedRepLogin || (repPinStep==="create" && (repPinEntry.length < 4 || repPinConfirm.length < 4)) || (repPinStep==="enter" && repPinEntry.length < 4)}
+              style={{ background: selectedRepLogin?"#10b981":"#ffffff20", border:"none", color: selectedRepLogin?"#0f0f11":"#ffffff40", padding:"12px", borderRadius:8, cursor: selectedRepLogin?"pointer":"default", fontWeight:"bold", fontSize:14, width:"100%", transition:"all 0.2s" }}>
+              {!selectedRepLogin ? "Select your name above" : repPinStep==="create" ? "Create PIN and Continue" : repPinStep==="enter" ? "Sign In" : `Continue as ${selectedRepLogin.name}`}
             </button>
           </div>
         </div>
@@ -1604,7 +1658,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             {key:"refs",label:"👥 Refs"},
             {key:"scripts",label:"📜 Scripts"},
             ...(rep.track==="licensed"||rep.track==="rvp" ? [{key:"lifeapps",label:"📋 Life Apps"}] : []),
-            {key:"scorecard",label:"📊 Scorecard"},
+            ...(rep.track==="licensed"||rep.track==="rvp" ? [{key:"scorecard",label:"📊 Scorecard"}] : []),
             {key:"rvp",label:"👑 RVP"},
             {key:"schedule",label:"🗓 Schedule"},
           ].map(tab => (
@@ -2875,7 +2929,7 @@ export default function App() {
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [] }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "" }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
@@ -2931,7 +2985,19 @@ export default function App() {
 
   const updateTrainerPin = (trainerId, pin) => setTrainers(prev => prev.map(t => t.id !== trainerId ? t : { ...t, pin }));
 
-  const handleLogin = (role, id) => { const s = { role, id }; setSession(s); saveSession(role, id); };
+  const handleLogin = (role, id, newPin = null) => {
+    const s = { role, id };
+    setSession(s);
+    saveSession(role, id);
+    // If new PIN provided, save it to the rep
+    if (newPin && role === "rep") {
+      setReps(prev => {
+        const updatedReps = prev.map(r => r.id !== id ? r : { ...r, repPin: newPin });
+        saveToFirebase(STORAGE_KEY, updatedReps);
+        return updatedReps;
+      });
+    }
+  };
   const handleLogout = () => { setSession(null); clearSession(); };
   const updateRepDirect = (updatedRep) => {
     setReps(prev => {
