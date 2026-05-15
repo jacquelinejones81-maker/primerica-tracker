@@ -1317,7 +1317,7 @@ function ScriptsSection() {
   return (
     <div>
       <div style={{ fontSize: 13, fontWeight: "bold", color: "#f59e0b", marginBottom: 14, letterSpacing: "0.05em" }}>📜 Scripts & Call Guides</div>
-      <div style={{ fontSize: 12, color: "#ffffff50", marginBottom: 16 }}>Tap any script to read it. You don't have to say it word for word — understand the psychology and make it your own!</div>
+      <div style={{ fontSize: 12, color: "#ffffff50", marginBottom: 16 }}>Tap any script to read it. You do not have to say it word for word. Understand the psychology and make it your own!</div>
 
       {categories.map(cat => (
         <div key={cat} style={{ marginBottom: 20 }}>
@@ -2896,7 +2896,7 @@ export default function App() {
           <div style={{ background: "linear-gradient(135deg,#10b98120,#f59e0b15)", border: "1px solid #10b98140", borderRadius: 14, padding: "20px 24px", marginBottom: 20, textAlign: "center" }}>
             <div style={{ fontSize: 28, marginBottom: 8 }}>🎉</div>
             <div style={{ fontSize: 18, fontWeight: "bold", color: "#10b981", marginBottom: 6 }}>New Month — Fresh Start!</div>
-            <div style={{ fontSize: 13, color: "#ffffff60", marginBottom: 16 }}>It's a new month! Save last month's numbers then reset the counters for {getMonthLabel(getMonthKey())}.</div>
+            <div style={{ fontSize: 13, color: "#ffffff60", marginBottom: 16 }}>New month — fresh start! Save last months numbers then reset the counters for {getMonthLabel(getMonthKey())}.</div>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <button onClick={snapshotAndReset} style={{ background: "#10b981", border: "none", color: "#0f0f11", padding: "10px 24px", borderRadius: 8, cursor: "pointer", fontWeight: "bold", fontSize: 14 }}>✓ Save & Reset for New Month</button>
               <button onClick={() => setShowNewMonthBanner(false)} style={{ background: "none", border: "1px solid #ffffff20", color: "#ffffff60", padding: "10px 20px", borderRadius: 8, cursor: "pointer", fontSize: 13 }}>Remind me later</button>
