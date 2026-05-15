@@ -1443,7 +1443,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
   const [showTour, setShowTour] = useState(() => { try { return !localStorage.getItem(tourKey); } catch(e) { return false; } });
   const [activeTab, setActiveTab] = useState("checklist");
   const [showConditional, setShowConditional] = useState(false);
-  const repChecklist = track.checklist;
+  const track = TRACK_INFO[rep.track] || TRACK_INFO["fast"];
   const repCats = [...new Set(repChecklist.map(i => i.category))];
   const rp = pct(rep.repCompleted.length, repChecklist.length);
   const graduated = rep.repCompleted.length === repChecklist.length;
