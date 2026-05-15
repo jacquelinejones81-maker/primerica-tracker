@@ -102,51 +102,59 @@ const REGULAR_START_CHECKLIST = [
 ];
 
 const LICENSED_NOW_WHAT = [
-  { id: "l1", category: "If Already Licensed", task: "Download Primerica app, register, and log in within 24 hours of IBA submission", note: "🎉 Earn a $50 Scholarship Bonus!", link: "https://www.primericaonline.com" },
-  { id: "l1b", category: "If Already Licensed", task: "Confirm POL login is active on primericaonline.com", note: null, link: null },
-  { id: "l2", category: "If Already Licensed", task: "Download Telegram or Telegram Messenger app", note: "Team communication app", link: null },
-  { id: "l3", category: "If Already Licensed", task: "Provide 5 professional character references to your trainer", note: null, link: null },
-  { id: "l4", category: "If Already Licensed", task: "Create training list of 20 names & numbers (MACHO people)", note: "Married, Age 25–55, Children 0–17, Homeowners, Occupation — at least 3 of these", link: null },
-  { id: "l5", category: "If Already Licensed", task: "Complete Orientation", note: null, link: null },
-  { id: "l6", category: "If Already Licensed", task: "Upload contacts into Contact Manager in Primerica app", note: null, link: null },
-  { id: "l7", category: "If Already Licensed", task: "Complete digital marketing checklist", note: null, link: null },
-  { id: "l8", category: "Business Commitment", task: "Make business commitment", note: "Confirm dollar amount with trainer", link: null },
-  { id: "l10", category: "Business Commitment", task: "Set up Business Account", note: null, link: null },
-  { id: "l11", category: "Business Commitment", task: "Complete FNA — Life Insurance", note: "Minimum required", link: null },
-  { id: "l12", category: "Business Commitment", task: "Complete FNA — Roth IRA", note: "Minimum required", link: null },
-  { id: "l13", category: "Bonus Opportunity", task: "Earn $200+ bonus — 1 recruit + $1,000 field training observation premium before license shows up", note: "Move with urgency! 3×$3,000 = $600 + District Leader Promotion", link: null },
-  { id: "l14", category: "Team Schedule", task: "Attend SIE Study Session / Practice Drill — Tuesdays & Saturdays @ 9 pm CST", note: null, link: null },
-  { id: "l15", category: "Team Schedule", task: "Attend Wealth Building Opportunity — Thursdays @ 7:30 pm CST (invite guests)", note: null, link: null },
-  { id: "l16", category: "Team Schedule", task: "Attend Team Training — Saturdays @ 10:10 am CST", note: null, link: null },
-  { id: "l17", category: "Learning Activity", task: "Complete Life Training Hub (POL > Products > Life Insurance > Life Training Hub)", note: null, link: "https://www.primericaonline.com" },
-  { id: "l18", category: "Learning Activity", task: "Get certified for Indexed and Fixed Annuities", note: null, link: null },
-  { id: "l17b", category: "Learning Activity", task: "Access the Licensed Now What Google Drive Folder", note: "All 7 Fundamentals resources are in this folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l21", category: "Learning Activity", task: "Complete 3 practice life apps in Primerica app", note: null, link: null },
-  { id: "l22", category: "Learning Activity", task: "Complete 3 practice IBAs in Primerica app", note: null, link: null },
-  { id: "l19", category: "Learning Activity", task: "1. Master the 7 Fundamentals — Prospecting", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l20", category: "Learning Activity", task: "2. Master the 7 Fundamentals — Setting Appointments", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l23", category: "Learning Activity", task: "3. Master the 7 Fundamentals — Giving a Winning Presentation", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l24", category: "Learning Activity", task: "4. Master the 7 Fundamentals — Overcoming Objections", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l25", category: "Learning Activity", task: "5. Master the 7 Fundamentals — Closing (Life Insurance)", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l25b", category: "Learning Activity", task: "6. Master the 7 Fundamentals — Getting Referrals", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l25c", category: "Learning Activity", task: "7. Master the 7 Fundamentals — Getting a New Rep Started", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l26", category: "Learning Activity", task: "Master the Products (Life, Investments, etc.)", note: null, link: null },
-  { id: "l27", category: "Learning Activity", task: "Beneficiary & Emergency Contacts process", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
-  { id: "l28", category: "Securities License", task: "Start securities license process — SIE", note: null, link: null },
-  { id: "l29", category: "Securities License", task: "Series 6", note: null, link: null },
-  { id: "l30", category: "Securities License", task: "Series 63", note: null, link: null },
-  { id: "l31", category: "Securities License", task: "Series 65", note: null, link: null },
-  { id: "l32", category: "Securities License", task: "Series 26 (if RVP is desired)", note: null, link: null },
-  { id: "l33", category: "Securities License", task: "Start mortgage license process", note: null, link: null },
-  { id: "l34", category: "Income Producing Activity", task: "Determine objective: Part-time income ($100–$300/mo)", note: "5 qualified contacts per week", link: null },
-  { id: "l35", category: "Income Producing Activity", task: "Determine objective: Consistent part-time income ($500–$1,000/wk)", note: "30–60 qualified contacts per week", link: null },
-  { id: "l36", category: "Income Producing Activity", task: "Weekly contacts logged — 5 qualified (part-time goal)", note: "Qualified: at least 3 of — Married, Age 25–55, Children under 17, Homeowner, Occupation", link: null },
-  { id: "l37", category: "Income Producing Activity", task: "Weekly contacts logged — 30–60 qualified (full-time goal)", note: null, link: null },
+  // ── Always shown first: Milestones ──
+  { id: "l41", category: "Milestones",               task: "🏆 Write first policy", note: "Log the date!", link: null },
+
+  // ── Securities License — start immediately after life license ──
+  { id: "l28", category: "Securities License",        task: "Start securities license process — SIE", note: null, link: null },
+  { id: "l29", category: "Securities License",        task: "Series 6", note: null, link: null },
+  { id: "l30", category: "Securities License",        task: "Series 63", note: null, link: null },
+  { id: "l31", category: "Securities License",        task: "Series 65", note: null, link: null },
+  { id: "l32", category: "Securities License",        task: "Series 26 (if RVP is desired)", note: null, link: null },
+  { id: "l33", category: "Securities License",        task: "Start mortgage license process", note: null, link: null },
+
+  // ── Shown only if already licensed (conditional via UI) ──
+  { id: "l1",  category: "If Already Licensed",       task: "Download Primerica app, register, and log in within 24 hours of IBA submission", note: "🎉 Earn a $50 Scholarship Bonus!", link: "https://www.primericaonline.com" },
+  { id: "l1b", category: "If Already Licensed",       task: "Confirm POL login is active on primericaonline.com", note: null, link: null },
+  { id: "l2",  category: "If Already Licensed",       task: "Download Telegram or Telegram Messenger app", note: "Team communication app", link: null },
+  { id: "l3",  category: "If Already Licensed",       task: "Provide 5 professional character references to your trainer", note: null, link: null },
+  { id: "l4",  category: "If Already Licensed",       task: "Create training list of 20 names and numbers (MACHO people)", note: "Married, Age 25-55, Children 0-17, Homeowners, Occupation — at least 3 of these", link: null },
+  { id: "l5",  category: "If Already Licensed",       task: "Complete Orientation", note: null, link: null },
+  { id: "l6",  category: "If Already Licensed",       task: "Upload contacts into Contact Manager in Primerica app", note: null, link: null },
+  { id: "l7",  category: "If Already Licensed",       task: "Complete digital marketing checklist", note: null, link: null },
+  { id: "l8",  category: "Business Commitment",       task: "Make business commitment", note: "Confirm dollar amount with trainer", link: null },
+  { id: "l10", category: "Business Commitment",       task: "Set up Business Account", note: null, link: null },
+  { id: "l11", category: "Business Commitment",       task: "Complete FNA — Life Insurance", note: null, link: null },
+  { id: "l12", category: "Business Commitment",       task: "Complete FNA — Roth IRA", note: null, link: null },
+  { id: "l13", category: "Bonus Opportunity",         task: "Earn $200+ bonus — 1 recruit + $1,000 field training observation premium before license shows up", note: "⚡ You have less than 5 days before your license shows up — move NOW! 3×$3,000 = $600 + District Leader Promotion", link: null },
+
+  // ── Learning Activity ──
+  { id: "l17",  category: "Learning Activity",        task: "Complete Life Training Hub (POL > Products > Life Insurance > Life Training Hub)", note: null, link: "https://www.primericaonline.com" },
+  { id: "l18",  category: "Learning Activity",        task: "Get certified for Indexed and Fixed Annuities", note: null, link: null },
+  { id: "l17b", category: "Learning Activity",        task: "Access the Licensed Now What Google Drive Folder", note: "All 7 Fundamentals resources are in this folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l21",  category: "Learning Activity",        task: "Complete 3 practice life apps in Primerica app", note: null, link: null },
+  { id: "l22",  category: "Learning Activity",        task: "Complete 3 practice IBAs in Primerica app", note: null, link: null },
+  { id: "l19",  category: "Learning Activity",        task: "1. Master the 7 Fundamentals — Prospecting", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l20",  category: "Learning Activity",        task: "2. Master the 7 Fundamentals — Setting Appointments", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l23",  category: "Learning Activity",        task: "3. Master the 7 Fundamentals — Giving a Winning Presentation", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l24",  category: "Learning Activity",        task: "4. Master the 7 Fundamentals — Overcoming Objections", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25",  category: "Learning Activity",        task: "5. Master the 7 Fundamentals — Closing (Life Insurance)", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25b", category: "Learning Activity",        task: "6. Master the 7 Fundamentals — Getting Referrals", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l25c", category: "Learning Activity",        task: "7. Master the 7 Fundamentals — Getting a New Rep Started", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+  { id: "l26",  category: "Learning Activity",        task: "Master the Products (Life, Investments, etc.)", note: null, link: null },
+  { id: "l27",  category: "Learning Activity",        task: "Beneficiary and Emergency Contacts process", note: "See Licensed Now What Folder", link: "https://docs.google.com/document/d/1NKbtB-lVIIBBXpEC-VWxyAvLnnWHVP99OqewymJYQXM/edit?usp=drive_link" },
+
+  // ── Income Producing Activity ──
+  { id: "l34", category: "Income Producing Activity", task: "Determine objective: Part-time income ($100-$300/mo)", note: "5 qualified contacts per week", link: null },
+  { id: "l35", category: "Income Producing Activity", task: "Determine objective: Consistent part-time income ($500-$1,000/wk)", note: "30-60 qualified contacts per week", link: null },
+  { id: "l36", category: "Income Producing Activity", task: "Weekly contacts logged — 5 qualified (part-time goal)", note: "Qualified: at least 3 of — Married, Age 25-55, Children under 17, Homeowner, Occupation", link: null },
+  { id: "l37", category: "Income Producing Activity", task: "Weekly contacts logged — 30-60 qualified (full-time goal)", note: null, link: null },
   { id: "l38", category: "Income Producing Activity", task: "Add contacts to CRM", note: null, link: null },
   { id: "l39", category: "Income Producing Activity", task: "Weekly set appointments / follow-ups — 2 qualified (part-time goal)", note: null, link: null },
-  { id: "l40", category: "Income Producing Activity", task: "Weekly set appointments / follow-ups — 15–30 qualified (full-time goal)", note: null, link: null },
-  { id: "l41", category: "Milestones", task: "🏆 Write first policy", note: "Log the date!", link: null },
-  { id: "l42", category: "RVP Path", task: "Request RVP checklist (if RVP promotion is your desire)", note: null, link: null },
+  { id: "l40", category: "Income Producing Activity", task: "Weekly set appointments / follow-ups — 15-30 qualified (full-time goal)", note: null, link: null },
+
+  // ── RVP Path ──
+  { id: "l42", category: "RVP Path",                  task: "Request RVP checklist (if RVP promotion is your desire)", note: null, link: null },
 ];
 
 
@@ -1712,9 +1720,43 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           ))}
         </div>
 
-        {activeTab==="checklist" && repCats.map(cat => (
-          <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
-        ))}
+        {activeTab==="checklist" && (() => {
+          const conditionalCats = ["If Already Licensed", "Business Commitment", "Bonus Opportunity"];
+          const isLicensedTrackView = rep.track === "licensed" || rep.track === "rvp";
+          const [showConditional, setShowConditional] = React.useState(false);
+          return (
+            <>
+              {repCats.filter(cat => !conditionalCats.includes(cat)).map(cat => (
+                <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
+              ))}
+              {isLicensedTrackView && (
+                <div style={{ marginBottom:20 }}>
+                  {/* Alert banner — guides both paths */}
+                  <div style={{ background:"#f59e0b0f", border:"1px solid #f59e0b30", borderLeft:"4px solid #f59e0b", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
+                    <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b", marginBottom:6 }}>⭐ Did you join already life licensed?</div>
+                    <div style={{ fontSize:12, color:"#ffffff70", lineHeight:1.7 }}>
+                      If you skipped the new rep training because you came in already licensed — tap below to complete these required onboarding steps. They are specific to you and must be done first.
+                    </div>
+                    <div style={{ fontSize:12, color:"#ffffff50", marginTop:8, paddingTop:8, borderTop:"1px solid #ffffff10" }}>
+                      If you went through the full new rep training process — these steps are not for you. You can skip this section.
+                    </div>
+                  </div>
+                  <button onClick={() => setShowConditional(s => !s)}
+                    style={{ width:"100%", background: showConditional?"#f59e0b18":"#ffffff07", border:`1px solid ${showConditional?"#f59e0b40":"#ffffff15"}`, borderRadius:12, padding:"14px 18px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom: showConditional ? 12 : 0 }}>
+                    <div>
+                      <div style={{ fontSize:13, fontWeight:"bold", color:"#f59e0b" }}>⭐ Already Licensed Onboarding Steps</div>
+                      <div style={{ fontSize:11, color:"#ffffff50", marginTop:3 }}>{showConditional ? "Tap to collapse" : "Tap to expand and complete your steps"}</div>
+                    </div>
+                    <div style={{ fontSize:16, color:"#f59e0b" }}>{showConditional ? "▲" : "▼"}</div>
+                  </button>
+                  {showConditional && conditionalCats.map(cat => (
+                    <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
+                  ))}
+                </div>
+              )}
+            </>
+          );
+        })()}
         {activeTab==="appointments" && (
           <div><AppointmentReminderBanner /><RepAppointmentTracker appointments={rep.appointments||[]} onChange={appts => onUpdate({ ...rep, appointments:appts, lastActivity:new Date().toISOString() })} trainerLink={trainerLink} /></div>
         )}
@@ -2471,54 +2513,34 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
 
                   {/* Beneficiary and Emergency Contact Section */}
                   <div style={{ background:"#8b5cf610", border:"1px solid #8b5cf630", borderRadius:10, padding:"14px 16px", marginBottom:10 }}>
-                    {/* Beneficiary */}
-                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:10 }}>👤 Beneficiary Information</div>
-                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px", marginBottom:14 }}>
-                      <div>
-                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Full Name</div>
-                        <input value={app.beneName||""} onChange={e => updateApp(app.id,"beneName",e.target.value)} placeholder="Beneficiary full name" style={fieldStyle} />
+                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:12 }}>🚨 Emergency Contacts</div>
+                    {[1,2,3].map(num => (
+                      <div key={num} style={{ marginBottom: num < 3 ? 14 : 0, paddingBottom: num < 3 ? 14 : 0, borderBottom: num < 3 ? "1px solid #8b5cf620" : "none" }}>
+                        <div style={{ fontSize:10, color:"#8b5cf6", marginBottom:8, fontWeight:"bold" }}>Contact {num}</div>
+                        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px" }}>
+                          <div>
+                            <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Full Name</div>
+                            <input value={app[`emerg${num}Name`]||""} onChange={e => updateApp(app.id,`emerg${num}Name`,e.target.value)} placeholder="Full name" style={fieldStyle} />
+                          </div>
+                          <div>
+                            <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Relationship to Insured</div>
+                            <select value={app[`emerg${num}Relationship`]||""} onChange={e => updateApp(app.id,`emerg${num}Relationship`,e.target.value)}
+                              style={{ background:"#ffffff0d", border:"none", borderBottom:"1px solid #ffffff15", color: app[`emerg${num}Relationship`]?"#f0ede8":"#ffffff40", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }}>
+                              <option value="" style={{ background:"#1a1a2e" }}>Select relationship</option>
+                              {["Spouse","Child","Parent","Sibling","Grandchild","Grandparent","Friend","Other"].map(r => <option key={r} value={r} style={{ background:"#1a1a2e" }}>{r}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Phone</div>
+                            <input value={app[`emerg${num}Phone`]||""} onChange={e => updateApp(app.id,`emerg${num}Phone`,formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12} style={fieldStyle} />
+                          </div>
+                          <div>
+                            <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Email</div>
+                            <input value={app[`emerg${num}Email`]||""} onChange={e => updateApp(app.id,`emerg${num}Email`,e.target.value)} placeholder="Email address" style={fieldStyle} />
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Relationship to Insured</div>
-                        <select value={app.beneRelationship||""} onChange={e => updateApp(app.id,"beneRelationship",e.target.value)}
-                          style={{ background:"#ffffff0d", border:"none", borderBottom:"1px solid #ffffff15", color: app.beneRelationship?"#f0ede8":"#ffffff40", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }}>
-                          <option value="" style={{ background:"#1a1a2e" }}>Select relationship</option>
-                          {["Spouse","Child","Parent","Sibling","Grandchild","Grandparent","Friend","Other"].map(r => <option key={r} value={r} style={{ background:"#1a1a2e" }}>{r}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Phone</div>
-                        <input value={app.benePhone||""} onChange={e => updateApp(app.id,"benePhone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12} style={fieldStyle} />
-                      </div>
-                      <div>
-                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Email</div>
-                        <input value={app.beneEmail||""} onChange={e => updateApp(app.id,"beneEmail",e.target.value)} placeholder="Email address" style={fieldStyle} />
-                      </div>
-                    </div>
-                    {/* Emergency Contact */}
-                    <div style={{ fontSize:11, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:10, paddingTop:10, borderTop:"1px solid #8b5cf620" }}>🚨 Emergency Contact</div>
-                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px" }}>
-                      <div>
-                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Full Name</div>
-                        <input value={app.emergName||""} onChange={e => updateApp(app.id,"emergName",e.target.value)} placeholder="Emergency contact full name" style={fieldStyle} />
-                      </div>
-                      <div>
-                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Relationship to Insured</div>
-                        <select value={app.emergRelationship||""} onChange={e => updateApp(app.id,"emergRelationship",e.target.value)}
-                          style={{ background:"#ffffff0d", border:"none", borderBottom:"1px solid #ffffff15", color: app.emergRelationship?"#f0ede8":"#ffffff40", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" }}>
-                          <option value="" style={{ background:"#1a1a2e" }}>Select relationship</option>
-                          {["Spouse","Child","Parent","Sibling","Grandchild","Grandparent","Friend","Other"].map(r => <option key={r} value={r} style={{ background:"#1a1a2e" }}>{r}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Phone</div>
-                        <input value={app.emergPhone||""} onChange={e => updateApp(app.id,"emergPhone",formatPhone(e.target.value))} placeholder="111-111-1111" maxLength={12} style={fieldStyle} />
-                      </div>
-                      <div>
-                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Email</div>
-                        <input value={app.emergEmail||""} onChange={e => updateApp(app.id,"emergEmail",e.target.value)} placeholder="Email address" style={fieldStyle} />
-                      </div>
-                    </div>
+                    ))}
                   </div>
 
                   {/* Checklist status */}
