@@ -2291,7 +2291,7 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
                 autoFocus
                 value={pendingApp.clientName||""}
                 onChange={e => { const updated = apps.map(a => a.id !== pendingNewId ? a : { ...a, clientName: e.target.value }); onChange(updated); }}
-                placeholder="Client full name"
+                placeholder="Future client full name"
                 style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"12px 14px", color:"#f0ede8", fontSize:15, outline:"none", width:"100%", boxSizing:"border-box", marginBottom:16, fontFamily:"inherit" }}
               />
               <div style={{ display:"flex", gap:10 }}>
@@ -2513,16 +2513,16 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, investmentClients
         <div style={{ position:"fixed", inset:0, background:"#000000cc", zIndex:999, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
           <div style={{ background:"#16213e", border:"1px solid #f59e0b40", borderRadius:16, padding:28, width:"100%", maxWidth:400 }}>
             <div style={{ fontSize:20, textAlign:"center", marginBottom:12 }}>💰</div>
-            <div style={{ fontSize:16, fontWeight:"bold", color:"#f59e0b", marginBottom:6, textAlign:"center" }}>Log Investment Client</div>
+            <div style={{ fontSize:16, fontWeight:"bold", color:"#f59e0b", marginBottom:6, textAlign:"center" }}>Log Future Investment Client</div>
             <div style={{ fontSize:13, color:"#ffffff60", marginBottom:20, textAlign:"center", lineHeight:1.6 }}>
-              Enter the client name for this investment. This helps track who will need to be moved over when you get your investment license.
+              Enter the future client name. This tracks who will need to be moved over to you when you get your investment license.
             </div>
             <input
               autoFocus
               value={newClientName}
               onChange={e => setNewClientName(e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleAdd()}
-              placeholder="Client full name"
+              placeholder="Future client full name"
               style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"12px 14px", color:"#f0ede8", fontSize:15, outline:"none", width:"100%", boxSizing:"border-box", marginBottom:16, fontFamily:"inherit" }}
             />
             <div style={{ display:"flex", gap:10 }}>
@@ -2570,7 +2570,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, investmentClients
       {!readOnly && onChange && (
         <button onClick={() => setShowAddModal(true)}
           style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", color:"#f59e0b", borderRadius:8, padding:"10px 16px", cursor:"pointer", fontWeight:"bold", fontSize:13, width:"100%", marginBottom: investmentClients.length > 0 ? 12 : 0 }}>
-          + Log New Investment Client
+          + Log Future Investment Client
         </button>
       )}
 
@@ -2579,7 +2579,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, investmentClients
         <div>
           <button onClick={() => setShowClients(s => !s)}
             style={{ background:"none", border:"1px solid #ffffff20", color:"#ffffff60", borderRadius:8, padding:"8px 14px", cursor:"pointer", fontSize:12, width:"100%", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-            <span>{showClients ? "Hide" : "Show"} Investment Clients ({investmentClients.length})</span>
+            <span>{showClients ? "Hide" : "Show"} Future Investment Clients ({investmentClients.length})</span>
             <span>{showClients ? "▲" : "▼"}</span>
           </button>
           {showClients && (
@@ -2693,7 +2693,7 @@ const REP_TOUR_STEPS = [
   { emoji:"👥", title:"References Tab", body:"Enter your 5 character references here. Your trainer can see these and will reach out to help set appointments." },
   { emoji:"📜", title:"Scripts Tab", body:"Find your appointment setting scripts here. Practice them before making calls — you do not have to say them word for word!" },
   { emoji:"📋", title:"Life Apps Tab", body:"Once you start writing business, log every life application here. You will be reminded to collect beneficiary info and schedule an investment." },
-  { emoji:"💰", title:"Investment Counter", body:"Every life app should come with an investment. Tap + each time you are responsible for a new investment to track your AUM building!" },
+  { emoji:"💰", title:"Investment Tracker", body:"Tap Log Future Investment Client each time you help a client get an investment. Enter their name so your trainer knows exactly who to move over to you when you pass your investment exam!" },
   { emoji:"🗓", title:"Team Schedule", body:"See all weekly team meetings here. Check it daily so you never miss a meeting. Canceled meetings will show up here too!" },
   { emoji:"🎯", title:"You Are All Set!", body:"Explore the app, complete your checklist, and reach out to your trainer if you need help. Let us go build something great!" },
 ];
@@ -3006,9 +3006,12 @@ export default function App() {
     const tabs = [
       { key:"trainer", label:"Trainer" },
       { key:"rep", label: track.shortLabel },
-      { key:"appointments", label:`Appointments (${apptSet})` },
-      { key:"refs", label:`References (${(rep.references||[]).filter(r=>r.name).length})` },
-      { key:"rvp", label:"👑 RVP Path" },
+      { key:"appointments", label:`Appts (${apptSet})` },
+      { key:"refs", label:`Refs (${(rep.references||[]).filter(r=>r.name).length})` },
+      { key:"lifeapps", label:`📋 Life Apps (${(rep.lifeApps||[]).filter(a=>a.clientName).length})` },
+      { key:"investments", label:`💰 Investments (${(rep.investmentClients||[]).length})` },
+      { key:"scorecard", label:"📊 Scorecard" },
+      { key:"rvp", label:"👑 RVP" },
       { key:"schedule", label:"Schedule" },
     ];
 
@@ -3154,7 +3157,7 @@ export default function App() {
             {/* Investment Clients Feed */}
             <div style={{ marginTop:12, paddingTop:12, borderTop:"1px solid #ffffff10" }}>
               <div style={{ fontSize:10, color:"#f59e0b", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 }}>
-                💰 Investment Clients ({(rep.investmentClients||[]).length}) — to be moved when investment licensed
+                💰 Future Investment Clients ({(rep.investmentClients||[]).length}) — to move over when rep gets investment licensed
               </div>
               {(rep.investmentClients||[]).length === 0
                 ? <div style={{ fontSize:12, color:"#ffffff30", fontStyle:"italic" }}>No investment clients logged yet</div>
@@ -3388,7 +3391,17 @@ export default function App() {
               onChange={() => {}}
               readOnly={true}
               autoLifeApps={(rep.lifeApps||[]).filter(a=>a.clientName).length}
-              autoInvestments={(rep.lifeApps||[]).filter(a=>a.investStatus==="completed").length}
+              autoInvestments={rep.pacCount||0}
+            />
+          )}
+          {activeTab==="investments" && (
+            <PacCounter
+              pacCount={rep.pacCount||0}
+              onChange={null}
+              investmentClients={rep.investmentClients||[]}
+              onUpdateClients={(clients) => updateRep(rep.id, r => ({ ...r, investmentClients:clients }))}
+              isLicensed={rep.track === "licensed" || rep.track === "rvp"}
+              readOnly={false}
             />
           )}
           {activeTab==="rvp" && (
