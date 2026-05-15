@@ -1527,6 +1527,39 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           isLicensed={rep.track === "licensed" || rep.track === "rvp"}
         />
 
+        {/* Field Training Observation Counter — new reps only */}
+        {(rep.track === "fast" || rep.track === "regular") && (
+          <FieldObsCounter
+            count={rep.fieldObsCount||0}
+            onChange={count => onUpdate({ ...rep, fieldObsCount:count, lastActivity:new Date().toISOString() })}
+          />
+        )}
+
+        {/* Life App Counter — new reps only, goal of 10 during training */}
+        {(rep.track === "fast" || rep.track === "regular") && (() => {
+          const count = rep.lifeAppCount || 0;
+          const goal = 10;
+          const p = Math.min(100, Math.round((count/goal)*100));
+          return (
+            <div style={{ background: count>=goal?"#10b98110":"#3b82f610", border:`1px solid ${count>=goal?"#10b98140":"#3b82f630"}`, borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+                <div style={{ fontSize:14, fontWeight:"bold", color:count>=goal?"#10b981":"#3b82f6" }}>📋 Life Applications</div>
+                <div style={{ fontSize:22, fontWeight:"bold", color:count>=goal?"#10b981":"#3b82f6" }}>{count}/{goal}</div>
+              </div>
+              <div style={{ background:"#ffffff10", borderRadius:99, height:8, overflow:"hidden", marginBottom:8 }}>
+                <div style={{ width:`${p}%`, height:"100%", background:count>=goal?"#10b981":"linear-gradient(90deg,#3b82f6,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
+              </div>
+              <div style={{ fontSize:12, color:"#ffffff50", marginBottom:12 }}>Goal: 10 life applications during training</div>
+              {count >= goal && <div style={{ background:"#10b98120", border:"1px solid #10b98140", borderRadius:10, padding:"10px 14px", fontSize:13, color:"#10b981", fontWeight:"bold", textAlign:"center", marginBottom:12 }}>Goal reached! Great work! 🎉</div>}
+              <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+                <button onClick={() => onUpdate({ ...rep, lifeAppCount:Math.max(0,count-1), lastActivity:new Date().toISOString() })} style={{ background:"#ffffff10", border:"none", color:"#f0ede8", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20 }}>-</button>
+                <div style={{ flex:1, textAlign:"center", fontSize:12, color:"#ffffff50" }}>Tap + each time you complete a life application. Tap - to correct an error.</div>
+                <button onClick={() => { onUpdate({ ...rep, lifeAppCount:count+1, lastActivity:new Date().toISOString() }); if (count+1===goal) { spawnConfetti(window.innerWidth/2,200); spawnEmoji(window.innerWidth/2,180,"📋"); } }} style={{ background:"#3b82f630", border:"1px solid #3b82f650", color:"#3b82f6", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20, fontWeight:"bold" }}>+</button>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Business Commitment Card — rep view */}
         {(rep.track === "fast" || rep.track === "regular") && (
           <div style={{ background: rep.businessCommitment ? "#8b5cf610" : "#ffffff07", border: `1px solid ${rep.businessCommitment ? "#8b5cf640" : "#ffffff12"}`, borderRadius: 14, padding: "16px 20px", marginBottom: 14 }}>
@@ -2807,6 +2840,41 @@ function TourButton({ onClick }) {
   );
 }
 
+
+// ─── FIELD TRAINING OBSERVATION COUNTER ──────────────────────────────────────
+function FieldObsCounter({ count = 0, onChange }) {
+  const goal = 20;
+  const p = Math.min(100, Math.round((count/goal)*100));
+  return (
+    <div style={{ background: count>=goal?"#10b98110":"#8b5cf610", border:`1px solid ${count>=goal?"#10b98140":"#8b5cf640"}`, borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+        <div style={{ fontSize:14, fontWeight:"bold", color:count>=goal?"#10b981":"#8b5cf6" }}>👁 Field Training Observations</div>
+        <div style={{ fontSize:22, fontWeight:"bold", color:count>=goal?"#10b981":"#8b5cf6" }}>{count}/{goal}</div>
+      </div>
+      <div style={{ background:"#ffffff10", borderRadius:99, height:8, overflow:"hidden", marginBottom:8 }}>
+        <div style={{ width:`${p}%`, height:"100%", background:count>=goal?"#10b981":"linear-gradient(90deg,#8b5cf6,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
+      </div>
+      <div style={{ fontSize:12, color:"#ffffff50", marginBottom:12 }}>
+        Every observation prepares you for when you are licensed — pay close attention to the process! Goal: 20 before licensing.
+      </div>
+      {count >= goal && (
+        <div style={{ background:"#10b98120", border:"1px solid #10b98140", borderRadius:10, padding:"10px 14px", fontSize:13, color:"#10b981", fontWeight:"bold", textAlign:"center", marginBottom:12 }}>
+          20 observations complete — you are ready for licensing! 🎉
+        </div>
+      )}
+      {onChange && (
+        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+          <button onClick={() => onChange(Math.max(0, count-1))}
+            style={{ background:"#ffffff10", border:"none", color:"#f0ede8", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20 }}>-</button>
+          <div style={{ flex:1, textAlign:"center", fontSize:12, color:"#ffffff50" }}>Tap + after each life app observation with your trainer. Tap - to correct an error.</div>
+          <button onClick={() => { onChange(count+1); if (count+1===goal) { spawnConfetti(window.innerWidth/2,200); spawnEmoji(window.innerWidth/2,180,"👁"); } }}
+            style={{ background:"#8b5cf630", border:"1px solid #8b5cf650", color:"#8b5cf6", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20, fontWeight:"bold" }}>+</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 // inject pulse animation
 if (typeof document !== 'undefined' && !document.getElementById('pulse-style')) {
@@ -2929,7 +2997,7 @@ export default function App() {
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "" }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {}, investmentClients: [], repPin: "", lifeAppCount: 0, fieldObsCount: 0 }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
@@ -3222,7 +3290,20 @@ export default function App() {
               </div>
             </div>
 
-            {/* Investment Clients Feed */}
+            {/* Field Training Observation Counter — trainer can update */}
+            {(rep.track === "fast" || rep.track === "regular") && (
+              <div style={{ marginTop:12, paddingTop:12, borderTop:"1px solid #ffffff10" }}>
+                <div style={{ fontSize:10, color:"#8b5cf6", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 }}>
+                  👁 Field Training Observations ({rep.fieldObsCount||0}/10)
+                </div>
+                <FieldObsCounter
+                  count={rep.fieldObsCount||0}
+                  onChange={count => updateRep(rep.id, r => ({ ...r, fieldObsCount:count }))}
+                />
+              </div>
+            )}
+
+            {/* Investment Clients Feed — always show */}
             <div style={{ marginTop:12, paddingTop:12, borderTop:"1px solid #ffffff10" }}>
               <div style={{ fontSize:10, color:"#f59e0b", fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:8 }}>
                 💰 Future Investment Clients ({(rep.investmentClients||[]).length}) — to move over when rep gets investment licensed
@@ -3247,6 +3328,30 @@ export default function App() {
                 )
               }
             </div>
+          </div>
+
+          {/* Investment Clients — standalone prominent panel */}
+          <div style={{ background:"#f59e0b08", border:"1px solid #f59e0b30", borderRadius:12, padding:"16px 18px", marginBottom:14 }}>
+            <div style={{ fontSize:11, color:"#f59e0b", fontWeight:"bold", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:12 }}>
+              💰 Future Investment Clients ({(rep.investmentClients||[]).length}) — to move when investment licensed
+            </div>
+            {(rep.investmentClients||[]).length === 0
+              ? <div style={{ fontSize:13, color:"#ffffff30", fontStyle:"italic" }}>No future investment clients logged yet</div>
+              : <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                  {(rep.investmentClients||[]).map(client => (
+                    <div key={client.id} style={{ background:client.movedOver?"#10b98110":"#ffffff06", border:`1px solid ${client.movedOver?"#10b98130":"#ffffff10"}`, borderRadius:8, padding:"10px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                      <div>
+                        <div style={{ fontSize:13, fontWeight:"bold", color:client.movedOver?"#ffffff50":"#f0ede8", textDecoration:client.movedOver?"line-through":"none" }}>{client.name}</div>
+                        <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>{client.date}</div>
+                      </div>
+                      <button onClick={() => updateRep(rep.id, r => ({ ...r, investmentClients:(r.investmentClients||[]).map(c => c.id!==client.id?c:{...c,movedOver:!c.movedOver}) }))}
+                        style={{ fontSize:11, background:client.movedOver?"#10b98120":"#ffffff10", border:`1px solid ${client.movedOver?"#10b98140":"#ffffff20"}`, color:client.movedOver?"#10b981":"#ffffff50", borderRadius:20, padding:"4px 12px", cursor:"pointer" }}>
+                        {client.movedOver ? "✓ Moved" : "Mark Moved"}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+            }
           </div>
 
           {/* References Feed — from rep's entries */}
