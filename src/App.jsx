@@ -77,7 +77,7 @@ const FAST_START_CHECKLIST = [
   { id: "f15",  category: "Bonus Goals",         task: "3×$3,000 done — $650 Bonus + District Manager Promotion", note: null, link: null },
   { id: "f16",  category: "Bonus Goals",         task: "6×$6,000 done — $1,250 Bonus + District Manager Promotion", note: null, link: null },
   { id: "f17",  category: "Bonus Goals",         task: "10×$10,000 done — $2,050 Bonus + District Manager Promotion", note: null, link: null },
-  { id: "f18",  category: "Licensing",           task: "Complete pre-licensing class — enter your dates in the Pre-Licensing Class section below", note: "Use the Class Scheduling card below to log your dates", link: null },
+  { id: "f18",  category: "Licensing",           task: "Schedule and complete pre-licensing class", note: "Scroll down to the Pre-Licensing Class card — enter your class start date, type (In-Person, Zoom, or Online), and mark complete when done", link: null },
   { id: "f19",  category: "Licensing",           task: "Schedule exam within 5 days of completing class — enter your exam date in the Exam section on your dashboard", note: null, link: null },
   { id: "f22b", category: "Licensing",           task: "Access Live Life Exam Review Sessions with Licensing Coaches", note: "Path: primericaonline.com → Life Licensing → Pre-Licensing Education (select your state) → Life Exam Study Resources → Life Review Sessions → Live Life Exam Review Sessions", link: "https://www.primericaonline.com" },
   { id: "f23",  category: "Licensing",           task: "Pass exam — upload pass notice and required docs in Primerica App", note: "🎉 Congratulations!!", link: null },
@@ -94,7 +94,7 @@ const REGULAR_START_CHECKLIST = [
   { id: "r9",   category: "FNA",                 task: "Complete Financial Needs Analysis — Roth IRA", note: null, link: null },
   { id: "r12",  category: "Events",              task: "Schedule Digital Grand Opening — enter your DGO date in the DGO card on your dashboard", note: null, link: null },
   { id: "r12b", category: "Events",              task: "Attend DGO — mark complete in the DGO card on your dashboard", note: "Review who attended, appointments set, and next steps", link: null },
-  { id: "r10",  category: "Licensing",           task: "Complete pre-licensing class — enter your dates in the Pre-Licensing Class section below", note: "Use the Class Scheduling card below to log your dates", link: null },
+  { id: "r10",  category: "Licensing",           task: "Schedule and complete pre-licensing class", note: "Scroll down to the Pre-Licensing Class card — enter your class start date, type (In-Person, Zoom, or Online), and mark complete when done", link: null },
   { id: "r11",  category: "Licensing",           task: "Schedule exam within 5 days of completing class — enter your exam date in the Exam section on your dashboard", note: null, link: null },
   { id: "r19b", category: "Licensing",           task: "Access Live Life Exam Review Sessions with Licensing Coaches", note: "Path: primericaonline.com → Life Licensing → Pre-Licensing Education (select your state) → Life Exam Study Resources → Life Review Sessions → Live Life Exam Review Sessions", link: "https://www.primericaonline.com" },
   { id: "r20",  category: "Licensing",           task: "Pass exam — upload pass notice and required docs in Primerica App", note: "🎉 Congratulations!!", link: null },
@@ -1442,7 +1442,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
   const tourKey = "primerica_tour_rep_" + rep.id;
   const [showTour, setShowTour] = useState(() => { try { return !localStorage.getItem(tourKey); } catch(e) { return false; } });
   const [activeTab, setActiveTab] = useState("checklist");
-  const track = TRACK_INFO[rep.track];
+  const [showConditional, setShowConditional] = useState(false);
   const repChecklist = track.checklist;
   const repCats = [...new Set(repChecklist.map(i => i.category))];
   const rp = pct(rep.repCompleted.length, repChecklist.length);
@@ -1629,7 +1629,10 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             <div style={{ background: rep.classCompleted ? "#10b98110" : "#a78bfa10", border:`1px solid ${rep.classCompleted?"#10b98140":"#a78bfa40"}`, borderRadius:14, padding:"16px 20px", marginBottom:16 }}>
               {/* Header */}
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
-                <div style={{ fontSize:14, fontWeight:"bold", color: cardColor }}>📚 Pre-Licensing Class</div>
+                <div>
+                  <div style={{ fontSize:10, color: cardColor, fontWeight:"bold", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:2 }}>Step 1 of 2 — Class</div>
+                  <div style={{ fontSize:14, fontWeight:"bold", color: cardColor }}>📚 Pre-Licensing Class</div>
+                </div>
                 <div onClick={() => { const u = { ...rep, classCompleted: !rep.classCompleted, lastActivity: new Date().toISOString() }; onUpdate(u); if (!rep.classCompleted) { spawnConfetti(window.innerWidth/2, 200); spawnEmoji(window.innerWidth/2, 180, "🎓"); } }}
                   style={{ background: rep.classCompleted?"#10b98120":"#a78bfa20", border:`1px solid ${rep.classCompleted?"#10b98150":"#a78bfa50"}`, borderRadius:20, padding:"6px 16px", fontSize:13, fontWeight:"bold", color: cardColor, cursor:"pointer" }}>
                   {rep.classCompleted ? "✓ Complete! 🎓" : "Mark Complete"}
@@ -1654,7 +1657,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
                       {classType === "zoom" ? "Zoom Class Start Date" : "Class Start Date"}
                     </div>
                     <input type="date" value={rep.classStartDate||""} onChange={e => onUpdate({ ...rep, classStartDate: e.target.value, lastActivity: new Date().toISOString() })} style={dateStyle} />
-                    {!rep.classStartDate && <div style={{ fontSize:11, color:"#ffffff30", marginTop:4 }}>Enter your scheduled start date</div>}
+                    {!rep.classStartDate && <div style={{ fontSize:11, color:"#a78bfa", marginTop:4, fontWeight:"bold" }}>👆 Enter your scheduled class start date here</div>}
                   </div>
                   <div>
                     <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:6 }}>Completion Date</div>
@@ -1723,12 +1726,8 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
         {activeTab==="checklist" && (() => {
           const conditionalCats = ["If Already Licensed", "Business Commitment", "Bonus Opportunity"];
           const isLicensedTrackView = rep.track === "licensed" || rep.track === "rvp";
-          const [showConditional, setShowConditional] = React.useState(false);
           return (
             <>
-              {repCats.filter(cat => !conditionalCats.includes(cat)).map(cat => (
-                <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
-              ))}
               {isLicensedTrackView && (
                 <div style={{ marginBottom:20 }}>
                   {/* Alert banner — guides both paths */}
@@ -1754,6 +1753,9 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
                   ))}
                 </div>
               )}
+              {repCats.filter(cat => !conditionalCats.includes(cat)).map(cat => (
+                <CategorySection key={cat} title={cat} items={repChecklist.filter(i=>i.category===cat)} completedIds={rep.repCompleted} onToggle={toggleItem} isRepView={true} />
+              ))}
             </>
           );
         })()}
@@ -2165,6 +2167,7 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
   const [activeFilter, setActiveFilter] = useState(currentAdminId || "all");
   const [showRepInput, setShowRepInput] = useState(null);
   const [premiumInput, setPremiumInput] = useState("");
+  const [prodOpen, setProdOpen] = useState(false);
 
   const filteredReps = isSuperAdmin && activeFilter === "all"
     ? reps
@@ -2252,10 +2255,7 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
       )}
 
       {/* Rep Production Input — collapsible */}
-      {(() => {
-        const [prodOpen, setProdOpen] = React.useState(false);
-        return (
-          <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, overflow:"hidden" }}>
+      <div style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:14, overflow:"hidden" }}>
             <div onClick={() => setProdOpen(o => !o)} style={{ padding:"14px 20px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div style={{ fontSize:12, color:"#ffffff50", letterSpacing:"0.08em", textTransform:"uppercase", fontWeight:"bold" }}>💼 Update Rep Production ({filteredReps.length} reps)</div>
               <div style={{ fontSize:16, color:"#ffffff40" }}>{prodOpen ? "▲" : "▼"}</div>
@@ -2298,9 +2298,7 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
             </div>
           ))}
         </div>}
-          </div>
-        );
-      })()}
+      </div>
     </div>
   );
 }
@@ -2866,17 +2864,19 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
 
 // ─── APP TOUR ─────────────────────────────────────────────────────────────────
 const REP_TOUR_STEPS = [
-  { emoji:"👋", title:"Welcome to Your Onboarding App!", body:"This app guides you through every step of your Primerica journey. Let us show you around real quick!" },
+  { emoji:"👋", title:"Welcome to Your Onboarding App!", body:"This app guides you through every step of your Primerica journey. Whether you are brand new or already licensed — this app keeps you on track. Let us show you around!" },
   { emoji:"🔐", title:"Your PIN is Your Key", body:"You created a 4-digit PIN when you logged in. You will need it every time you access your checklist. Keep it private — no one else should access your account!" },
   { emoji:"✅", title:"My Checklist", body:"This is your main to-do list. Complete each task to move through your onboarding. Check items off as you finish them and watch your progress bar grow!" },
+  { emoji:"⭐", title:"Already Life Licensed? Read This First!", body:"If you joined already life licensed and skipped new rep training — tap the gold alert at the top of your checklist first. Those steps are required for you. If you went through the full new rep training — skip that section, it is not for you." },
+  { emoji:"📜", title:"Securities License — Start Now!", body:"As soon as you are life licensed, start working toward your securities license. You will see it near the top of your checklist. SIE first, then Series 6, 63, and 26 if you are going for RVP!" },
   { emoji:"📅", title:"Appointments Tab", body:"Log all your training appointments here. Enter your contact name, phone, date, and MACHO score. Your goal is 15-20 training appointments!" },
   { emoji:"⭐", title:"MACHO Qualifier", body:"Rate each contact M-A-C-H-O (Married, Age 25-55, Children, Homeowner, Occupation). 3 or more stars means they are a great candidate. Set appointments with your best people!" },
   { emoji:"👥", title:"References Tab", body:"Enter your 5 character references with name, phone, and relationship. Your trainer can see these and will use them to help you set training appointments." },
   { emoji:"📜", title:"Scripts Tab", body:"Your appointment setting scripts live here. Practice before every call. You do not have to say them word for word — understand the psychology and make it your own!" },
-  { emoji:"👁", title:"Field Training Observations", body:"Every time you watch your trainer complete a life app — tap the + on the Field Training Observations counter. Goal is 20 observations before you get licensed. Pay close attention!" },
+  { emoji:"👁", title:"Field Training Observations", body:"Every time you watch your trainer complete a life app — tap + on the Field Training Observations counter. Goal is 20 observations before you get licensed. Pay close attention to the entire process!" },
   { emoji:"📋", title:"Life App Counter", body:"Every time you are present for a completed life application during training, tap + on the Life Application counter. Goal is 10 during training!" },
   { emoji:"💰", title:"Future Investment Clients", body:"Every time a client gets an investment while you are training, tap + and enter their name. These clients will be moved over to you when you pass your investment exam — this is your future AUM!" },
-  { emoji:"🗓", title:"Team Schedule", body:"See all weekly meetings here — Monday through Saturday. Check it daily. If a meeting is canceled your trainer will mark it and you will see it right here!" },
+  { emoji:"🗓", title:"Team Schedule and Daily Banner", body:"A banner at the top of your app shows what is scheduled today. Check it every time you log in so you never miss a meeting. If a meeting is canceled your trainer marks it and you will see it immediately!" },
   { emoji:"🎯", title:"You Are All Set!", body:"Complete your checklist, attend every meeting, set 15-20 appointments, and reach out to your trainer daily. Let us go build something great!" },
 ];
 
@@ -2887,6 +2887,7 @@ const TRAINER_TOUR_STEPS = [
   { emoji:"📊", title:"Rep-Entered Details Panel", body:"When a rep enters their business commitment, DGO date, class info, exam date, or references it feeds directly into their profile. You can see it all without asking them!" },
   { emoji:"💰", title:"Future Investment Clients", body:"When a rep logs a future investment client you see their name right in the rep profile. These are the clients you will move over to the rep when they pass their investment exam." },
   { emoji:"👁", title:"Field Training Observations", body:"You can update the Field Training Observation counter directly from the rep profile. Both you and the rep can tap + after each life app observation during training." },
+  { emoji:"⭐", title:"Already Licensed Reps", body:"When a rep joins already life licensed, they see a gold alert at the top of their checklist guiding them to complete the onboarding steps specific to them. If they went through new rep training those steps are hidden — no confusion!" },
   { emoji:"✅", title:"Check-Ins", body:"Log check-ins with notes on each rep profile. You will get alerts when a rep has not been contacted in 3 or more days so nobody falls through the cracks." },
   { emoji:"📊", title:"My Production", body:"Your own life apps, weekly scorecard, and investment tracking lives in the My Production section at the top of your dashboard. Track your own business here!" },
   { emoji:"🗓", title:"Cancel Meetings", body:"Go to the Schedule tab on any rep profile and tap Cancel Today next to any meeting. Reps will immediately see a CANCELED banner on their app that day." },
@@ -3300,13 +3301,24 @@ export default function App() {
               <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Start Date</div>
               <div style={{ fontSize:13, fontWeight:"bold", color:"#f0ede8" }}>{rep.startDate||rep.date}</div>
             </div>
-            {/* Target Graduation — editable */}
-            <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:140 }}>
-              <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Target Graduation</div>
-              <input type="date" value={rep.gradDate||""} onChange={e => updateRep(rep.id, r => ({ ...r, gradDate: e.target.value }))}
-                style={{ background:"transparent", border:"none", color: rep.gradDate?"#f0ede8":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
-              {!rep.gradDate && <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>Tap to set date</div>}
-            </div>
+            {/* Target Graduation — only for new reps, not licensed */}
+            {(rep.track !== "licensed" && rep.track !== "rvp") && (
+              <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:140 }}>
+                <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Target Graduation</div>
+                <input type="date" value={rep.gradDate||""} onChange={e => updateRep(rep.id, r => ({ ...r, gradDate: e.target.value }))}
+                  style={{ background:"transparent", border:"none", color: rep.gradDate?"#f0ede8":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
+                {!rep.gradDate && <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>Tap to set date</div>}
+              </div>
+            )}
+            {/* RVP Goal Date — for licensed/RVP only */}
+            {(rep.track === "licensed" || rep.track === "rvp") && (
+              <div style={{ background:"#f59e0b07", border:"1px solid #f59e0b20", borderRadius:10, padding:"10px 16px", flex:1, minWidth:140 }}>
+                <div style={{ fontSize:10, color:"#f59e0b80", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>👑 RVP Goal Date</div>
+                <input type="date" value={rep.rvpPromotionDate||""} onChange={e => updateRep(rep.id, r => ({ ...r, rvpPromotionDate: e.target.value }))}
+                  style={{ background:"transparent", border:"none", color: rep.rvpPromotionDate?"#f59e0b":"#ffffff30", fontSize:13, fontWeight:"bold", outline:"none", colorScheme:"dark", fontFamily:"inherit", width:"100%" }} />
+                {!rep.rvpPromotionDate && <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>Tap to set date</div>}
+              </div>
+            )}
             {/* Days remaining */}
             {daysLeft !== null && (
               <div style={{ background:"#ffffff07", border:"1px solid #ffffff10", borderRadius:10, padding:"10px 16px", flex:1, minWidth:110 }}>
