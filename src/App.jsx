@@ -3192,8 +3192,10 @@ export default function App() {
   // ── REP PREVIEW MODAL (admin peeking at rep view) ────────────────────────────
   if (previewingRepId) {
     const previewRep = reps.find(r => r.id === previewingRepId);
-    if (!previewRep) { setPreviewingRepId(null); }
-    else return (
+    if (!previewRep) { setPreviewingRepId(null); return null; }
+    const previewTrainer = trainers.find(t => t.id === previewRep.trainerId);
+    const previewAdminData = admins.find(a => a.id === previewTrainer?.adminId);
+    return (
       <div style={{ position: "fixed", inset: 0, background: "#0f0f11", zIndex: 200, overflowY: "auto" }}>
         <div style={{ background: "linear-gradient(135deg,#1a0a2e,#0f3460)", borderBottom: "1px solid #ffffff18", padding: "14px 20px", position: "sticky", top: 0, zIndex: 210, display: "flex", alignItems: "center", gap: 14 }}>
           <button onClick={() => setPreviewingRepId(null)} style={{ background: "#f59e0b", border: "none", color: "#0f0f11", padding: "7px 16px", borderRadius: 8, cursor: "pointer", fontWeight: "bold", fontSize: 13 }}>← Exit Preview</button>
@@ -3203,7 +3205,7 @@ export default function App() {
           </div>
           <div style={{ marginLeft: "auto", background: "#f59e0b20", border: "1px solid #f59e0b40", borderRadius: 20, padding: "4px 14px", fontSize: 12, color: "#f59e0b" }}>👁 Read-only preview</div>
         </div>
-        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(trainers.find(t => t.id === previewRep.trainerId))} schedule={schedule} cancellations={cancellations} />
+        <RepView rep={previewRep} onUpdate={(updated) => setReps(prev => prev.map(r => r.id !== updated.id ? r : updated))} onLogout={() => setPreviewingRepId(null)} isPreview={true} trainerLink={getApptLink(previewTrainer, previewAdminData)} schedule={schedule} cancellations={cancellations} />
       </div>
     );
   }
