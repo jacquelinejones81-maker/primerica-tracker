@@ -1377,6 +1377,8 @@ function ScriptsSection() {
 
 // ─── REP VIEW ─────────────────────────────────────────────────────────────────
 function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAULT_SCHEDULE, trainerLink = DEFAULT_APPT_LINK, cancellations = {} }) {
+  const tourKey = "primerica_tour_rep_" + rep.id;
+  const [showTour, setShowTour] = useState(() => { try { return !localStorage.getItem(tourKey); } catch(e) { return false; } });
   const [activeTab, setActiveTab] = useState("checklist");
   const track = TRACK_INFO[rep.track];
   const repChecklist = track.checklist;
@@ -1409,12 +1411,14 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           </div>
           <div style={{ display:"flex", gap:10, alignItems:"center" }}>
             <div style={{ background:`${track.color}20`, border:`1px solid ${track.color}50`, color:track.color, borderRadius:20, padding:"4px 12px", fontSize:12, fontWeight:"bold" }}>{track.label}</div>
+            <TourButton onClick={() => setShowTour(true)} />
             <button onClick={onLogout} style={{ background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"6px 12px", borderRadius:8, cursor:"pointer", fontSize:12 }}>Sign Out</button>
           </div>
         </div>
       </div>
 
       <div style={{ maxWidth:600, margin:"0 auto", padding:"20px 16px" }}>
+        {showTour && !isPreview && <AppTour steps={REP_TOUR_STEPS} onClose={() => setShowTour(false)} storageKey={tourKey} />}
         {isPreview && (
           <div style={{ background:"#8b5cf615", border:"1px solid #8b5cf640", borderRadius:10, padding:"10px 16px", marginBottom:16, fontSize:12, color:"#8b5cf6", textAlign:"center" }}>
             👁 You are previewing this rep’s view as admin. All interactions are live — changes will save.
@@ -1591,9 +1595,9 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
         })()}
 
         {/* Tabs */}
-        <div style={{ display:"flex", gap:4, background:"#ffffff08", borderRadius:10, padding:4, marginBottom:22 }}>
-          {[{key:"checklist",label:"My Checklist"},{key:"appointments",label:`Appointments (${apptSet})`},{key:"refs",label:"References"},{key:"scripts",label:"📜 Scripts"},{key:"lifeapps",label:"📋 Life Apps"},{key:"scorecard",label:"📊 Scorecard"},{key:"schedule",label:"Schedule"}].map(tab => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{ flex:1, padding:"10px 12px", borderRadius:8, border:"none", cursor:"pointer", fontSize:13, fontWeight:"bold", transition:"all 0.15s", background:activeTab===tab.key?"#ffffff15":"transparent", color:activeTab===tab.key?"#f0ede8":"#ffffff50" }}>
+        <div style={{ display:"flex", gap:4, background:"#ffffff08", borderRadius:10, padding:4, marginBottom:22, overflowX:"auto", WebkitOverflowScrolling:"touch" }}>
+          {[{key:"checklist",label:"✅ Checklist"},{key:"appointments",label:`📅 Appts (${apptSet})`},{key:"refs",label:"👥 Refs"},{key:"scripts",label:"📜 Scripts"},{key:"lifeapps",label:"📋 Life Apps"},{key:"scorecard",label:"📊 Scorecard"},{key:"rvp",label:"👑 RVP"},{key:"schedule",label:"🗓 Schedule"}].map(tab => (
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{ flexShrink:0, padding:"8px 12px", borderRadius:8, border:"none", cursor:"pointer", fontSize:12, fontWeight:"bold", transition:"all 0.15s", background:activeTab===tab.key?"#ffffff15":"transparent", color:activeTab===tab.key?"#f0ede8":"#ffffff50", whiteSpace:"nowrap" }}>
               {tab.label}
             </button>
           ))}
@@ -1626,7 +1630,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             activity={rep.weeklyActivity||{}}
             onChange={act => onUpdate({ ...rep, weeklyActivity:act, lastActivity:new Date().toISOString() })}
             autoLifeApps={(rep.lifeApps||[]).filter(a=>a.clientName).length}
-            autoInvestments={(rep.lifeApps||[]).filter(a=>a.investStatus==="completed").length}
+            autoInvestments={rep.pacCount||0}
           />
         )}
         {activeTab==="rvp" && (
@@ -2178,7 +2182,7 @@ function LifeAppChecklist({ app, onUpdate, onClose }) {
             <div style={{ fontSize:22, marginBottom:12, textAlign:"center" }}>📋</div>
             <div style={{ fontSize:16, fontWeight:"bold", color:"#f0ede8", marginBottom:8, textAlign:"center" }}>Beneficiary and Emergency Contact</div>
             <div style={{ fontSize:13, color:"#ffffff60", marginBottom:20, textAlign:"center", lineHeight:1.6 }}>
-              Did you collect the Beneficiary and Emergency Contact information from {app.clientName}?
+              Did you collect the Beneficiary and Emergency Contact information from your client?
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
               <button onClick={() => { setBeneAnswer("yes"); setStep(2); }}
@@ -2197,7 +2201,7 @@ function LifeAppChecklist({ app, onUpdate, onClose }) {
             <div style={{ fontSize:22, marginBottom:12, textAlign:"center" }}>💰</div>
             <div style={{ fontSize:16, fontWeight:"bold", color:"#f59e0b", marginBottom:4, textAlign:"center" }}>Buy Term and Invest the Difference</div>
             <div style={{ fontSize:13, color:"#ffffff60", marginBottom:20, textAlign:"center", lineHeight:1.6 }}>
-              Every life app should come with an investment. Did you complete or schedule an investment appointment with {app.clientName}?
+              Every life app should come with an investment. Did you complete or schedule an investment appointment with your client?
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:20 }}>
               {[
@@ -2247,8 +2251,7 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
   };
 
   const submitted = apps.filter(a => a.clientName).length;
-  const approved = apps.filter(a => a.status === "Approved").length;
-  const totalPremium = apps.filter(a => a.clientName).reduce((s,a) => s + (Number(a.premium)||0), 0);
+  const investmentsDone = apps.filter(a => a.investStatus === "completed").length;
   const needsBene = apps.filter(a => a.clientName && a.beneCollected !== "yes").length;
   const needsInvest = apps.filter(a => a.clientName && a.investStatus !== "completed" && a.investStatus !== "scheduled").length;
 
@@ -2264,31 +2267,22 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
         />
       )}
 
-      {/* Summary cards */}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
-        {[
-          { label:"Apps Submitted", value: submitted, color:"#3b82f6", emoji:"📋" },
-          { label:"Approved", value: approved, color:"#10b981", emoji:"✅" },
-          { label:"Total Premium", value: "$"+totalPremium.toLocaleString(), color:"#f59e0b", emoji:"💰" },
-        ].map(s => (
-          <div key={s.label} style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:10, padding:"12px 14px", textAlign:"center" }}>
-            <div style={{ fontSize:20, fontWeight:"bold", color:s.color }}>{s.value}</div>
-            <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.06em", marginTop:3 }}>{s.emoji} {s.label}</div>
-          </div>
-        ))}
+      {/* Counter display */}
+      <div style={{ background:"#3b82f610", border:"1px solid #3b82f630", borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+          <div style={{ fontSize:14, fontWeight:"bold", color:"#3b82f6" }}>📋 Life Applications</div>
+          <div style={{ fontSize:28, fontWeight:"bold", color:"#3b82f6" }}>{submitted}</div>
+        </div>
+        <div style={{ background:"#ffffff10", borderRadius:99, height:8, overflow:"hidden", marginBottom:8 }}>
+          <div style={{ width:`${Math.min(100,Math.round((submitted/20)*100))}%`, height:"100%", background:"linear-gradient(90deg,#3b82f6,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
+        </div>
+        <div style={{ display:"flex", justifyContent:"space-between", fontSize:11, color:"#ffffff40", marginBottom: (needsBene>0||needsInvest>0) ? 8 : 0 }}>
+          <span>{submitted} apps logged · {investmentsDone} investments completed</span>
+          <span>Goal: 20/month</span>
+        </div>
+        {needsBene > 0 && <div style={{ fontSize:12, color:"#f43f5e", marginTop:4 }}>⚠️ {needsBene} client{needsBene!==1?"s":""} still need Beneficiary and Emergency Contact info</div>}
+        {needsInvest > 0 && <div style={{ fontSize:12, color:"#f59e0b", marginTop:4 }}>💰 {needsInvest} client{needsInvest!==1?"s":""} still need an investment — Buy Term and Invest the Difference!</div>}
       </div>
-
-      {/* Follow-up alerts */}
-      {needsBene > 0 && (
-        <div style={{ background:"#f43f5e0f", border:"1px solid #f43f5e30", borderRadius:10, padding:"10px 14px", marginBottom:10, fontSize:12, color:"#f43f5e" }}>
-          ⚠️ {needsBene} client{needsBene !== 1 ? "s" : ""} still need Beneficiary and Emergency Contact info collected
-        </div>
-      )}
-      {needsInvest > 0 && (
-        <div style={{ background:"#f59e0b0f", border:"1px solid #f59e0b30", borderRadius:10, padding:"10px 14px", marginBottom:14, fontSize:12, color:"#f59e0b" }}>
-          💰 {needsInvest} client{needsInvest !== 1 ? "s" : ""} still need an investment appointment — remember: Buy Term and Invest the Difference!
-        </div>
-      )}
 
       {/* App list */}
       <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:14 }}>
@@ -2310,6 +2304,7 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
                   </div>
                 </div>
                 <div style={{ background:`${statusColor}20`, border:`1px solid ${statusColor}50`, borderRadius:20, padding:"3px 12px", fontSize:11, color:statusColor, fontWeight:"bold" }}>{app.status}</div>
+                {!readOnly && <button onClick={e => { e.stopPropagation(); onChange(apps.filter(a => a.id !== app.id)); }} style={{ background:"#f43f5e15", border:"1px solid #f43f5e30", color:"#f43f5e", borderRadius:20, padding:"3px 10px", fontSize:11, cursor:"pointer" }}>✕ Remove</button>}
                 <div style={{ fontSize:12, color:"#ffffff30" }}>{isExpanded ? "▲" : "▼"}</div>
               </div>
               {isExpanded && !readOnly && (
@@ -2486,8 +2481,7 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
   const pacCount = myProduction.pacCount || 0;
   const weeklyActivity = myProduction.weeklyActivity || {};
   const submitted = lifeApps.filter(a => a.clientName).length;
-  const approved = lifeApps.filter(a => a.status === "Approved").length;
-  const totalPremium = lifeApps.filter(a => a.clientName).reduce((s,a) => s+(Number(a.premium)||0), 0);
+  const investmentsDone = lifeApps.filter(a => a.investStatus === "completed").length;
   const weekKey = getWeekKey();
   const thisWeek = weeklyActivity[weekKey] || {};
 
@@ -2498,7 +2492,7 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
         <div>
           <div style={{ fontSize:14, fontWeight:"bold", color:"#10b981" }}>📊 My Production</div>
           <div style={{ fontSize:11, color:"#ffffff50", marginTop:3 }}>
-            {submitted} life app{submitted!==1?"s":""} · ${totalPremium.toLocaleString()} premium · {pacCount} investments · {thisWeek.contacts||0} contacts this week
+            {submitted} life app{submitted!==1?"s":""} · {pacCount} investments · {thisWeek.contacts||0} contacts this week
           </div>
         </div>
         <div style={{ fontSize:18, color:"#10b981" }}>{expanded ? "▲" : "▼"}</div>
@@ -2531,8 +2525,8 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
             <WeeklyScorecard
               activity={weeklyActivity}
               onChange={act => onUpdate({ ...myProduction, weeklyActivity:act })}
-              autoLifeApps={lifeApps.filter(a=>a.clientName).length}
-              autoInvestments={lifeApps.filter(a=>a.investStatus==="completed").length}
+              autoLifeApps={submitted}
+              autoInvestments={pacCount}
             />
           )}
           {activeTab === "investments" && (
@@ -2545,6 +2539,76 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
         </div>
       )}
     </div>
+  );
+}
+
+
+// ─── APP TOUR ─────────────────────────────────────────────────────────────────
+const REP_TOUR_STEPS = [
+  { emoji:"👋", title:"Welcome to Your Onboarding App!", body:"This app guides you through every step of your Primerica journey. Let us show you around real quick!" },
+  { emoji:"✅", title:"My Checklist", body:"This is your main to-do list. Complete each task to move through your onboarding. Check off items as you finish them!" },
+  { emoji:"📅", title:"Appointments Tab", body:"Log all your training appointments here with your contacts name, phone, date, and MACHO score. Aim for 15-20!" },
+  { emoji:"⭐", title:"MACHO Qualifier", body:"Rate each contact using M-A-C-H-O (Married, Age 25-55, Children, Homeowner, Occupation). 3 or more stars means they are a great candidate for an appointment!" },
+  { emoji:"👥", title:"References Tab", body:"Enter your 5 character references here. Your trainer can see these and will reach out to help set appointments." },
+  { emoji:"📜", title:"Scripts Tab", body:"Find your appointment setting scripts here. Practice them before making calls — you do not have to say them word for word!" },
+  { emoji:"📋", title:"Life Apps Tab", body:"Once you start writing business, log every life application here. You will be reminded to collect beneficiary info and schedule an investment." },
+  { emoji:"💰", title:"Investment Counter", body:"Every life app should come with an investment. Tap + each time you are responsible for a new investment to track your AUM building!" },
+  { emoji:"🗓", title:"Team Schedule", body:"See all weekly team meetings here. Check it daily so you never miss a meeting. Canceled meetings will show up here too!" },
+  { emoji:"🎯", title:"You Are All Set!", body:"Explore the app, complete your checklist, and reach out to your trainer if you need help. Let us go build something great!" },
+];
+
+const TRAINER_TOUR_STEPS = [
+  { emoji:"👋", title:"Welcome to Your Training Dashboard!", body:"This app helps you manage and track all your reps through their onboarding journey. Here is a quick overview!" },
+  { emoji:"👥", title:"Rep Dashboard", body:"See all your reps at a glance with their progress bars, appointment counts, and status. Click any rep to open their full profile." },
+  { emoji:"📋", title:"Rep Profile Tabs", body:"Each rep has tabs for Trainer Checklist, Rep Checklist, Appointments, References, Life Apps, Scorecard, RVP Path, and Schedule." },
+  { emoji:"📊", title:"Rep-Entered Details", body:"When a rep enters their business commitment, DGO date, class info, exam date, or references it feeds directly into their profile here." },
+  { emoji:"✅", title:"Check-Ins", body:"Log check-ins with notes on each rep. You will see alerts if a rep has not been contacted in 3 or more days." },
+  { emoji:"📊", title:"My Production", body:"Track your own life apps, weekly scorecard, and investment counter in the My Production section at the top of your dashboard." },
+  { emoji:"🗓", title:"Team Schedule", body:"The Schedule tab on each rep shows the weekly meetings. As an admin you can cancel a meeting for the day and reps will see it immediately." },
+  { emoji:"⚙️", title:"Manage Trainers", body:"Add trainers, set PINs, and add booking links in Manage Trainers. Each trainer gets their own booking link for scheduling." },
+  { emoji:"🎯", title:"You Are All Set!", body:"Your team is counting on you. Use this app daily to stay on top of your reps and build a winning team!" },
+];
+
+function AppTour({ steps, onClose, storageKey }) {
+  const [step, setStep] = useState(0);
+  const current = steps[step];
+  const isLast = step === steps.length - 1;
+
+  const finish = () => {
+    try { localStorage.setItem(storageKey, "done"); } catch(e) {}
+    onClose();
+  };
+
+  return (
+    <div style={{ position:"fixed", inset:0, background:"#000000dd", zIndex:9999, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+      <div style={{ background:"linear-gradient(135deg,#1a0a2e,#0f3460)", border:"1px solid #f59e0b40", borderRadius:20, padding:32, width:"100%", maxWidth:420, textAlign:"center" }}>
+        <div style={{ fontSize:48, marginBottom:16 }}>{current.emoji}</div>
+        <div style={{ fontSize:18, fontWeight:"bold", color:"#f59e0b", marginBottom:12 }}>{current.title}</div>
+        <div style={{ fontSize:14, color:"#ffffff80", lineHeight:1.7, marginBottom:24 }}>{current.body}</div>
+        {/* Step dots */}
+        <div style={{ display:"flex", justifyContent:"center", gap:6, marginBottom:24 }}>
+          {steps.map((_,i) => (
+            <div key={i} style={{ width:8, height:8, borderRadius:"50%", background: i===step?"#f59e0b":"#ffffff20", transition:"all 0.2s" }} />
+          ))}
+        </div>
+        <div style={{ display:"flex", gap:10 }}>
+          {step > 0 && <button onClick={() => setStep(s => s-1)} style={{ flex:1, background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"12px", borderRadius:10, cursor:"pointer", fontSize:13 }}>Back</button>}
+          {!isLast
+            ? <button onClick={() => setStep(s => s+1)} style={{ flex:2, background:"#f59e0b", border:"none", color:"#0f0f11", padding:"12px", borderRadius:10, cursor:"pointer", fontWeight:"bold", fontSize:14 }}>Next →</button>
+            : <button onClick={finish} style={{ flex:2, background:"#10b981", border:"none", color:"#0f0f11", padding:"12px", borderRadius:10, cursor:"pointer", fontWeight:"bold", fontSize:14 }}>Get Started! 🚀</button>
+          }
+        </div>
+        <button onClick={finish} style={{ background:"none", border:"none", color:"#ffffff30", cursor:"pointer", fontSize:12, marginTop:12 }}>Skip tour</button>
+      </div>
+    </div>
+  );
+}
+
+function TourButton({ onClick }) {
+  return (
+    <button onClick={onClick} style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", color:"#f59e0b", borderRadius:20, padding:"5px 14px", fontSize:12, cursor:"pointer", fontWeight:"bold" }}>
+      ❓ App Tour
+    </button>
   );
 }
 
@@ -2586,6 +2650,8 @@ export default function App() {
   const [showNewMonthBanner, setShowNewMonthBanner] = useState(false);
   const [cancellations, setCancellations] = useState(() => load(CANCEL_KEY, {}));
   const [myProduction, setMyProduction] = useState(() => load("primerica_myproduction_v1", { lifeApps:[], weeklyActivity:{}, pacCount:0 }));
+  const trainerTourKey = "primerica_tour_trainer_" + (session?.id||"admin");
+  const [showTrainerTour, setShowTrainerTour] = useState(() => { try { return !localStorage.getItem(trainerTourKey); } catch(e) { return false; } });
   const activeAdmin = admins.find(a => a.id === session?.id);
   const activeTrainer = trainers.find(t => t.id === activeTrainerId) || trainers[0];
   const isSuperAdmin = session?.role === "superadmin";
@@ -3191,6 +3257,7 @@ export default function App() {
               <select value={activeTrainerId} onChange={e => setActiveTrainerId(e.target.value)} style={{ background:"#ffffff10", border:"1px solid #ffffff20", color:"#f0ede8", borderRadius:8, padding:"7px 12px", fontSize:13, cursor:"pointer", outline:"none" }}>
                 {trainers.map(t => <option key={t.id} value={t.id} style={{ background:"#1a1a2e" }}>{t.name}</option>)}
               </select>
+              <TourButton onClick={() => setShowTrainerTour(true)} />
               <button onClick={() => setShowTrainerMgr(true)} style={{ background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"7px 12px", borderRadius:8, cursor:"pointer", fontSize:12 }}>Manage Trainers</button>
               <button onClick={handleLogout} style={{ background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"7px 12px", borderRadius:8, cursor:"pointer", fontSize:12 }}>Sign Out</button>
             </div>
@@ -3319,7 +3386,8 @@ export default function App() {
 
       <div style={{ maxWidth:860, margin:"0 auto", padding:"20px 16px" }}>
 
-        {/* New Month Banner */}
+        {showTrainerTour && <AppTour steps={TRAINER_TOUR_STEPS} onClose={() => setShowTrainerTour(false)} storageKey={trainerTourKey} />}
+      {/* New Month Banner */}
         {showNewMonthBanner && isAdmin && (
           <div style={{ background:"linear-gradient(135deg,#10b98120,#f59e0b15)", border:"1px solid #10b98140", borderRadius:14, padding:"20px 24px", marginBottom:20, textAlign:"center" }}>
             <div style={{ fontSize:28, marginBottom:8 }}>🎉</div>
