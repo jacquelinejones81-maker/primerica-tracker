@@ -1460,6 +1460,13 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           ))}
         </div>
 
+        {/* PAC Counter — shows for all tracks with different messaging */}
+        <PacCounter
+          pacCount={rep.pacCount||0}
+          onChange={count => onUpdate({ ...rep, pacCount:count, lastActivity:new Date().toISOString() })}
+          isLicensed={rep.track === "licensed" || rep.track === "rvp"}
+        />
+
         {/* Business Commitment Card — rep view */}
         {(rep.track === "fast" || rep.track === "regular") && (
           <div style={{ background: rep.businessCommitment ? "#8b5cf610" : "#ffffff07", border: `1px solid ${rep.businessCommitment ? "#8b5cf640" : "#ffffff12"}`, borderRadius: 14, padding: "16px 20px", marginBottom: 14 }}>
@@ -1585,7 +1592,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
 
         {/* Tabs */}
         <div style={{ display:"flex", gap:4, background:"#ffffff08", borderRadius:10, padding:4, marginBottom:22 }}>
-          {[{key:"checklist",label:"My Checklist"},{key:"appointments",label:`Appointments (${apptSet})`},{key:"refs",label:"References"},{key:"scripts",label:"📜 Scripts"},{key:"schedule",label:"Schedule"}].map(tab => (
+          {[{key:"checklist",label:"My Checklist"},{key:"appointments",label:`Appointments (${apptSet})`},{key:"refs",label:"References"},{key:"scripts",label:"📜 Scripts"},{key:"lifeapps",label:"📋 Life Apps"},{key:"scorecard",label:"📊 Scorecard"},{key:"schedule",label:"Schedule"}].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{ flex:1, padding:"10px 12px", borderRadius:8, border:"none", cursor:"pointer", fontSize:13, fontWeight:"bold", transition:"all 0.15s", background:activeTab===tab.key?"#ffffff15":"transparent", color:activeTab===tab.key?"#f0ede8":"#ffffff50" }}>
               {tab.label}
             </button>
@@ -1608,6 +1615,18 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
           />
         )}
         {activeTab==="scripts" && <ScriptsSection />}
+        {activeTab==="lifeapps" && (
+          <LifeAppTracker
+            apps={rep.lifeApps||[]}
+            onChange={apps => onUpdate({ ...rep, lifeApps:apps, lastActivity:new Date().toISOString() })}
+          />
+        )}
+        {activeTab==="scorecard" && (
+          <WeeklyScorecard
+            activity={rep.weeklyActivity||{}}
+            onChange={act => onUpdate({ ...rep, weeklyActivity:act, lastActivity:new Date().toISOString() })}
+          />
+        )}
         {activeTab==="rvp" && (
           <RvpChecklist
             completedIds={rep.rvpCompleted||[]}
@@ -2126,6 +2145,390 @@ function ProductionDashboard({ reps, trainers, admins, currentAdminId, isSuperAd
   );
 }
 
+
+// ─── LIFE APPLICATION TRACKER ─────────────────────────────────────────────────
+const APP_STATUSES = ["Submitted","Approved","Pending","Declined"];
+const STATUS_COLORS = { Submitted:"#3b82f6", Approved:"#10b981", Pending:"#f59e0b", Declined:"#f43f5e" };
+
+function LifeAppChecklist({ app, onUpdate, onClose }) {
+  const [step, setStep] = useState(1);
+  const [beneAnswer, setBeneAnswer] = useState(app.beneCollected || null);
+  const [investAnswer, setInvestAnswer] = useState(app.investStatus || null);
+
+  const finish = () => {
+    onUpdate({ ...app, beneCollected: beneAnswer, investStatus: investAnswer });
+    onClose();
+  };
+
+  return (
+    <div style={{ position:"fixed", inset:0, background:"#000000cc", zIndex:999, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+      <div style={{ background:"#16213e", border:"1px solid #ffffff20", borderRadius:16, padding:28, width:"100%", maxWidth:420 }}>
+        {step === 1 && (
+          <>
+            <div style={{ fontSize:22, marginBottom:12, textAlign:"center" }}>📋</div>
+            <div style={{ fontSize:16, fontWeight:"bold", color:"#f0ede8", marginBottom:8, textAlign:"center" }}>Beneficiary and Emergency Contact</div>
+            <div style={{ fontSize:13, color:"#ffffff60", marginBottom:20, textAlign:"center", lineHeight:1.6 }}>
+              Did you collect the Beneficiary and Emergency Contact information from {app.clientName}?
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+              <button onClick={() => { setBeneAnswer("yes"); setStep(2); }}
+                style={{ background: beneAnswer==="yes" ? "#10b98120" : "#ffffff08", border:`2px solid ${beneAnswer==="yes" ? "#10b981" : "#ffffff20"}`, borderRadius:10, padding:"14px 16px", cursor:"pointer", color:"#f0ede8", fontSize:14, fontWeight:"bold", display:"flex", alignItems:"center", gap:12 }}>
+                <span style={{ fontSize:20 }}>✅</span> Yes — collected
+              </button>
+              <button onClick={() => { setBeneAnswer("followup"); setStep(2); }}
+                style={{ background: beneAnswer==="followup" ? "#f59e0b20" : "#ffffff08", border:`2px solid ${beneAnswer==="followup" ? "#f59e0b" : "#ffffff20"}`, borderRadius:10, padding:"14px 16px", cursor:"pointer", color:"#f0ede8", fontSize:14, fontWeight:"bold", display:"flex", alignItems:"center", gap:12 }}>
+                <span style={{ fontSize:20 }}>⏳</span> Not yet — need to follow up
+              </button>
+            </div>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <div style={{ fontSize:22, marginBottom:12, textAlign:"center" }}>💰</div>
+            <div style={{ fontSize:16, fontWeight:"bold", color:"#f59e0b", marginBottom:4, textAlign:"center" }}>Buy Term and Invest the Difference</div>
+            <div style={{ fontSize:13, color:"#ffffff60", marginBottom:20, textAlign:"center", lineHeight:1.6 }}>
+              Every life app should come with an investment. Did you complete or schedule an investment appointment with {app.clientName}?
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:20 }}>
+              {[
+                { val:"completed", icon:"✅", label:"Investment completed with client" },
+                { val:"scheduled", icon:"📅", label:"Investment appointment scheduled" },
+                { val:"followup", icon:"⏳", label:"Not yet — need to follow up" },
+              ].map(opt => (
+                <button key={opt.val} onClick={() => setInvestAnswer(opt.val)}
+                  style={{ background: investAnswer===opt.val ? "#f59e0b20" : "#ffffff08", border:`2px solid ${investAnswer===opt.val ? "#f59e0b" : "#ffffff20"}`, borderRadius:10, padding:"14px 16px", cursor:"pointer", color:"#f0ede8", fontSize:14, fontWeight:"bold", display:"flex", alignItems:"center", gap:12 }}>
+                  <span style={{ fontSize:20 }}>{opt.icon}</span> {opt.label}
+                </button>
+              ))}
+            </div>
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={() => setStep(1)} style={{ flex:1, background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"10px", borderRadius:8, cursor:"pointer", fontSize:13 }}>Back</button>
+              <button onClick={finish} disabled={!investAnswer}
+                style={{ flex:2, background: investAnswer ? "#f59e0b" : "#ffffff15", border:"none", color: investAnswer ? "#0f0f11" : "#ffffff30", padding:"10px", borderRadius:8, cursor: investAnswer ? "pointer" : "default", fontSize:14, fontWeight:"bold" }}>
+                Save and Close
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
+  const [showChecklist, setShowChecklist] = useState(null);
+  const [expandedIdx, setExpandedIdx] = useState(null);
+
+  const addApp = () => {
+    const newApp = { id: Date.now().toString(), clientName:"", phone:"", email:"", coverageAmount:"", premium:"", appDate: new Date().toISOString().split("T")[0], status:"Submitted", policyNumber:"", notes:"", beneCollected: null, investStatus: null };
+    const updated = [...apps, newApp];
+    onChange(updated);
+    setExpandedIdx(updated.length - 1);
+    setShowChecklist(newApp.id);
+  };
+
+  const updateApp = (id, field, value) => {
+    onChange(apps.map(a => a.id !== id ? a : { ...a, [field]: value }));
+  };
+
+  const submitted = apps.filter(a => a.clientName).length;
+  const approved = apps.filter(a => a.status === "Approved").length;
+  const totalPremium = apps.filter(a => a.clientName).reduce((s,a) => s + (Number(a.premium)||0), 0);
+  const needsBene = apps.filter(a => a.clientName && a.beneCollected !== "yes").length;
+  const needsInvest = apps.filter(a => a.clientName && a.investStatus !== "completed" && a.investStatus !== "scheduled").length;
+
+  const fieldStyle = { background:"transparent", border:"none", borderBottom:"1px solid #ffffff15", color:"#f0ede8", fontSize:13, outline:"none", width:"100%", padding:"4px 2px", fontFamily:"inherit" };
+
+  return (
+    <div>
+      {showChecklist && (
+        <LifeAppChecklist
+          app={apps.find(a => a.id === showChecklist) || {}}
+          onUpdate={(updated) => onChange(apps.map(a => a.id !== updated.id ? a : updated))}
+          onClose={() => setShowChecklist(null)}
+        />
+      )}
+
+      {/* Summary cards */}
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
+        {[
+          { label:"Apps Submitted", value: submitted, color:"#3b82f6", emoji:"📋" },
+          { label:"Approved", value: approved, color:"#10b981", emoji:"✅" },
+          { label:"Total Premium", value: "$"+totalPremium.toLocaleString(), color:"#f59e0b", emoji:"💰" },
+        ].map(s => (
+          <div key={s.label} style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:10, padding:"12px 14px", textAlign:"center" }}>
+            <div style={{ fontSize:20, fontWeight:"bold", color:s.color }}>{s.value}</div>
+            <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", letterSpacing:"0.06em", marginTop:3 }}>{s.emoji} {s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Follow-up alerts */}
+      {needsBene > 0 && (
+        <div style={{ background:"#f43f5e0f", border:"1px solid #f43f5e30", borderRadius:10, padding:"10px 14px", marginBottom:10, fontSize:12, color:"#f43f5e" }}>
+          ⚠️ {needsBene} client{needsBene !== 1 ? "s" : ""} still need Beneficiary and Emergency Contact info collected
+        </div>
+      )}
+      {needsInvest > 0 && (
+        <div style={{ background:"#f59e0b0f", border:"1px solid #f59e0b30", borderRadius:10, padding:"10px 14px", marginBottom:14, fontSize:12, color:"#f59e0b" }}>
+          💰 {needsInvest} client{needsInvest !== 1 ? "s" : ""} still need an investment appointment — remember: Buy Term and Invest the Difference!
+        </div>
+      )}
+
+      {/* App list */}
+      <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:14 }}>
+        {apps.filter(a => a.clientName).map((app, idx) => {
+          const isExpanded = expandedIdx === idx;
+          const statusColor = STATUS_COLORS[app.status] || "#ffffff50";
+          return (
+            <div key={app.id} style={{ background:"#ffffff07", border:`1px solid ${statusColor}30`, borderRadius:12, overflow:"hidden" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 14px", cursor:"pointer" }} onClick={() => { setExpandedIdx(isExpanded ? null : idx); if (!readOnly) setShowChecklist(app.id); }}>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:14, fontWeight:"bold", color:"#f0ede8" }}>{app.clientName}</div>
+                  <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>
+                    {app.appDate} · {app.premium ? "$"+Number(app.premium).toLocaleString()+" premium" : "No premium entered"}
+                    {app.beneCollected === "yes" && <span style={{ color:"#10b981", marginLeft:8 }}>✓ Bene</span>}
+                    {app.beneCollected !== "yes" && app.clientName && <span style={{ color:"#f43f5e", marginLeft:8 }}>⚠ Bene needed</span>}
+                    {app.investStatus === "completed" && <span style={{ color:"#10b981", marginLeft:8 }}>✓ Invested</span>}
+                    {app.investStatus === "scheduled" && <span style={{ color:"#f59e0b", marginLeft:8 }}>📅 Invest scheduled</span>}
+                    {(!app.investStatus || app.investStatus === "followup") && app.clientName && <span style={{ color:"#f59e0b", marginLeft:8 }}>💰 Invest needed</span>}
+                  </div>
+                </div>
+                <div style={{ background:`${statusColor}20`, border:`1px solid ${statusColor}50`, borderRadius:20, padding:"3px 12px", fontSize:11, color:statusColor, fontWeight:"bold" }}>{app.status}</div>
+                <div style={{ fontSize:12, color:"#ffffff30" }}>{isExpanded ? "▲" : "▼"}</div>
+              </div>
+              {isExpanded && !readOnly && (
+                <div style={{ padding:"0 14px 14px", borderTop:"1px solid #ffffff08" }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px 16px", marginTop:12, marginBottom:10 }}>
+                    {[["clientName","Client Name","Full name"],["phone","Phone","Phone number"],["email","Email","Email address"],["appDate","App Date",null],["coverageAmount","Coverage Amount","e.g. 250000"],["premium","Monthly Premium","e.g. 85"]].map(([field,label,placeholder]) => (
+                      <div key={field}>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>{label}</div>
+                        <input type={field==="appDate"?"date":field==="email"?"email":"text"} value={app[field]||""} onChange={e => updateApp(app.id, field, field==="phone"?formatPhone(e.target.value):e.target.value)}
+                          placeholder={placeholder||""} style={{ ...fieldStyle, colorScheme: field==="appDate"?"dark":undefined }} />
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px 16px", marginBottom:10 }}>
+                    <div>
+                      <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Status</div>
+                      <select value={app.status} onChange={e => updateApp(app.id,"status",e.target.value)} style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:6, color:"#f0ede8", fontSize:13, padding:"4px 8px", outline:"none", width:"100%" }}>
+                        {APP_STATUSES.map(s => <option key={s} value={s} style={{ background:"#1a1a2e" }}>{s}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Policy Number</div>
+                      <input value={app.policyNumber||""} onChange={e => updateApp(app.id,"policyNumber",e.target.value)} placeholder="Once approved" style={fieldStyle} />
+                    </div>
+                  </div>
+                  <div style={{ marginBottom:10 }}>
+                    <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>Notes</div>
+                    <input value={app.notes||""} onChange={e => updateApp(app.id,"notes",e.target.value)} placeholder="Any additional notes" style={fieldStyle} />
+                  </div>
+                  {/* Checklist status */}
+                  <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginTop:8 }}>
+                    <div style={{ fontSize:11, background: app.beneCollected==="yes"?"#10b98120":"#f43f5e15", border:`1px solid ${app.beneCollected==="yes"?"#10b98140":"#f43f5e30"}`, borderRadius:20, padding:"4px 12px", color: app.beneCollected==="yes"?"#10b981":"#f43f5e" }}>
+                      {app.beneCollected==="yes" ? "✓ Bene and Emergency Contact collected" : "⚠ Bene and Emergency Contact needed"}
+                    </div>
+                    <div style={{ fontSize:11, background: app.investStatus==="completed"?"#10b98120":app.investStatus==="scheduled"?"#f59e0b20":"#f43f5e15", border:`1px solid ${app.investStatus==="completed"?"#10b98140":app.investStatus==="scheduled"?"#f59e0b40":"#f43f5e30"}`, borderRadius:20, padding:"4px 12px", color: app.investStatus==="completed"?"#10b981":app.investStatus==="scheduled"?"#f59e0b":"#f43f5e" }}>
+                      {app.investStatus==="completed" ? "✓ Investment completed" : app.investStatus==="scheduled" ? "📅 Investment scheduled" : "⚠ Investment needed"}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {isExpanded && readOnly && (
+                <div style={{ padding:"0 14px 14px", borderTop:"1px solid #ffffff08" }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginTop:12 }}>
+                    {[["Phone",app.phone],["Email",app.email],["Coverage","$"+(Number(app.coverageAmount)||0).toLocaleString()],["Premium","$"+(Number(app.premium)||0).toLocaleString()+"/mo"],["Policy",app.policyNumber||"Pending"],["Date",app.appDate]].map(([label,value]) => (
+                      <div key={label}>
+                        <div style={{ fontSize:9, color:"#ffffff30", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:2 }}>{label}</div>
+                        <div style={{ fontSize:12, color:"#f0ede8" }}>{value||"—"}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {!readOnly && (
+        <button onClick={addApp} style={{ background:"#3b82f620", border:"1px dashed #3b82f640", color:"#3b82f6", borderRadius:10, padding:"12px 16px", cursor:"pointer", fontSize:14, fontWeight:"bold", width:"100%" }}>
+          + Log New Life Application
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ─── WEEKLY ACTIVITY SCORECARD ─────────────────────────────────────────────────
+function getWeekKey() {
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(now.getDate() - now.getDay());
+  return start.toISOString().split("T")[0];
+}
+
+function WeeklyScorecard({ activity = {}, onChange, readOnly = false }) {
+  const weekKey = getWeekKey();
+  const current = activity[weekKey] || { contacts:0, apptSet:0, apptDone:0, lifeApps:0, investments:0 };
+
+  const update = (field, val) => {
+    const num = Math.max(0, Number(val)||0);
+    onChange({ ...activity, [weekKey]: { ...current, [field]: num } });
+  };
+
+  const FIELDS = [
+    { key:"contacts",    label:"Contacts Made",           color:"#3b82f6", emoji:"📞", goal:30 },
+    { key:"apptSet",     label:"Appointments Set",         color:"#8b5cf6", emoji:"📅", goal:10 },
+    { key:"apptDone",    label:"Appointments Completed",   color:"#06b6d4", emoji:"✅", goal:5  },
+    { key:"lifeApps",    label:"Life Apps Submitted",      color:"#f59e0b", emoji:"📋", goal:3  },
+    { key:"investments", label:"Investments Completed",    color:"#10b981", emoji:"💰", goal:2  },
+  ];
+
+  return (
+    <div>
+      <div style={{ fontSize:12, color:"#ffffff40", marginBottom:14 }}>Week of {weekKey}</div>
+      <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+        {FIELDS.map(f => {
+          const val = current[f.key] || 0;
+          const pct = Math.min(100, Math.round((val/f.goal)*100));
+          return (
+            <div key={f.key} style={{ background:"#ffffff07", border:"1px solid #ffffff12", borderRadius:10, padding:"12px 16px" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
+                <div style={{ fontSize:13, fontWeight:"bold", color:"#f0ede8" }}>{f.emoji} {f.label}</div>
+                <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                  <div style={{ fontSize:11, color:"#ffffff40" }}>Goal: {f.goal}</div>
+                  {!readOnly ? (
+                    <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                      <button onClick={() => update(f.key, val-1)} style={{ background:"#ffffff10", border:"none", color:"#f0ede8", width:26, height:26, borderRadius:6, cursor:"pointer", fontSize:16, lineHeight:1 }}>-</button>
+                      <div style={{ fontSize:18, fontWeight:"bold", color:f.color, minWidth:30, textAlign:"center" }}>{val}</div>
+                      <button onClick={() => update(f.key, val+1)} style={{ background:`${f.color}30`, border:`1px solid ${f.color}50`, color:f.color, width:26, height:26, borderRadius:6, cursor:"pointer", fontSize:16, lineHeight:1 }}>+</button>
+                    </div>
+                  ) : (
+                    <div style={{ fontSize:18, fontWeight:"bold", color:f.color }}>{val}</div>
+                  )}
+                </div>
+              </div>
+              <div style={{ background:"#ffffff10", borderRadius:99, height:6, overflow:"hidden" }}>
+                <div style={{ width:`${pct}%`, height:"100%", background:pct>=100?"#10b981":f.color, borderRadius:99, transition:"width 0.4s" }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── PAC COUNTER ──────────────────────────────────────────────────────────────
+function PacCounter({ pacCount = 0, onChange, isLicensed = false }) {
+  const goal = 10;
+  const pct = Math.min(100, Math.round((pacCount/goal)*100));
+  return (
+    <div style={{ background: pacCount >= goal ? "#10b98110" : "#f59e0b10", border:`1px solid ${pacCount>=goal?"#10b98140":"#f59e0b40"}`, borderRadius:14, padding:"18px 20px", marginBottom:16 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+        <div style={{ fontSize:14, fontWeight:"bold", color: pacCount>=goal?"#10b981":"#f59e0b" }}>{isLicensed ? "💰 Investment Counter (AUM Building)" : "💰 PAC Investments (AUM Building)"}</div>
+        <div style={{ fontSize:22, fontWeight:"bold", color: pacCount>=goal?"#10b981":"#f59e0b" }}>{pacCount}/{goal}</div>
+      </div>
+      <div style={{ background:"#ffffff10", borderRadius:99, height:10, overflow:"hidden", marginBottom:10 }}>
+        <div style={{ width:`${pct}%`, height:"100%", background: pacCount>=goal?"#10b981":"linear-gradient(90deg,#f59e0b,#10b981)", borderRadius:99, transition:"width 0.5s ease" }} />
+      </div>
+      <div style={{ fontSize:12, color:"#ffffff50", marginBottom:12 }}>
+        {isLicensed ? "Track every investment you are responsible for. Every investment builds your clients AUM and grows your book of business!" : "Every investment you are responsible for builds your clients AUM and your long-term book of business. Goal: 10 during training!"}
+      </div>
+      {pacCount >= goal && !isLicensed && (
+        <div style={{ background:"#10b98120", border:"1px solid #10b98140", borderRadius:10, padding:"10px 14px", fontSize:13, color:"#10b981", fontWeight:"bold", marginBottom:12, textAlign:"center" }}>
+          Goal reached! You are building real AUM for your clients!
+        </div>
+      )}
+      {pacCount >= goal && isLicensed && (
+        <div style={{ background:"#10b98120", border:"1px solid #10b98140", borderRadius:10, padding:"10px 14px", fontSize:13, color:"#10b981", fontWeight:"bold", marginBottom:12, textAlign:"center" }}>
+          {pacCount} investments and growing — keep building that AUM!
+        </div>
+      )}
+      {!onChange ? null : (
+        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+          <button onClick={() => onChange(Math.max(0, pacCount-1))} style={{ background:"#ffffff10", border:"none", color:"#f0ede8", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20 }}>-</button>
+          <div style={{ flex:1, textAlign:"center", fontSize:13, color:"#ffffff50" }}>Tap + each time you are responsible for a new investment. Tap - to correct an error.</div>
+          <button onClick={() => { onChange(pacCount+1); if ((pacCount+1) === goal) { spawnConfetti(window.innerWidth/2,200); spawnEmoji(window.innerWidth/2,180,"💰"); } }}
+            style={{ background:"#f59e0b30", border:"1px solid #f59e0b50", color:"#f59e0b", width:36, height:36, borderRadius:8, cursor:"pointer", fontSize:20, fontWeight:"bold" }}>+</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ─── MY PRODUCTION SECTION ────────────────────────────────────────────────────
+function MyProductionSection({ myProduction, onUpdate, trainerName }) {
+  const [expanded, setExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState("lifeapps");
+
+  const lifeApps = myProduction.lifeApps || [];
+  const pacCount = myProduction.pacCount || 0;
+  const weeklyActivity = myProduction.weeklyActivity || {};
+  const submitted = lifeApps.filter(a => a.clientName).length;
+  const approved = lifeApps.filter(a => a.status === "Approved").length;
+  const totalPremium = lifeApps.filter(a => a.clientName).reduce((s,a) => s+(Number(a.premium)||0), 0);
+  const weekKey = getWeekKey();
+  const thisWeek = weeklyActivity[weekKey] || {};
+
+  return (
+    <div style={{ background:"linear-gradient(135deg,#10b98110,#3b82f610)", border:"1px solid #10b98130", borderRadius:14, marginBottom:20 }}>
+      {/* Header — always visible */}
+      <div onClick={() => setExpanded(!expanded)} style={{ padding:"16px 20px", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <div>
+          <div style={{ fontSize:14, fontWeight:"bold", color:"#10b981" }}>📊 My Production</div>
+          <div style={{ fontSize:11, color:"#ffffff50", marginTop:3 }}>
+            {submitted} life app{submitted!==1?"s":""} · ${totalPremium.toLocaleString()} premium · {pacCount} investments · {thisWeek.contacts||0} contacts this week
+          </div>
+        </div>
+        <div style={{ fontSize:18, color:"#10b981" }}>{expanded ? "▲" : "▼"}</div>
+      </div>
+
+      {/* Expanded content */}
+      {expanded && (
+        <div style={{ padding:"0 20px 20px" }}>
+          {/* Tabs */}
+          <div style={{ display:"flex", gap:4, background:"#ffffff08", borderRadius:10, padding:4, marginBottom:18 }}>
+            {[
+              { key:"lifeapps", label:"📋 Life Apps" },
+              { key:"scorecard", label:"📊 Scorecard" },
+              { key:"investments", label:"💰 Investments" },
+            ].map(tab => (
+              <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                style={{ flex:1, padding:"8px 10px", borderRadius:8, border:"none", cursor:"pointer", fontSize:12, fontWeight:"bold", transition:"all 0.15s", background:activeTab===tab.key?"#ffffff15":"transparent", color:activeTab===tab.key?"#f0ede8":"#ffffff50" }}>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {activeTab === "lifeapps" && (
+            <LifeAppTracker
+              apps={lifeApps}
+              onChange={apps => onUpdate({ ...myProduction, lifeApps:apps })}
+            />
+          )}
+          {activeTab === "scorecard" && (
+            <WeeklyScorecard
+              activity={weeklyActivity}
+              onChange={act => onUpdate({ ...myProduction, weeklyActivity:act })}
+            />
+          )}
+          {activeTab === "investments" && (
+            <PacCounter
+              pacCount={pacCount}
+              onChange={count => onUpdate({ ...myProduction, pacCount:count })}
+              isLicensed={true}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 // inject pulse animation
 if (typeof document !== 'undefined' && !document.getElementById('pulse-style')) {
@@ -2163,6 +2566,7 @@ export default function App() {
   const [monthlyData, setMonthlyData] = useState(() => load(MONTHLY_KEY, {}));
   const [showNewMonthBanner, setShowNewMonthBanner] = useState(false);
   const [cancellations, setCancellations] = useState(() => load(CANCEL_KEY, {}));
+  const [myProduction, setMyProduction] = useState(() => load("primerica_myproduction_v1", { lifeApps:[], weeklyActivity:{}, pacCount:0 }));
   const activeAdmin = admins.find(a => a.id === session?.id);
   const activeTrainer = trainers.find(t => t.id === activeTrainerId) || trainers[0];
   const isSuperAdmin = session?.role === "superadmin";
@@ -2175,6 +2579,7 @@ export default function App() {
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(SCHEDULE_KEY, schedule); }, [schedule]);
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(MONTHLY_KEY, monthlyData); }, [monthlyData]);
   useEffect(() => { if (!dataLoaded) return; saveToFirebase(CANCEL_KEY, cancellations); }, [cancellations]);
+  useEffect(() => { if (!dataLoaded) return; saveToFirebase("primerica_myproduction_v1", myProduction); }, [myProduction]);
   useEffect(() => { save(ACTIVE_TRAINER_KEY, activeTrainerId); }, [activeTrainerId]);
 
   // ── FIREBASE REAL-TIME LISTENERS ──────────────────────────────────────────
@@ -2244,7 +2649,7 @@ export default function App() {
 
   const addRep = () => {
     if (!newRep.name.trim()) return;
-    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true }]);
+    setReps(prev => [...prev, { id: Date.now(), name: newRep.name.trim(), phone: newRep.phone.trim(), date: newRep.startDate || new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), startDate: newRep.startDate, gradDate: newRep.gradDate, track: newRep.track, trainerId: newRep.trainerId || activeTrainerId, adminId: currentAdminId, trainerCompleted: [], repCompleted: [], appointments: [], notes: "", stalledManual: false, lastActivity: new Date().toISOString(), lastContactDate: "", dgoDate: "", dgoCompleted: false, checkIns: [], businessCommitment: "", classStartDate: "", classCompletionDate: "", classCompleted: false, rvpCompleted: [], rvpPromotionDate: "", examDate: "", examCompleted: false, references: [], premiumSubmitted: 0, isLicensed: false, isRecruited: true, pacCount: 0, lifeApps: [], weeklyActivity: {} }]);
     setNewRep({ name: "", phone: "", track: "fast", trainerId: activeTrainerId, startDate: "", gradDate: "" });
     setShowAddRep(false);
   };
@@ -2267,6 +2672,9 @@ export default function App() {
   const updateAdminCalendly = (adminId, link) => setAdmins(prev => prev.map(a => a.id !== adminId ? a : { ...a, calendlyLink: link }));
   const updateRepProduction = (repId, field, value) => updateRep(repId, r => ({ ...r, [field]: value }));
   const updateRepPhoto = (repId, photo) => updateRep(repId, r => ({ ...r, photo }));
+  const updateLifeApps = (repId, apps) => updateRep(repId, r => ({ ...r, lifeApps: apps }));
+  const updateWeeklyActivity = (repId, activity) => updateRep(repId, r => ({ ...r, weeklyActivity: activity }));
+  const updatePacCount = (repId, count) => updateRep(repId, r => ({ ...r, pacCount: count }));
 
   const doSnapshot = () => {
     const monthKey = getMonthKey();
@@ -2715,6 +3123,20 @@ export default function App() {
           {activeTab==="schedule" && (
             <TeamScheduleView schedule={schedule} isAdmin={isAdmin} onUpdate={(updated) => setSchedule(updated)} cancellations={cancellations} onCancel={(key, val) => setCancellations(prev => ({ ...prev, [key]: val }))} />
           )}
+          {activeTab==="lifeapps" && (
+            <LifeAppTracker
+              apps={rep.lifeApps||[]}
+              onChange={apps => updateRep(rep.id, r => ({ ...r, lifeApps:apps }))}
+              readOnly={true}
+            />
+          )}
+          {activeTab==="scorecard" && (
+            <WeeklyScorecard
+              activity={rep.weeklyActivity||{}}
+              onChange={() => {}}
+              readOnly={true}
+            />
+          )}
           {activeTab==="rvp" && (
             <RvpChecklist
               completedIds={rep.rvpCompleted||[]}
@@ -2902,6 +3324,13 @@ export default function App() {
             monthlyData={monthlyData}
           />
         )}
+
+        {/* My Production — for trainers and admins writing their own business */}
+        <MyProductionSection
+          myProduction={myProduction}
+          onUpdate={setMyProduction}
+          trainerName={activeAdmin?.name || activeTrainer?.name || "Me"}
+        />
 
         {/* How to Access the App */}
         <div style={{ background:"linear-gradient(135deg,#3b82f610,#8b5cf610)", border:"1px solid #3b82f630", borderRadius:14, padding:"18px 20px", marginBottom:20 }}>
