@@ -2837,7 +2837,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
       {!readOnly && onChange && (
         <button onClick={() => setShowAddModal(true)}
           style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", color:"#f59e0b", borderRadius:8, padding:"10px 16px", cursor:"pointer", fontWeight:"bold", fontSize:13, width:"100%", marginBottom: investmentClients.length > 0 ? 12 : 0 }}>
-          + Log Future Investment Client
+          + Log New Investment
         </button>
       )}
 
