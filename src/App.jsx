@@ -3847,7 +3847,7 @@ export default function App() {
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
             <div>
               <div style={{ fontSize:11, letterSpacing:"0.2em", color:"#f59e0b", textTransform:"uppercase", marginBottom:4 }}>NEXTLEVEL FIELD TRAINING HUB</div>
-              <div style={{ fontSize:20, fontWeight:"bold" }}>Rep Onboarding Tracker</div>
+              <div style={{ fontSize:20, fontWeight:"bold" }}>Field Training Hub</div>
               <div style={{ fontSize:12, color:"#ffffff50", marginTop:2 }}>Goal: 3×$3,000 · $750 Bonus · DM Promotion</div>
             </div>
             <div style={{ display:"flex", gap:10, alignItems:"center", flexWrap:"wrap" }}>
