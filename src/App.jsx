@@ -2903,7 +2903,7 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
           {activeTab === "lifeapps" && (
             <LifeAppTracker
               apps={lifeApps}
-              onChange={apps => onUpdate({ ...myProduction, lifeApps:apps })}
+              const updateLifeApps = (repId, apps) => { const tp=apps.filter(a=>a.clientName).reduce((s,a)=>s+(Number(a.premium)||0),0); updateRep(repId, r => ({...r, lifeApps:apps, premiumSubmitted:tp})); };
             />
           )}
           {activeTab === "scorecard" && (
