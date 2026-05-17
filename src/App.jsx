@@ -511,7 +511,7 @@ function AppointmentTracker({ appointments = [], onChange }) {
       </div>
 
       <div style={{ background: "#f59e0b0f", border: "1px solid #f59e0b30", borderRadius: 10, padding: "12px 16px", marginBottom: 14, display: "flex", gap: 12, alignItems: "flex-start" }}>
-        <div style={{ fontSize: 18 }}>{"!"}</div>
+        <div style={{ fontSize: 18 }}>!</div>
         <div>
           <div style={{ fontSize: 13, fontWeight: "bold", color: "#f59e0b", marginBottom: 4 }}>Important: Add yourself as a guest when scheduling!</div>
           <div style={{ fontSize: 12, color: "#ffffff60", marginBottom: 8 }}>Use the link below to schedule your training appointments. Make sure to add your field trainer as a guest so they receive the confirmation.</div>
@@ -839,7 +839,7 @@ function RepAppointmentTracker({ appointments = [], onChange, trainerLink = DEFA
 
       {/* Calendly reminder */}
       <div style={{ background: "#f59e0b0f", border: "1px solid #f59e0b30", borderRadius: 10, padding: "12px 16px", marginBottom: 14, display: "flex", gap: 12, alignItems: "flex-start" }}>
-        <div style={{ fontSize: 18 }}>{"!"}</div>
+        <div style={{ fontSize: 18 }}>!</div>
         <div>
           <div style={{ fontSize: 13, fontWeight: "bold", color: "#f59e0b", marginBottom: 4 }}>Add yourself as a guest when scheduling!</div>
           <div style={{ fontSize: 12, color: "#ffffff60", marginBottom: 8 }}>Schedule your training appointments using the link below. Make sure to add yourself as a "guest" on the appointment so you will receive the appointment notifications to your email.</div>
