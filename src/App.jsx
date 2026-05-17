@@ -2715,15 +2715,13 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
   const [showAddModal, setShowAddModal] = useState(false);
   const [showClients, setShowClients] = useState(false);
   const [newClientName, setNewClientName] = useState("");
-  const [newPac, setNewPac] = useState("");
-  const [newLump, setNewLump] = useState("");
-  const [newType, setNewType] = useState("Mutual Fund");
 
   const handleAdd = () => {
     if (!newClientName.trim()) return;
-    const entry = { id: Date.now().toString(), name: newClientName.trim(), pac: Number(newPac)||0, lump: Number(newLump)||0, type: newType, date: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), movedOver: false };
+    const entry = { id: Date.now().toString(), name: newClientName.trim(), date: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}), movedOver: false };
     const newClients = [...investmentClients, entry];
     const newCount = pacCount + 1;
+    // Single atomic update  -  prevents race condition overwriting clients
     if (onUpdateBoth) {
       onUpdateBoth(newClients, newCount);
     } else {
@@ -2734,7 +2732,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
       spawnConfetti(window.innerWidth/2, 200);
       spawnEmoji(window.innerWidth/2, 180, "$");
     }
-    setNewClientName(""); setNewPac(""); setNewLump(""); setNewType("Mutual Fund");
+    setNewClientName("");
     setShowAddModal(false);
   };
 
@@ -2760,30 +2758,18 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
         <div style={{ position:"fixed", inset:0, background:"#000000cc", zIndex:999, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
           <div style={{ background:"#16213e", border:"1px solid #f59e0b40", borderRadius:16, padding:28, width:"100%", maxWidth:400 }}>
             <div style={{ fontSize:20, textAlign:"center", marginBottom:12 }}>$</div>
-            <div style={{ fontSize:16, fontWeight:"bold", color:"#f59e0b", marginBottom:6, textAlign:"center" }}>Log Investment</div>
-            <div style={{ fontSize:13, color:"#ffffff60", marginBottom:16, textAlign:"center", lineHeight:1.6 }}>Enter client details and investment amounts.</div>
-            <input autoFocus value={newClientName} onChange={e => setNewClientName(e.target.value)} placeholder="Client full name"
-              style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"12px 14px", color:"#f0ede8", fontSize:15, outline:"none", width:"100%", boxSizing:"border-box", marginBottom:10, fontFamily:"inherit" }} />
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:10 }}>
-              <div>
-                <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:4 }}>PAC Amount (monthly)</div>
-                <input type="number" value={newPac} onChange={e => setNewPac(e.target.value)} placeholder="e.g. 200"
-                  style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 12px", color:"#f0ede8", fontSize:14, outline:"none", width:"100%", boxSizing:"border-box", fontFamily:"inherit" }} />
-              </div>
-              <div>
-                <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:4 }}>Lump Sum Amount</div>
-                <input type="number" value={newLump} onChange={e => setNewLump(e.target.value)} placeholder="e.g. 5000"
-                  style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 12px", color:"#f0ede8", fontSize:14, outline:"none", width:"100%", boxSizing:"border-box", fontFamily:"inherit" }} />
-              </div>
+            <div style={{ fontSize:16, fontWeight:"bold", color:"#f59e0b", marginBottom:6, textAlign:"center" }}>Log Future Investment Client</div>
+            <div style={{ fontSize:13, color:"#ffffff60", marginBottom:20, textAlign:"center", lineHeight:1.6 }}>
+              Enter the future client name. This tracks who will need to be moved over to you when you get your investment license.
             </div>
-            <div style={{ marginBottom:16 }}>
-              <div style={{ fontSize:10, color:"#ffffff40", textTransform:"uppercase", marginBottom:4 }}>Investment Type</div>
-              <select value={newType} onChange={e => setNewType(e.target.value)}
-                style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"10px 12px", color:"#f0ede8", fontSize:14, outline:"none", width:"100%", fontFamily:"inherit" }}>
-                <option style={{ background:"#1a1a2e" }}>Mutual Fund</option>
-                <option style={{ background:"#1a1a2e" }}>Annuity</option>
-              </select>
-            </div>
+            <input
+              autoFocus
+              value={newClientName}
+              onChange={e => setNewClientName(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleAdd()}
+              placeholder="Future client full name"
+              style={{ background:"#ffffff0d", border:"1px solid #ffffff20", borderRadius:8, padding:"12px 14px", color:"#f0ede8", fontSize:15, outline:"none", width:"100%", boxSizing:"border-box", marginBottom:16, fontFamily:"inherit" }}
+            />
             <div style={{ display:"flex", gap:10 }}>
               <button onClick={() => { setShowAddModal(false); setNewClientName(""); }}
                 style={{ flex:1, background:"none", border:"1px solid #ffffff20", color:"#ffffff60", padding:"12px", borderRadius:8, cursor:"pointer", fontSize:13 }}>Cancel</button>
@@ -2801,16 +2787,8 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
         <div style={{ fontSize:14, fontWeight:"bold", color: (!isLicensed&&pacCount>=goal)?"#10b981":"#f59e0b" }}>
           {isLicensed ? "$ Investment Tracker (AUM Building)" : "$ PAC Investments (AUM Building)"}
         </div>
-        <div style={{ textAlign:"right" }}>
-          <div style={{ fontSize:22, fontWeight:"bold", color: (!isLicensed&&pacCount>=goal)?"#10b981":"#f59e0b" }}>
-            {isLicensed ? pacCount : `${pacCount}/${goal}`}
-          </div>
-          {investmentClients.length > 0 && (
-            <div style={{ fontSize:11, color:"#ffffff40", marginTop:2 }}>
-              {investmentClients.filter(c=>c.pac>0).length > 0 && <span style={{ color:"#3b82f6" }}>PAC: ${investmentClients.reduce((s,c)=>s+(c.pac||0),0).toLocaleString()}/mo </span>}
-              {investmentClients.filter(c=>c.lump>0).length > 0 && <span style={{ color:"#10b981" }}>Lump: ${investmentClients.reduce((s,c)=>s+(c.lump||0),0).toLocaleString()}</span>}
-            </div>
-          )}
+        <div style={{ fontSize:22, fontWeight:"bold", color: (!isLicensed&&pacCount>=goal)?"#10b981":"#f59e0b" }}>
+          {isLicensed ? pacCount : `${pacCount}/${goal}`}
         </div>
       </div>
 
@@ -2837,7 +2815,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
       {!readOnly && onChange && (
         <button onClick={() => setShowAddModal(true)}
           style={{ background:"#f59e0b20", border:"1px solid #f59e0b40", color:"#f59e0b", borderRadius:8, padding:"10px 16px", cursor:"pointer", fontWeight:"bold", fontSize:13, width:"100%", marginBottom: investmentClients.length > 0 ? 12 : 0 }}>
-          + Log New Investment
+          + Log Future Investment Client
         </button>
       )}
 
@@ -2855,7 +2833,7 @@ function PacCounter({ pacCount = 0, onChange, onUpdateClients, onUpdateBoth, inv
                 <div key={client.id} style={{ background: client.movedOver?"#10b98110":"#ffffff07", border:`1px solid ${client.movedOver?"#10b98130":"#ffffff12"}`, borderRadius:8, padding:"10px 14px", display:"flex", alignItems:"center", gap:10 }}>
                   <div style={{ flex:1 }}>
                     <div style={{ fontSize:13, fontWeight:"bold", color: client.movedOver?"#ffffff50":"#f0ede8", textDecoration: client.movedOver?"line-through":"none" }}>{client.name}</div>
-                    <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>{client.type && <span style={{ color:"#f59e0b" }}>{client.type} </span>}{client.pac>0 && <span style={{ color:"#3b82f6" }}>PAC: ${client.pac.toLocaleString()}/mo </span>}{client.lump>0 && <span style={{ color:"#10b981" }}>Lump: ${client.lump.toLocaleString()} </span>}{client.date}{client.movedOver ? " - Moved" : ""}</div>
+                    <div style={{ fontSize:10, color:"#ffffff30", marginTop:2 }}>{client.date} {client.movedOver ? "- v Moved over" : ""}</div>
                   </div>
                   {!readOnly && (
                     <div style={{ display:"flex", gap:6 }}>
