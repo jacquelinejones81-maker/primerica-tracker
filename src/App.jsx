@@ -1730,7 +1730,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             <div style={{ fontSize:13, fontWeight:"bold", color:"#3b82f6", marginBottom:12, letterSpacing:"0.05em" }}> Life Application Tracker</div>
             <LifeAppTracker
               apps={rep.lifeApps||[]}
-              onChange={apps => onUpdate({ ...rep, lifeApps:apps, lastActivity:new Date().toISOString() })}
+              onChange={apps => { const tp = apps.filter(a=>a.clientName).reduce((s,a)=>s+(Number(a.premium)||0),0); onUpdate({ ...rep, lifeApps:apps, premiumSubmitted:tp, lastActivity:new Date().toISOString() }); }}
             />
           </div>
         )}
@@ -3919,7 +3919,7 @@ export default function App() {
           {activeTab==="lifeapps" && (
             <LifeAppTracker
               apps={rep.lifeApps||[]}
-              onChange={apps => updateRep(rep.id, r => ({ ...r, lifeApps:apps }))}
+              onChange={apps => { const tp = apps.filter(a=>a.clientName).reduce((s,a)=>s+(Number(a.premium)||0),0); updateRep(rep.id, r => ({ ...r, lifeApps:apps, premiumSubmitted:tp })); }}
               readOnly={true}
             />
           )}
