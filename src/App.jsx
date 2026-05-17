@@ -625,7 +625,7 @@ function LoginScreen({ trainers, reps, admins, onLogin }) {
     <div style={{ fontFamily:"'Georgia',serif", minHeight:"100vh", background:"#0f0f11", color:"#f0ede8", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:24 }}>
       <div style={{ marginBottom:32, textAlign:"center" }}>
         <div style={{ fontSize:11, letterSpacing:"0.2em", color:"#f59e0b", textTransform:"uppercase", marginBottom:8 }}>NEXTLEVEL FIELD TRAINING HUB</div>
-        <div style={{ fontSize:28, fontWeight:"bold" }}>Onboarding Tracker</div>
+        <div style={{ fontSize:28, fontWeight:"bold" }}>Field Training Hub</div>
         <div style={{ fontSize:13, color:"#ffffff50", marginTop:6 }}>Sign in to continue</div>
       </div>
 
