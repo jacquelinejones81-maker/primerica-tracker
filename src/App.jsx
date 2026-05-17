@@ -1730,7 +1730,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             <div style={{ fontSize:13, fontWeight:"bold", color:"#3b82f6", marginBottom:12, letterSpacing:"0.05em" }}> Life Application Tracker</div>
             <LifeAppTracker
               apps={rep.lifeApps||[]}
-              onChange={apps => { const tp = apps.filter(a=>a.clientName).reduce((s,a)=>s+(Number(a.premium)||0),0); onUpdate({ ...rep, lifeApps:apps, premiumSubmitted:tp, lastActivity:new Date().toISOString() }); }}
+              onChange={apps => onUpdate({ ...rep, lifeApps:apps, lastActivity:new Date().toISOString() })}
             />
           </div>
         )}
@@ -2903,7 +2903,7 @@ function MyProductionSection({ myProduction, onUpdate, trainerName }) {
           {activeTab === "lifeapps" && (
             <LifeAppTracker
               apps={lifeApps}
-              onChange={apps => { const tp = apps.filter(a=>a.clientName).reduce((s,a)=>s+(Number(a.premium)||0),0); onUpdate({ ...myProduction, lifeApps:apps, trainerPremiumTotal:tp }); }}
+              onChange={apps => onUpdate({ ...myProduction, lifeApps:apps })}
             />
           )}
           {activeTab === "scorecard" && (
@@ -3349,7 +3349,7 @@ export default function App() {
   const updateAdminCalendly = (adminId, link) => setAdmins(prev => prev.map(a => a.id !== adminId ? a : { ...a, calendlyLink: link }));
   const updateRepProduction = (repId, field, value) => updateRep(repId, r => ({ ...r, [field]: value }));
   const updateRepPhoto = (repId, photo) => updateRep(repId, r => ({ ...r, photo }));
-  const updateLifeApps = (repId, apps) => { const totalPremium = apps.filter(a=>a.clientName).reduce((s,a)=>s+(Number(a.premium)||0),0); updateRep(repId, r => ({ ...r, lifeApps: apps, premiumSubmitted: totalPremium })); };
+  const updateLifeApps = (repId, apps) => updateRep(repId, r => ({ ...r, lifeApps: apps }));
   const updateWeeklyActivity = (repId, activity) => updateRep(repId, r => ({ ...r, weeklyActivity: activity }));
   const updatePacCount = (repId, count) => updateRep(repId, r => ({ ...r, pacCount: count }));
 
@@ -3919,7 +3919,7 @@ export default function App() {
           {activeTab==="lifeapps" && (
             <LifeAppTracker
               apps={rep.lifeApps||[]}
-              onChange={apps => { const tp = apps.filter(a=>a.clientName).reduce((s,a)=>s+(Number(a.premium)||0),0); updateRep(rep.id, r => ({ ...r, lifeApps:apps, premiumSubmitted:tp })); }}
+              onChange={apps => updateRep(rep.id, r => ({ ...r, lifeApps:apps }))}
               readOnly={true}
             />
           )}
