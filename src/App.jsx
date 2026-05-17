@@ -1409,8 +1409,7 @@ Please don't forget  -  I need you on this one. Thanks again!`,
   },
 ];
 
-function ScriptsSection() {
-  const [activeScript, setActiveScript] = useState(null);
+function ScriptsSection({ activeScript=null, onSetActiveScript=()=>{} }) {
   const categories = [...new Set(SCRIPTS.map(s => s.category))];
 
   return (
@@ -1424,7 +1423,7 @@ function ScriptsSection() {
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {SCRIPTS.filter(s => s.category === cat).map(script => (
               <div key={script.id}>
-                <div onClick={() => setActiveScript(activeScript === script.id ? null : script.id)}
+                <div onClick={() => onSetActiveScript(activeScript === script.id ? null : script.id)}
                   style={{ background: activeScript === script.id ? `${script.color}15` : "#ffffff07", border: `1px solid ${activeScript === script.id ? script.color+"40" : "#ffffff12"}`, borderRadius: 10, padding: "14px 16px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", transition: "all 0.15s" }}>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: "bold", color: activeScript === script.id ? script.color : "#f0ede8" }}>{script.title}</div>
@@ -1459,6 +1458,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
   const [showTour, setShowTour] = useState(() => { try { return !localStorage.getItem(tourKey); } catch(e) { return false; } });
   const [activeTab, setActiveTab] = useState("checklist");
   const [showConditional, setShowConditional] = useState(false);
+  const [activeScript, setActiveScript] = useState(null);
   const track = TRACK_INFO[rep.track] || TRACK_INFO["fast"];
   const repChecklist = track.checklist;
   const repCats = [...new Set(repChecklist.map(i => i.category))];
@@ -1829,7 +1829,7 @@ function RepView({ rep, onUpdate, onLogout, isPreview = false, schedule = DEFAUL
             onChange={refs => onUpdate({ ...rep, references: refs, lastActivity: new Date().toISOString() })}
           />
         )}
-        {activeTab==="scripts" && <ScriptsSection />}
+        {activeTab==="scripts" && <ScriptsSection activeScript={activeScript} onSetActiveScript={setActiveScript} />}
 
         {activeTab==="scorecard" && (
           <WeeklyScorecard
@@ -2495,13 +2495,13 @@ function LifeAppTracker({ apps = [], onChange, readOnly = false }) {
 
   return (
     <div>
-      {showChecklist && (
+      <div style={{ display: showChecklist ? "block" : "none" }}>
         <LifeAppChecklist
           app={apps.find(a => a.id === showChecklist) || {}}
           onUpdate={(updated) => onChange(apps.map(a => a.id !== updated.id ? a : updated))}
           onClose={() => setShowChecklist(null)}
         />
-      )}
+      </div>
       {pendingNewId && (() => {
         const pendingApp = apps.find(a => a.id === pendingNewId);
         if (!pendingApp) { setPendingNewId(null); return null; }
